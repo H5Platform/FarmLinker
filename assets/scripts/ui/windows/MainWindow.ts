@@ -1,5 +1,6 @@
 import { _decorator, Node, Button } from 'cc';
 import { WindowBase } from '../base/WindowBase';
+import { WindowManager } from '../WindowManager';
 
 const { ccclass, property } = _decorator;
 
@@ -19,8 +20,8 @@ export class MainWindow extends WindowBase {
         console.log('MainWindow shown');
     }
 
-    public onHide(): void {
-        super.onHide();
+    public hide(): void {
+        super.hide();
         console.log('MainWindow hidden');
     }
 
@@ -33,8 +34,9 @@ export class MainWindow extends WindowBase {
     }
 
     private onStartButtonClicked(): void {
-        console.log('Start button clicked');
         // Add your start game logic here
+        WindowManager.instance.show("GameWindow");
+        this.hide();
     }
 
     protected onDestroy(): void {

@@ -3,13 +3,13 @@ const { ccclass, property } = _decorator;
 
 @ccclass('WindowBase')
 export class WindowBase extends Component {
-    public initialize(): void { console.log('WindowBase initialize'); }
+    public initialize(): void { }
 
     public show(): void {
         this.node.active = true;
     }
 
-    public onHide(): void {
+    public hide(): void {
         this.node.active = false;
     }
 }

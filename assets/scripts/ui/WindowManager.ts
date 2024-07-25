@@ -71,7 +71,7 @@ export class WindowManager extends Component {
     public hide(name: string): void {
         const windowBase = this.windowMap.get(name);
         if (windowBase) {
-            windowBase.onHide();
+            windowBase.hide();
         } else {
             console.warn(`Window not found: ${name}`);
         }
