@@ -48,6 +48,9 @@ export class SharedDefines {
 
     // // 你可以根据需要继续添加更多常量
 
+    public static readonly CROP_GROWTH_STAGES: number = 4;
+    public static readonly CROP_GROWTH_TIME: number = 60;
+
     public static readonly CROP_CORN: string = 'entities/crops/Corn';
     public static readonly CROP_CARROT: string = 'entities/crops/Carrot';
     public static readonly CROP_GRAPE: string = 'entities/crops/Grape';

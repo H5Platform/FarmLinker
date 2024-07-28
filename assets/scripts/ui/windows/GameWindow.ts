@@ -39,8 +39,9 @@ export class GameWindow extends WindowBase {
         if (gameControllerNode) {
             this.gameController = gameControllerNode.getComponent(GameController);
         }
-        this.initializePlots();
+
         this.initializeDragDropComponent();
+        this.initializePlots();
     }
 
     private initializePlots(): void {

@@ -252,6 +252,30 @@
     "sprite": {
       "__id__": 5
     },
+    "growSprites": [
+      {
+        "__uuid__": "59e714a7-19f3-4705-a7bd-4cefb805c35d@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "d2f2653f-46c3-4fd1-8d83-6ac0a7e67172@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "9dafb6ac-a091-4de4-a7f6-6a580a35765e@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "9dafb6ac-a091-4de4-a7f6-6a580a35765e@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      }
+    ],
+    "bottomOffset": {
+      "__type__": "cc.Vec3",
+      "x": -10,
+      "y": 50,
+      "z": 0
+    },
     "_id": ""
   },
   {
@@ -267,6 +291,7 @@
       "__id__": 0
     },
     "fileId": "714fhSZnRGAabmTmlLP3vh",
+    "instance": null,
     "targetOverrides": null
   }
 ]

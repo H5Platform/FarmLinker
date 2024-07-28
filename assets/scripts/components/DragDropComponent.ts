@@ -3,13 +3,17 @@ const { ccclass, property } = _decorator;
 
 // 定义可拖拽对象的接口
 export interface IDraggable {
+
+    setPosition(position: Vec3): void;
+
     onDragStart(): void;
     onDragging(newPosition: Vec3): void;
-    onDragEnd(endPosition: Vec3): boolean;
+    onDragEnd(endPosition: Vec3,isDestroy:boolean): boolean;
 }
 
 // 定义放置区域的接口
 export interface IDropZone {
+    getNode(): Node;
     isPointInside(point: Vec2): boolean;
     canAcceptDrop(draggable: IDraggable): boolean;
     onDrop(draggable: IDraggable): void;
@@ -60,16 +64,16 @@ export class DragDropComponent extends Component {
             this.dragContainer.addChild(node);
             node.setWorldPosition(worldPos);
         }
+        
         // 立即更新位置到鼠标位置
         const mousePos = this.getMousePosition();
         draggable.onDragging(mousePos);
-        this.startDragPosition = mousePos;
+        this.startDragPosition = node.getWorldPosition();
     }
 
     private onTouchStart(event: EventTouch): void {
         if (this.isDragging && this.currentDraggingObject) {
             const endPosition = event.getUILocation();
-            let canAcceptDrop = false;
             let acceptedDropZone: IDropZone | null = null;
             for (const dropZone of this.dropZones) {
                 if (dropZone.isPointInside(endPosition) && dropZone.canAcceptDrop(this.currentDraggingObject)) {
@@ -78,11 +82,13 @@ export class DragDropComponent extends Component {
                 }
             }
             if (acceptedDropZone) {
+                let worldPos = acceptedDropZone.getNode().getWorldPosition();
+                this.currentDraggingObject.onDragEnd(worldPos,false);
                 acceptedDropZone.onDrop(this.currentDraggingObject);
-                this.currentDraggingObject.onDragEnd(new Vec3(endPosition.x, endPosition.y, 0));
+                
             }
             else {
-                this.currentDraggingObject.onDragEnd(this.startDragPosition);
+                this.currentDraggingObject.onDragEnd(this.startDragPosition,true);
             }
             this.currentDraggingObject = null;
             this.isDragging = false;
