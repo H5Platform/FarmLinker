@@ -1,0 +1,184 @@
+{
+  "list": [
+    {
+      "id": "200101",
+      "name": "CropsWheat_01",
+      "description": "小麦_幼苗",
+      "farm_type": "1",
+      "time_min": "5",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "CropsWheat_01"
+    },
+    {
+      "id": "200102",
+      "name": "Cropswheat_02",
+      "description": "小麦_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "Cropswheat_02"
+    },
+    {
+      "id": "200201",
+      "name": "CropsLettuce_01",
+      "description": "生菜_幼苗",
+      "farm_type": "1",
+      "time_min": "10",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "CropsLettuce_01"
+    },
+    {
+      "id": "200202",
+      "name": "CropsLettuce_02",
+      "description": "生菜_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "CropsLettuce_02"
+    },
+    {
+      "id": "200301",
+      "name": "CropsCarrot_01",
+      "description": "胡萝卜_幼苗",
+      "farm_type": "1",
+      "time_min": "15",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "CropsCarrot_01"
+    },
+    {
+      "id": "200302",
+      "name": "CropsCarrot_02",
+      "description": "胡萝卜_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "1",
+      "grid_capacity": "1",
+      "png": "CropsCarrot_02"
+    },
+    {
+      "id": "200401",
+      "name": "CropsTomato_01",
+      "description": "番茄_幼苗",
+      "farm_type": "1",
+      "time_min": "30",
+      "level_need": "2",
+      "grid_capacity": "1",
+      "png": "CropsTomato_01"
+    },
+    {
+      "id": "200402",
+      "name": "CropsTomato_02",
+      "description": "番茄_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "2",
+      "grid_capacity": "1",
+      "png": "CropsTomato_02"
+    },
+    {
+      "id": "200501",
+      "name": "CropsCorn_01",
+      "description": "玉米_幼苗",
+      "farm_type": "1",
+      "time_min": "60",
+      "level_need": "2",
+      "grid_capacity": "1",
+      "png": "CropsCorn_01"
+    },
+    {
+      "id": "200502",
+      "name": "CropsCorn_02",
+      "description": "玉米_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "2",
+      "grid_capacity": "1",
+      "png": "CropsCorn_02"
+    },
+    {
+      "id": "200601",
+      "name": "CropsPotato_01",
+      "description": "土豆_幼苗",
+      "farm_type": "1",
+      "time_min": "120",
+      "level_need": "3",
+      "grid_capacity": "1",
+      "png": "CropsPotato_01"
+    },
+    {
+      "id": "200602",
+      "name": "CropsPotato_02",
+      "description": "土豆_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "3",
+      "grid_capacity": "1",
+      "png": "CropsPotato_02"
+    },
+    {
+      "id": "200701",
+      "name": "CropsStrawberry_01",
+      "description": "草莓_幼苗",
+      "farm_type": "1",
+      "time_min": "240",
+      "level_need": "3",
+      "grid_capacity": "1",
+      "png": "CropsStrawberry_01"
+    },
+    {
+      "id": "200702",
+      "name": "CropsStrawberry_02",
+      "description": "草莓_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "3",
+      "grid_capacity": "1",
+      "png": "CropsStrawberry_02"
+    },
+    {
+      "id": "200801",
+      "name": "CropsPumpkin_01",
+      "description": "南瓜_幼苗",
+      "farm_type": "1",
+      "time_min": "360",
+      "level_need": "4",
+      "grid_capacity": "1",
+      "png": "CropsPumpkin_01"
+    },
+    {
+      "id": "200802",
+      "name": "CropsPumpkin_02",
+      "description": "南瓜_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "4",
+      "grid_capacity": "1",
+      "png": "CropsPumpkin_02"
+    },
+    {
+      "id": "200901",
+      "name": "CropsGrape_01",
+      "description": "葡萄_幼苗",
+      "farm_type": "1",
+      "time_min": "480",
+      "level_need": "4",
+      "grid_capacity": "1",
+      "png": "CropsGrape_01"
+    },
+    {
+      "id": "200902",
+      "name": "CropsGrape_02",
+      "description": "葡萄_成熟",
+      "farm_type": "1",
+      "time_min": "0",
+      "level_need": "4",
+      "grid_capacity": "1",
+      "png": "CropsGrape_02"
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "list": [
+    {
+      "id": "900101",
+      "name": "Item_Wheat",
+      "description": "小麦",
+      "item_type": "1",
+      "exp_get": "5",
+      "buy_price": "0",
+      "sell_price": "2",
+      "png": "Item_Wheat"
+    },
+    {
+      "id": "900102",
+      "name": "Item_Lettuce",
+      "description": "生菜",
+      "item_type": "1",
+      "exp_get": "10",
+      "buy_price": "0",
+      "sell_price": "4",
+      "png": "Item_Lettuce"
+    },
+    {
+      "id": "900103",
+      "name": "Item_Carrot",
+      "description": "胡萝卜",
+      "item_type": "1",
+      "exp_get": "15",
+      "buy_price": "0",
+      "sell_price": "6",
+      "png": "Item_Carrot"
+    },
+    {
+      "id": "900104",
+      "name": "Item_Tomato",
+      "description": "番茄",
+      "item_type": "1",
+      "exp_get": "20",
+      "buy_price": "0",
+      "sell_price": "8",
+      "png": "Item_Tomato"
+    },
+    {
+      "id": "900105",
+      "name": "Item_Corn",
+      "description": "玉米",
+      "item_type": "1",
+      "exp_get": "25",
+      "buy_price": "0",
+      "sell_price": "10",
+      "png": "Item_Corn"
+    },
+    {
+      "id": "900106",
+      "name": "Item_Potato",
+      "description": "土豆",
+      "item_type": "1",
+      "exp_get": "35",
+      "buy_price": "0",
+      "sell_price": "16",
+      "png": "Item_Potato"
+    },
+    {
+      "id": "900107",
+      "name": "Item_Strawberry",
+      "description": "草莓",
+      "item_type": "1",
+      "exp_get": "45",
+      "buy_price": "0",
+      "sell_price": "20",
+      "png": "Item_Strawberry"
+    },
+    {
+      "id": "900108",
+      "name": "Item_Pumpkin",
+      "description": "南瓜",
+      "item_type": "1",
+      "exp_get": "55",
+      "buy_price": "0",
+      "sell_price": "24",
+      "png": "Item_Pumpkin"
+    },
+    {
+      "id": "900109",
+      "name": "Item_Grape",
+      "description": "葡萄",
+      "item_type": "1",
+      "exp_get": "70",
+      "buy_price": "0",
+      "sell_price": "30",
+      "png": "Item_Grape"
+    },
+    {
+      "id": "900201",
+      "name": "Item_Chicken",
+      "description": "鸡",
+      "item_type": "2",
+      "exp_get": "15",
+      "buy_price": "0",
+      "sell_price": "20",
+      "png": "Item_Chicken"
+    },
+    {
+      "id": "900202",
+      "name": "Item_Goose",
+      "description": "鹅",
+      "item_type": "2",
+      "exp_get": "20",
+      "buy_price": "0",
+      "sell_price": "30",
+      "png": "Item_Goose"
+    },
+    {
+      "id": "900203",
+      "name": "Item_Sheep",
+      "description": "羊",
+      "item_type": "2",
+      "exp_get": "35",
+      "buy_price": "0",
+      "sell_price": "60",
+      "png": "Item_Sheep"
+    },
+    {
+      "id": "900204",
+      "name": "Item_Cattle",
+      "description": "牛",
+      "item_type": "2",
+      "exp_get": "50",
+      "buy_price": "0",
+      "sell_price": "100",
+      "png": "Item_Cattle"
+    },
+    {
+      "id": "900205",
+      "name": "Item_Pig",
+      "description": "猪",
+      "item_type": "2",
+      "exp_get": "45",
+      "buy_price": "0",
+      "sell_price": "80",
+      "png": "Item_Pig"
+    },
+    {
+      "id": "900206",
+      "name": "Item_Horse",
+      "description": "马",
+      "item_type": "2",
+      "exp_get": "75",
+      "buy_price": "0",
+      "sell_price": "140",
+      "png": "Item_Horse"
+    },
+    {
+      "id": "900901",
+      "name": "Item_Wheatmeal",
+      "description": "小麦粉",
+      "item_type": "3",
+      "exp_get": "10",
+      "buy_price": "0",
+      "sell_price": "5",
+      "png": "Item_Wheatmeal"
+    },
+    {
+      "id": "900902",
+      "name": "Item_bread",
+      "description": "面包",
+      "item_type": "3",
+      "exp_get": "30",
+      "buy_price": "0",
+      "sell_price": "15",
+      "png": "Item_bread"
+    },
+    {
+      "id": "900903",
+      "name": "Item_StrawberryJam",
+      "description": "草莓果酱",
+      "item_type": "3",
+      "exp_get": "50",
+      "buy_price": "0",
+      "sell_price": "50",
+      "png": "Item_StrawberryJam"
+    },
+    {
+      "id": "900904",
+      "name": "Item_GrapeJelly",
+      "description": "葡萄果酱",
+      "item_type": "3",
+      "exp_get": "70",
+      "buy_price": "0",
+      "sell_price": "70",
+      "png": "Item_GrapeJelly"
+    },
+    {
+      "id": "900905",
+      "name": "Item_Milk",
+      "description": "牛奶",
+      "item_type": "3",
+      "exp_get": "20",
+      "buy_price": "0",
+      "sell_price": "20",
+      "png": "Item_Milk"
+    },
+    {
+      "id": "900906",
+      "name": "Item_Cheese",
+      "description": "奶酪",
+      "item_type": "3",
+      "exp_get": "60",
+      "buy_price": "0",
+      "sell_price": "60",
+      "png": "Item_Cheese"
+    }
+  ]
+}

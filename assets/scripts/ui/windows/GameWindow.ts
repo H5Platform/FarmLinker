@@ -40,7 +40,7 @@ export class GameWindow extends WindowBase {
             this.gameController = gameControllerNode.getComponent(GameController);
         }
 
-        this.initializeDragDropComponent();
+        //this.initializeDragDropComponent();
         this.initializePlots();
     }
 
@@ -70,7 +70,7 @@ export class GameWindow extends WindowBase {
     public show(): void 
     {
         super.show();
-        this.gameController?.setGameViewVisibility(true);
+        this.gameController?.startGame();
     }
 
     public hide(): void 

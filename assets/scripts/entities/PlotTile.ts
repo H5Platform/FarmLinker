@@ -1,6 +1,7 @@
-import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget} from 'cc';
 import { IDropZone,IDraggable } from '../components/DragDropComponent';
 import { Crop } from './Crop';
+import { SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -12,11 +13,20 @@ export class PlotTile extends Component implements IDropZone {
     public gridPosition: Vec2 = new Vec2(0, 0);
     private polygonCollider: PolygonCollider2D | null = null;
 
+    public onSelectedEvent: EventTarget = new EventTarget();
+
     protected onLoad(): void {
         this.polygonCollider = this.getComponent(PolygonCollider2D);
         if (!this.polygonCollider) {
             console.error('PlotTile: PolygonCollider2D component is missing!');
         }
+        //listening to click event
+        this.node.on(Node.EventType.TOUCH_END, this.onTouchStart, this);
+    }
+
+    //ondestroy
+    public onDestroy(): void {
+        this.node.off(Node.EventType.TOUCH_END, this.onTouchStart, this);
     }
 
     public getWorldPosition(): Vec2 {
@@ -35,6 +45,11 @@ export class PlotTile extends Component implements IDropZone {
     public getNode(): Node 
     {
         return this.node;
+    }
+
+    private onTouchStart(event: any): void {
+        console.log('touch start');
+        this.onSelectedEvent.emit(SharedDefines.EVENT_PLOT_SELECTED,this);
     }
 
     private isPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {

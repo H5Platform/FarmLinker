@@ -1,0 +1,62 @@
+{
+  "list": [
+    {
+      "id": "900901",
+      "name": "Item_Wheatmeal",
+      "description": "小麦粉_合成",
+      "build": "400101",
+      "time_min": "10",
+      "png": "Item_Wheatmeal",
+      "formula_1": [
+        "900101",
+        "900102"
+      ],
+      "quality": [
+        "2",
+        "1"
+      ]
+    },
+    {
+      "id": "900902",
+      "name": "Item_bread",
+      "description": "面包_合成",
+      "build": "400101",
+      "time_min": "30",
+      "png": "Item_bread",
+      "formula_1": [
+        "900901"
+      ],
+      "quality": [
+        "2"
+      ]
+    },
+    {
+      "id": "900903",
+      "name": "Item_StrawberryJam",
+      "description": "草莓果酱_合成",
+      "build": "400102",
+      "time_min": "60",
+      "png": "Item_StrawberryJam",
+      "formula_1": [
+        "900107"
+      ],
+      "quality": [
+        "4"
+      ]
+    },
+    {
+      "id": "900904",
+      "name": "Item_GrapeJelly",
+      "description": "葡萄果酱_合成",
+      "build": "400102",
+      "time_min": "90",
+      "png": "Item_GrapeJelly",
+      "formula_1": [
+        "900109"
+      ],
+      "quality": [
+        "5"
+      ]
+    }
+  ]
+}

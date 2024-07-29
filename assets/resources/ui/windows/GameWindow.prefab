@@ -44,13 +44,10 @@
       },
       {
         "__id__": 194
-      },
-      {
-        "__id__": 196
       }
     ],
     "_prefab": {
-      "__id__": 198
+      "__id__": 196
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -4844,24 +4841,6 @@
     "fileId": "cexdzD5nBNjqhBwibtuNtc"
   },
   {
-    "__type__": "cc.BlockInputEvents",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 195
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "71NBD3G/pHxZLCuJvCOByR"
-  },
-  {
     "__type__": "a28dabuEQNE9pj7Yu7oGB3z",
     "_name": "",
     "_objFlags": 0,
@@ -4871,7 +4850,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 197
+      "__id__": 195
     },
     "btnCrop1": {
       "__id__": 137
@@ -4885,7 +4864,6 @@
     "btnCrop4": {
       "__id__": 161
     },
-    "plotContainer": null,
     "dragContainer": {
       "__id__": 184
     },

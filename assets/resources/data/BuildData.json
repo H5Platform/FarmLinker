@@ -1,0 +1,22 @@
+{
+  "list": [
+    {
+      "id": "400101",
+      "name": "Build_Bakery",
+      "description": "面包坊",
+      "level_need": "2"
+    },
+    {
+      "id": "400102",
+      "name": "Build_Jam",
+      "description": "果酱工厂",
+      "level_need": "3"
+    },
+    {
+      "id": "400103",
+      "name": "Build_Dairy",
+      "description": "奶制品厂",
+      "level_need": "4"
+    }
+  ]
+}
