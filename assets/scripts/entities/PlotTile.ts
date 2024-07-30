@@ -13,7 +13,7 @@ export class PlotTile extends Component implements IDropZone {
     public gridPosition: Vec2 = new Vec2(0, 0);
     private polygonCollider: PolygonCollider2D | null = null;
 
-    public onSelectedEvent: EventTarget = new EventTarget();
+    public eventTarget: EventTarget = new EventTarget();
 
     protected onLoad(): void {
         this.polygonCollider = this.getComponent(PolygonCollider2D);
@@ -49,7 +49,7 @@ export class PlotTile extends Component implements IDropZone {
 
     private onTouchStart(event: any): void {
         console.log('touch start');
-        this.onSelectedEvent.emit(SharedDefines.EVENT_PLOT_SELECTED,this);
+        this.eventTarget.emit(SharedDefines.EVENT_PLOT_SELECTED,this);
     }
 
     private isPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {

@@ -1,11 +1,10 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget  } from 'cc';
-import { IDraggable } from '../components/DragDropComponent';
 import { CooldownComponent } from '../components/CooldownComponent';
 import { SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 @ccclass('Crop')
-export class Crop extends Component implements IDraggable {
+export class Crop extends Component {
     @property
     public id: string = '';
 
@@ -107,40 +106,6 @@ export class Crop extends Component implements IDraggable {
     setPosition(position: Vec3): void 
     {
         this.node.position = new Vec3(position.x + this.bottomOffset.x, position.y + this.bottomOffset.y, position.z + this.bottomOffset.z);
-    }
-
-    onDragStart(): void {
-        this.isDragging = true;
-        this.originalParent = this.node.parent;
-        this.originalPosition = this.node.position.clone();
-        if (this.sprite) {
-            this.sprite.opacity = 180;
-        }
-    }
-
-    onDragging(newPosition: Vec3): void {
-        this.node.position = newPosition;
-    }
-
-    onDragEnd(endPosition: Vec3,isDestroy:boolean): boolean {
-        if (isDestroy) {
-            this.node.destroy();
-            return;
-        }
-        this.isDragging = false;
-        //this.node.position = endPosition;
-        this.node.setWorldPosition(endPosition);
-        if (this.sprite) {
-            this.sprite.opacity = 255;
-        }
-        return true; // 允许放置
-    }
-
-    public returnToOriginalPosition(): void {
-        if (this.originalParent && this.originalPosition) {
-            this.node.parent = this.originalParent;
-            this.node.position = this.originalPosition;
-        }
     }
 
     public startGrowing(): void {

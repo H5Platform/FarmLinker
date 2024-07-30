@@ -11,6 +11,8 @@ import { DragDropComponent } from '../../components/DragDropComponent';
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
 
+    @property(Node)
+    public cropContainer: Node | null = null;
     @property(Button)
     public btnCrop1: Button | null = null;
     @property(Button)
@@ -29,6 +31,7 @@ export class GameWindow extends WindowBase {
     private plotContainer: Node | null = null;
     private dragDropComponent: DragDropComponent | null = null;
     private plots: PlotTile[] = [];
+    private currentSelectedPlot: PlotTile | null = null;
 
 
     public initialize(): void 
@@ -39,8 +42,8 @@ export class GameWindow extends WindowBase {
         if (gameControllerNode) {
             this.gameController = gameControllerNode.getComponent(GameController);
         }
+        this.gameController.eventTarget.on(SharedDefines.EVENT_PLOT_SELECTED, this.onPlotSelected, this);
 
-        //this.initializeDragDropComponent();
         this.initializePlots();
     }
 
@@ -59,17 +62,11 @@ export class GameWindow extends WindowBase {
         }
     }
 
-    private initializeDragDropComponent(): void {
-        this.dragDropComponent = this.getComponent(DragDropComponent);
-        if (!this.dragDropComponent) {
-            this.dragDropComponent = this.addComponent(DragDropComponent);
-        }
-        this.dragDropComponent.dragContainer = this.dragContainer;
-    }
-
     public show(): void 
     {
         super.show();
+        //set crop container invisible
+        this.cropContainer.active = false;
         this.gameController?.startGame();
     }
 
@@ -102,67 +99,61 @@ export class GameWindow extends WindowBase {
         this.btnCrop4?.node.on(Button.EventType.CLICK, this.onBtnCrop4Clicked, this);
     }
 
-    private startDragging(crop: Node) {
-        this.dragContainer?.addChild(crop);
-        const cropComponent = crop.getComponent(Crop);
-        if (cropComponent && this.dragDropComponent) {
-            this.dragDropComponent.startDragging(cropComponent, crop);
+    private async plantCrop(cropPath: string): Promise<void> {
+        if (!this.currentSelectedPlot || this.currentSelectedPlot.isOccupied) {
+            console.log('No valid plot selected or plot is already occupied');
+            return;
         }
+
+        let prefab = await ResourceManager.instance.loadPrefab(cropPath);
+        if (!prefab) {
+            console.error(`Failed to load crop prefab: ${cropPath}`);
+            return;
+        }
+        
+        const cropNode = instantiate(prefab);
+        const crop = cropNode.getComponent(Crop);
+        if (!crop) {
+            console.error(`Failed to get Crop component from prefab: ${cropPath}`);
+            return;
+        }
+
+        this.currentSelectedPlot.node.addChild(cropNode);
+        cropNode.setPosition(Vec3.ZERO);
+        this.currentSelectedPlot.occupy();
+        crop.startGrowing();
+
+        this.cropContainer!.active = false;
+        this.currentSelectedPlot = null;
     }
 
     private async onBtnCrop1Clicked(): Promise<void> 
     {
-        console.log('onBtnCrop1Clicked');
-        const cornPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.CROP_CORN);
-        if (!cornPrefab) 
-        {
-            console.error('Failed to load corn prefab');
-            return;
-        }
-        const corn = instantiate(cornPrefab);
-        this.startDragging(corn);
+        await this.plantCrop(SharedDefines.CROP_CORN);
     }
 
     private async onBtnCrop2Clicked(): Promise<void> 
     {
-        //same as onBtnCrop1Clicked logic but instead of corn use carrot
-        console.log('onBtnCrop2Clicked');
-        const carrotPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.CROP_CARROT);
-        if (!carrotPrefab) 
-        {
-            console.error('Failed to load carrot prefab');
-            return;
-        }
-        const carrot = instantiate(carrotPrefab);
-        this.startDragging(carrot);
+        await this.plantCrop(SharedDefines.CROP_CARROT);
     }
 
     private async onBtnCrop3Clicked(): Promise<void> 
     {
-        //same as onBtnCrop1Clicked logic but instead of corn use grape
-        console.log('onBtnCrop3Clicked');
-        const grapePrefab = await ResourceManager.instance.loadPrefab(SharedDefines.CROP_GRAPE);
-        if (!grapePrefab) 
-        {
-            console.error('Failed to load grape prefab');
-            return;
-        }
-        const grape = instantiate(grapePrefab);
-        this.startDragging(grape);
+        await this.plantCrop(SharedDefines.CROP_GRAPE);
     }
 
     private async onBtnCrop4Clicked(): Promise<void> 
     {
-        //same as onBtnCrop1Clicked logic but instead of corn use cabbage
-        console.log('onBtnCrop4Clicked');
-        const cabbagePrefab = await ResourceManager.instance.loadPrefab(SharedDefines.CROP_CABBAGE);
-        if (!cabbagePrefab) 
-        {
-            console.error('Failed to load cabbage prefab');
+        await this.plantCrop(SharedDefines.CROP_CABBAGE);
+    }
+
+    //create onPlotSelected func , when plot is selected, show crop container
+    private onPlotSelected(plot: PlotTile): void 
+    {
+        if (plot.isOccupied) 
             return;
-        }
-        const cabbage = instantiate(cabbagePrefab);
-        this.startDragging(cabbage);
+        this.cropContainer!.active = true;
+        this.currentSelectedPlot = plot;
     }
 }
 

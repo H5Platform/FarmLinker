@@ -46,6 +46,8 @@ export class SharedDefines {
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
 
+    public static readonly INIT_PLOT_NUM: number = 5;
+
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
 
     public static readonly EVENT_PLAYER_LEVEL_UP: string = 'player-level-up';
@@ -53,7 +55,7 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_GOLD_CHANGE: string = 'player-gold-change';
     public static readonly EVENT_PLAYER_DIAMOND_CHANGE: string = 'player-diamond-change';
 
-    // // 你可以根据需要继续添加更多常量
+
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;
