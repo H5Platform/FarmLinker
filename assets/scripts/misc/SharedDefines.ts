@@ -1,9 +1,20 @@
 export enum CropType {
-    WHEAT = 'wheat',
-    CORN = 'corn',
-    POTATO = 'potato',
-    TOMATO = 'tomato',
-    // 可以根据需要添加更多作物类型
+    WHEAT = 1,
+    CABBAGE ,
+    CARROT,
+    TOMATO ,
+    CORN,
+    POTATO,
+    STRAWBERRY,
+    PUMPKIN,
+    GRAPE
+}
+
+export enum CropState
+{
+    NONE,
+    GROWING,
+    HARVESTING
 }
 
 export enum GameState {
@@ -46,6 +57,8 @@ export class SharedDefines {
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
 
+    public static readonly TIME_MINUTE: number = 60;
+
     public static readonly INIT_PLOT_NUM: number = 5;
 
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
@@ -55,13 +68,18 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_GOLD_CHANGE: string = 'player-gold-change';
     public static readonly EVENT_PLAYER_DIAMOND_CHANGE: string = 'player-diamond-change';
 
+    public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
+
 
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;
 
-    public static readonly CROP_CORN: string = 'entities/crops/Corn';
-    public static readonly CROP_CARROT: string = 'entities/crops/Carrot';
-    public static readonly CROP_GRAPE: string = 'entities/crops/Grape';
-    public static readonly CROP_CABBAGE: string = 'entities/crops/Cabbage';
+    public static readonly JSON_CROP_DATA: string = 'data/CropsData';
+    public static readonly JSON_ITEM_DATA: string = 'data/ItemData';
+
+    public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
+    public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
+    public static readonly PREFAB_CROP_GRAPE: string = 'entities/crops/Grape';
+    public static readonly PREFAB_CROP_CABBAGE: string = 'entities/crops/Cabbage';
 }

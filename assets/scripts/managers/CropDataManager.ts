@@ -1,4 +1,5 @@
 import { _decorator, JsonAsset, resources } from 'cc';
+import { SharedDefines } from '../misc/SharedDefines';
 
 interface CropData {
     id: string;
@@ -7,6 +8,7 @@ interface CropData {
     farm_type: string;
     crop_type: string;
     time_min: string;
+    harvest_item_id: string;
     level_need: string;
     grid_capacity: string;
     png: string;
@@ -27,7 +29,7 @@ export class CropDataManager {
 
     public async loadCropData(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            resources.load('data/CropsData', JsonAsset, (err, jsonAsset) => {
+            resources.load(SharedDefines.JSON_CROP_DATA, JsonAsset, (err, jsonAsset) => {
                 if (err) {
                     console.error('Failed to load CropsData:', err);
                     reject(err);

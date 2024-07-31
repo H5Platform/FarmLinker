@@ -252,6 +252,14 @@
     "sprite": {
       "__id__": 5
     },
+    "growSprites": [],
+    "bottomOffset": {
+      "__type__": "cc.Vec3",
+      "x": -10,
+      "y": 50,
+      "z": 0
+    },
+    "cropType": 3,
     "_id": ""
   },
   {
@@ -267,6 +275,7 @@
       "__id__": 0
     },
     "fileId": "fdo18L6clPxI6c67fO3YUI",
+    "instance": null,
     "targetOverrides": null
   }
 ]

@@ -4722,6 +4722,18 @@
     "__prefab": {
       "__id__": 189
     },
+    "lblLevel": {
+      "__id__": 21
+    },
+    "progressExp": {
+      "__id__": 14
+    },
+    "lblCoin": {
+      "__id__": 33
+    },
+    "lblDiamond": {
+      "__id__": 59
+    },
     "cropContainer": {
       "__id__": 131
     },
@@ -4737,7 +4749,6 @@
     "btnCrop4": {
       "__id__": 161
     },
-    "dragContainer": null,
     "_id": ""
   },
   {

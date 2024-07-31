@@ -13,6 +13,8 @@ export class PlotTile extends Component implements IDropZone {
     public gridPosition: Vec2 = new Vec2(0, 0);
     private polygonCollider: PolygonCollider2D | null = null;
 
+    private occupiedCrop: Crop | null = null;
+
     public eventTarget: EventTarget = new EventTarget();
 
     protected onLoad(): void {
@@ -34,11 +36,22 @@ export class PlotTile extends Component implements IDropZone {
         return new Vec2(worldPos.x, worldPos.y);
     }
 
-    public occupy(): void {
+    public occupy(crop : Crop): void {
+        if(!crop || this.isOccupied) return;
+        this.occupiedCrop = crop;
+        this.node.addChild(crop.node);
         this.isOccupied = true;
+        crop.eventTarget.on(SharedDefines.EVENT_CROP_HARVEST, this.onCropHarvest, this);
     }
 
     public clear(): void {
+        if(this.occupiedCrop)
+        {
+            this.occupiedCrop.eventTarget.off(SharedDefines.EVENT_CROP_HARVEST, this.onCropHarvest, this);
+        }
+        
+        this.node.removeAllChildren();
+        this.occupiedCrop = null;
         this.isOccupied = false;
     }
 
@@ -48,7 +61,9 @@ export class PlotTile extends Component implements IDropZone {
     }
 
     private onTouchStart(event: any): void {
-        console.log('touch start');
+        if (this.isOccupied) {
+            return;
+        }
         this.eventTarget.emit(SharedDefines.EVENT_PLOT_SELECTED,this);
     }
 
@@ -111,5 +126,11 @@ export class PlotTile extends Component implements IDropZone {
             draggable.node.position = Vec3.ZERO;
             draggable.startGrowing();
         }
+    }
+
+    private onCropHarvest(crop: Crop): void 
+    {
+        console.log('crop harvest , name = ' + this.node.name);
+        this.clear();
     }
 }

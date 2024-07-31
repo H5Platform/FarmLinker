@@ -2,6 +2,8 @@ import { _decorator, Component, instantiate, Node, Prefab,EventTarget } from 'cc
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { SharedDefines } from '../misc/SharedDefines';
+import { CropDataManager } from '../managers/CropDataManager';
+import { ItemDataManager } from '../managers/ItemDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -26,11 +28,19 @@ export class GameController extends Component {
     }
 
     start() {
-
+        this.preloadJsonDatas();
+        this.initializePlayerController();
     }
 
     update(deltaTime: number) {
         
+    }
+
+    public preloadJsonDatas(): void 
+    {
+        //load json data
+        CropDataManager.instance.loadCropData();
+        ItemDataManager.instance.loadItemData();
     }
 
     //create getplayerController() method
@@ -55,7 +65,7 @@ export class GameController extends Component {
         this.setGameViewVisibility(true);
 
         //instantiate playerControllerprefab
-        this.initializePlayerController();
+        
         const plotNum = SharedDefines.INIT_PLOT_NUM + this.playerController.playerState.level - 1;
         this.initializePlotTiles(plotNum);
     }

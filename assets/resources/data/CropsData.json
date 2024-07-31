@@ -7,6 +7,7 @@
       "farm_type": "1",
       "crop_type": "1",
       "time_min": "5",
+      "harvest_item_id": "",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "CropsWheat_01"
@@ -18,6 +19,7 @@
       "farm_type": "1",
       "crop_type": "1",
       "time_min": "0",
+      "harvest_item_id": "900101",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "Cropswheat_02"
@@ -29,6 +31,7 @@
       "farm_type": "1",
       "crop_type": "2",
       "time_min": "10",
+      "harvest_item_id": "",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "CropsLettuce_01"
@@ -40,6 +43,7 @@
       "farm_type": "1",
       "crop_type": "2",
       "time_min": "0",
+      "harvest_item_id": "900102",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "CropsLettuce_02"
@@ -51,6 +55,7 @@
       "farm_type": "1",
       "crop_type": "3",
       "time_min": "15",
+      "harvest_item_id": "",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "CropsCarrot_01"
@@ -62,6 +67,7 @@
       "farm_type": "1",
       "crop_type": "3",
       "time_min": "0",
+      "harvest_item_id": "900103",
       "level_need": "1",
       "grid_capacity": "1",
       "png": "CropsCarrot_02"
@@ -73,6 +79,7 @@
       "farm_type": "1",
       "crop_type": "4",
       "time_min": "30",
+      "harvest_item_id": "",
       "level_need": "2",
       "grid_capacity": "1",
       "png": "CropsTomato_01"
@@ -84,6 +91,7 @@
       "farm_type": "1",
       "crop_type": "4",
       "time_min": "0",
+      "harvest_item_id": "900104",
       "level_need": "2",
       "grid_capacity": "1",
       "png": "CropsTomato_02"
@@ -95,6 +103,7 @@
       "farm_type": "1",
       "crop_type": "5",
       "time_min": "60",
+      "harvest_item_id": "",
       "level_need": "2",
       "grid_capacity": "1",
       "png": "CropsCorn_01"
@@ -106,6 +115,7 @@
       "farm_type": "1",
       "crop_type": "5",
       "time_min": "0",
+      "harvest_item_id": "900105",
       "level_need": "2",
       "grid_capacity": "1",
       "png": "CropsCorn_02"
@@ -117,6 +127,7 @@
       "farm_type": "1",
       "crop_type": "6",
       "time_min": "120",
+      "harvest_item_id": "",
       "level_need": "3",
       "grid_capacity": "1",
       "png": "CropsPotato_01"
@@ -128,6 +139,7 @@
       "farm_type": "1",
       "crop_type": "6",
       "time_min": "0",
+      "harvest_item_id": "900106",
       "level_need": "3",
       "grid_capacity": "1",
       "png": "CropsPotato_02"
@@ -139,6 +151,7 @@
       "farm_type": "1",
       "crop_type": "7",
       "time_min": "240",
+      "harvest_item_id": "",
       "level_need": "3",
       "grid_capacity": "1",
       "png": "CropsStrawberry_01"
@@ -150,6 +163,7 @@
       "farm_type": "1",
       "crop_type": "7",
       "time_min": "0",
+      "harvest_item_id": "900107",
       "level_need": "3",
       "grid_capacity": "1",
       "png": "CropsStrawberry_02"
@@ -161,6 +175,7 @@
       "farm_type": "1",
       "crop_type": "8",
       "time_min": "360",
+      "harvest_item_id": "",
       "level_need": "4",
       "grid_capacity": "1",
       "png": "CropsPumpkin_01"
@@ -172,6 +187,7 @@
       "farm_type": "1",
       "crop_type": "8",
       "time_min": "0",
+      "harvest_item_id": "900108",
       "level_need": "4",
       "grid_capacity": "1",
       "png": "CropsPumpkin_02"
@@ -183,6 +199,7 @@
       "farm_type": "1",
       "crop_type": "9",
       "time_min": "480",
+      "harvest_item_id": "",
       "level_need": "4",
       "grid_capacity": "1",
       "png": "CropsGrape_01"
@@ -194,6 +211,7 @@
       "farm_type": "1",
       "crop_type": "9",
       "time_min": "0",
+      "harvest_item_id": "900109",
       "level_need": "4",
       "grid_capacity": "1",
       "png": "CropsGrape_02"
