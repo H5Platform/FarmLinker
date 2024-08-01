@@ -11,6 +11,7 @@ interface CropData {
     harvest_item_id: string;
     level_need: string;
     grid_capacity: string;
+    icon: string;
     png: string;
 }
 

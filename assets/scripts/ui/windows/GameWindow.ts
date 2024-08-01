@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar } from 'cc';
+import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite } from 'cc';
 const { ccclass, property } = _decorator;
 import { ResourceManager } from '../../managers/ResourceManager';
 import { SharedDefines } from '../../misc/SharedDefines';
@@ -6,8 +6,10 @@ import { WindowBase } from '../base/WindowBase';
 import { GameController } from '../../controllers/GameController';
 import { PlotTile } from '../../entities/PlotTile';
 import { Crop } from '../../entities/Crop';
-import { DragDropComponent } from '../../components/DragDropComponent';
 import { PlayerController } from '../../controllers/PlayerController';
+import { CropDataManager } from '../../managers/CropDataManager';
+import { SpriteHelper } from '../../helpers/SpriteHelper';
+import { EDITOR } from 'cc/env';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -21,8 +23,12 @@ export class GameWindow extends WindowBase {
     @property(Label)
     public lblDiamond: Label | null = null;
 
+    @property(ScrollView)
+    public scrollViewCrops: ScrollView | null = null;
     @property(Node)
     public cropContainer: Node | null = null;
+    @property(Node)
+    public cropButtonTemplate: Node | null = null;
     @property(Button)
     public btnCrop1: Button | null = null;
     @property(Button)
@@ -32,6 +38,8 @@ export class GameWindow extends WindowBase {
     @property(Button)
     public btnCrop4: Button | null = null;
     
+    private cropButtons: Node[] = [];
+
     private gameController: GameController | null = null;
     private playerController: PlayerController | null = null;
     private currentSelectedPlot: PlotTile | null = null;
@@ -48,13 +56,14 @@ export class GameWindow extends WindowBase {
         }
         this.gameController.eventTarget.on(SharedDefines.EVENT_PLOT_SELECTED, this.onPlotSelected, this);
         this.setupEventLisnters();
+        this.initializeCropButtons();
     }
 
     public show(): void 
     {
         super.show();
         //set crop container invisible
-        this.cropContainer.active = false;
+        this.scrollViewCrops.node.active = false;
         this.gameController?.startGame();
         
         this.refreshBasePlayerStateInfo();
@@ -73,7 +82,7 @@ export class GameWindow extends WindowBase {
         super.onDestroy();
         if (this.playerController) {
             const playerState = this.playerController.playerState;
-            playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.refreshBasePlayerStateInfo, this);
+            playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_GOLD_CHANGE, this.refreshBasePlayerStateInfo, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_DIAMOND_CHANGE, this.refreshBasePlayerStateInfo, this);
@@ -88,7 +97,7 @@ export class GameWindow extends WindowBase {
     {
         if (this.playerController) {
             const playerState = this.playerController.playerState;
-            playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.refreshBasePlayerStateInfo, this);
+            playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_GOLD_CHANGE, this.refreshBasePlayerStateInfo, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_DIAMOND_CHANGE, this.refreshBasePlayerStateInfo, this);
@@ -97,6 +106,72 @@ export class GameWindow extends WindowBase {
         this.btnCrop2?.node.on(Button.EventType.CLICK, this.onBtnCrop2Clicked, this);
         this.btnCrop3?.node.on(Button.EventType.CLICK, this.onBtnCrop3Clicked, this);
         this.btnCrop4?.node.on(Button.EventType.CLICK, this.onBtnCrop4Clicked, this);
+    }
+
+    private onPlayerLeveUp(): void 
+    {
+        
+        this.refreshBasePlayerStateInfo();
+    }
+
+    private initializeCropButtons(): void 
+    {
+        if (!this.cropButtonTemplate || !this.scrollViewCrops) {
+            console.error('Crop button template or scroll view content is not set');
+            return;
+        }
+        //clear all cropButtons
+        for (let i = 0; i < this.cropButtons.length; ++i) {
+            this.cropButtons[i].destroy();
+            this.cropButtons[i] = null;
+        }
+        this.cropButtons = [];
+        
+        const cropDataList = CropDataManager.instance.getAllCropData();
+        const playerLevel = this.playerController?.playerState.level || 1;
+
+        let lastCropType = -1;
+        console.log('cropDataList: ' + cropDataList.length);
+        const content = this.scrollViewCrops.content;
+        for (let i = 0; i < cropDataList.length; ++i) {
+            
+            const cropData = cropDataList[i];
+            //check if croptype == -1 or croptype != cropdata.croptype
+            const curCropType = parseInt(cropData.crop_type);
+            console.log('curCropType: ' + curCropType + ',' + ' lastCropType: ' + lastCropType);
+            if (!(lastCropType === -1 || curCropType !== lastCropType)) {
+                continue;
+            }
+            lastCropType = parseInt(cropData.crop_type);
+            
+            const buttonNode = instantiate(this.cropButtonTemplate);
+            buttonNode.name = cropData.id;
+            buttonNode.active = parseInt(cropData.level_need) <= playerLevel;
+            content.addChild(buttonNode);
+            //if editor
+            
+            if(cropData.icon !== ''){
+                const buttonSprite = buttonNode.getComponent(Sprite);
+                if(!EDITOR)
+                {
+                    
+                    const atlas = buttonSprite?.spriteAtlas;
+                    SpriteHelper.setSpriteFrameFromAtlas(buttonSprite, atlas, cropData.icon);
+                }
+                else{
+                  //  SpriteHelper.setSpriteFrameForPreview(buttonSprite, 'textures/gamewindow/' + cropData.icon);
+                }
+
+            }
+
+            buttonNode.on(Button.EventType.CLICK, () => this.onCropButtonClicked(cropData.id), this);
+            this.cropButtons.push(buttonNode);
+        }
+
+        const layout = content.getComponent(Layout);
+        if (layout) {
+            layout.updateLayout();
+        }
     }
 
     private refreshBasePlayerStateInfo(): void {
@@ -156,8 +231,13 @@ export class GameWindow extends WindowBase {
         crop.initialize();
         crop.startGrowing();
 
-        this.cropContainer!.active = false;
+        this.scrollViewCrops.node!.active = false;
         this.currentSelectedPlot = null;
+    }
+
+    private async onCropButtonClicked(cropId : string): Promise<void>  {
+        console.log('onCropButtonClicked: ' + cropId);
+        
     }
 
     private async onBtnCrop1Clicked(): Promise<void> 
@@ -185,7 +265,7 @@ export class GameWindow extends WindowBase {
     {
         if (plot.isOccupied) 
             return;
-        this.cropContainer!.active = true;
+        this.scrollViewCrops.node!.active = true;
         this.currentSelectedPlot = plot;
     }
 }
