@@ -4,6 +4,7 @@ import { PlayerController } from './PlayerController';
 import { SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
+import { BuildDataManager } from '../managers/BuildDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -41,6 +42,7 @@ export class GameController extends Component {
         //load json data
         CropDataManager.instance.loadCropData();
         ItemDataManager.instance.loadItemData();
+        BuildDataManager.instance.loadBuildData();
     }
 
     //create getplayerController() method

@@ -1,9 +1,18 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, Node } from 'cc';
+import { GameController } from '../../controllers/GameController';
 const { ccclass, property } = _decorator;
 
 @ccclass('WindowBase')
 export class WindowBase extends Component {
-    public initialize(): void { }
+
+    protected gameController: GameController | null = null;
+
+    public initialize(): void {
+        const gameControllerNode = director.getScene()?.getChildByName('GameController');
+        if (gameControllerNode) {
+            this.gameController = gameControllerNode.getComponent(GameController);
+        }
+     }
 
     public show(): void {
         this.node.active = true;

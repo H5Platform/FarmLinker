@@ -67,9 +67,10 @@ export class Crop extends Component {
         }
     }
 
-    public initialize() : void{
+    public initialize(cropType : CropType) : void{
         this.currentGrowthStage = 0;
         this.cropState = CropState.NONE;
+        this.cropType = cropType;
         this.loadCropData();
         if (this.cropData.length > this.cropDataIndex) {
             this.setupData(this.cropData[this.cropDataIndex]); // 初始化时使用第一级数据

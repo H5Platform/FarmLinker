@@ -71,12 +71,17 @@ export class SharedDefines {
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
 
 
+    public static readonly WINDOW_CRAFT_NAME: string = 'CraftWindow';
+
+    public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
+    public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;
 
     public static readonly JSON_CROP_DATA: string = 'data/CropsData';
     public static readonly JSON_ITEM_DATA: string = 'data/ItemData';
+    public static readonly JSON_BUILD_DATA: string = 'data/BuildData';
 
     public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
