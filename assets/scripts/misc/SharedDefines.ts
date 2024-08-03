@@ -61,12 +61,16 @@ export class SharedDefines {
 
     public static readonly INIT_PLOT_NUM: number = 5;
 
+    public static readonly PATH_CAMERA: string = 'Canvas/Camera';
+    public static readonly PATH_INPUT_NODE: string = 'Canvas/InputNode';
+
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
 
     public static readonly EVENT_PLAYER_LEVEL_UP: string = 'player-level-up';
     public static readonly EVENT_PLAYER_EXP_CHANGE: string = 'player-exp-change';
     public static readonly EVENT_PLAYER_GOLD_CHANGE: string = 'player-gold-change';
     public static readonly EVENT_PLAYER_DIAMOND_CHANGE: string = 'player-diamond-change';
+    public static readonly EVENT_PLAYER_PLACEMENT_BUILDING: string = 'player-placement-building';
 
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
 
@@ -75,6 +79,10 @@ export class SharedDefines {
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
+
+    public static readonly LAYER_GROUND_NAME: string = 'Ground';
+    public static readonly LAYER_BUILDING_NAME: string = 'Building';
+    public static readonly LAYER_OBSTACLE_NAME: string = 'Obstacle';
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;
@@ -87,4 +95,6 @@ export class SharedDefines {
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
     public static readonly PREFAB_CROP_GRAPE: string = 'entities/crops/Grape';
     public static readonly PREFAB_CROP_CABBAGE: string = 'entities/crops/Cabbage';
+
+    public static readonly PREFAB_PLACEMENT_BUILDING: string = 'entities/buildings/placementBuilding';
 }

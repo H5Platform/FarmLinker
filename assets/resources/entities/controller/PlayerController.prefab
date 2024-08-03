@@ -71,6 +71,10 @@
     "__prefab": {
       "__id__": 3
     },
+    "placementBuildingPrefab": {
+      "__uuid__": "5e54e931-8d48-496b-8947-75ad6a6d01a7",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": ""
   },
   {

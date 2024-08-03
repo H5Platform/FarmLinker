@@ -2,15 +2,26 @@ import { _decorator, Component, Node, ScrollView, instantiate, Prefab, Label, Sp
 import { WindowBase } from '../base/WindowBase';
 import { BuildDataManager } from '../../managers/BuildDataManager';
 import { PlayerController } from '../../controllers/PlayerController';
-import { ResourceManager } from '../../managers/ResourceManager';
 import { SharedDefines } from '../../misc/SharedDefines';
 import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
+import { BuildingManager } from '../../managers/BuildingManager';
 const { ccclass, property } = _decorator;
+
+enum ViewType{
+    BUILDING,
+    PLACEMENT
+}
 
 @ccclass('CraftWindow')
 export class CraftWindow extends WindowBase {
+    @property(Node)
+    private buildingView: Node | null = null;
+    @property(Node)
+    private placementView: Node | null = null;
+    @property(Node)
+    private placementContainer: Node | null = null;
     @property(ScrollView)
     private scrollView: ScrollView | null = null;
 
@@ -25,8 +36,13 @@ export class CraftWindow extends WindowBase {
     @property(DiamondDisplay)
     private diamondDisplay: DiamondDisplay | null = null;
     @property(Button)
+    private btnPlacement: Button | null = null;
+    @property(Button)
+    private btnCancel: Button | null = null;
+    @property(Button)
     private btnClose: Button | null = null;
 
+    private viewType: ViewType = ViewType.BUILDING;
     private playerController: PlayerController | null = null;
     private buildItems: Node[] = [];
 
@@ -52,10 +68,19 @@ export class CraftWindow extends WindowBase {
     }
 
     private setupEventListeners(): void {
+        if(this.playerController){
+            this.playerController.eventTarget.on(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, this.onPlacementBuilding, this);
+        }
         if (this.btnClose) {
             this.btnClose.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
         } else {
             console.warn('Close button not found in CraftWindow');
+        }
+        if (this.btnPlacement) {
+            this.btnPlacement.node.on(Button.EventType.CLICK, this.onBtnPlacementClicked, this);
+        }
+        if (this.btnCancel) {
+            this.btnCancel.node.on(Button.EventType.CLICK, this.onBtnCancelClicked, this);
         }
     }
 
@@ -74,6 +99,7 @@ export class CraftWindow extends WindowBase {
             const item = instantiate(this.itemTemplate);
             const label = item.getComponentInChildren(Label);
             const sprite = item.getComponentInChildren(Sprite);
+            const button = item.getComponent(Button);
 
             if (label) {
                 label.string = buildData.name;
@@ -84,6 +110,10 @@ export class CraftWindow extends WindowBase {
                 if (spriteFrame) {
                     sprite.spriteFrame = spriteFrame;
                 }
+            }
+
+            if (button) {
+                button.node.on(Button.EventType.CLICK, () => this.onBuildItemClicked(buildData), this);
             }
 
             item.name = buildData.id;
@@ -124,16 +154,92 @@ export class CraftWindow extends WindowBase {
 
     public show(): void {
         super.show();
-        this.updateItemsVisibility();
-        if (this.coinDisplay) {
-            this.coinDisplay.refreshDisplay();
-        }
-        if (this.diamondDisplay) {
-            this.diamondDisplay.refreshDisplay();
-        }
+        this.switchView(ViewType.BUILDING);
     }
 
     public refreshItems(): void {
         this.updateItemsVisibility();
+    }
+
+    private switchView(viewType: ViewType): void {
+        this.viewType = viewType;
+        if(this.viewType === ViewType.BUILDING) {
+            this.buildingView.active = true;
+            this.placementView.active = false;
+            this.updateItemsVisibility();
+            if (this.coinDisplay) {
+                this.coinDisplay.refreshDisplay();
+            }
+            if (this.diamondDisplay) {
+                this.diamondDisplay.refreshDisplay();
+            }
+        }
+        else{
+            this.buildingView.active = false;
+            this.placementView.active = true;
+            
+        }
+    }
+
+    private onBuildItemClicked(buildData: any): void {
+        console.log(`Build item clicked: ${buildData.name}`);
+        const buildingManager = BuildingManager.instance;
+        if (buildingManager.hasBuildingOfType(buildData.id)) {
+            // 跳转到已有建筑
+            buildingManager.focusOnBuilding(buildData.id);
+        } else {
+            // 开始新建筑放置
+            this.switchView(ViewType.PLACEMENT);
+            this.startBuildingPlacement(buildData);
+        }
+
+    }
+
+    private startBuildingPlacement(buildData: any): void {
+        if (this.playerController) {
+            this.playerController.startBuildingPlacement(buildData,this.placementContainer);
+        }
+    }
+
+    private onBtnPlacementClicked(): void {
+        if (this.playerController) {
+            this.playerController.tryPlacementBuilding();
+        }
+    }
+
+    private onBtnCancelClicked(): void {
+        if (this.playerController) {
+            this.playerController.cancelBuildingPlacement();
+        }
+    }
+
+    
+    private onPlacementBuilding(success : boolean):void {
+        if (!success) {
+            this.switchView(ViewType.BUILDING);
+        }
+        else{
+            WindowManager.instance.hide(SharedDefines.WINDOW_CRAFT_NAME);
+        }
+    }
+
+    protected onDestroy(): void {
+        super.onDestroy();
+        if (this.btnClose) {
+            this.btnClose.node.off(Button.EventType.CLICK, this.onCloseButtonClicked, this);
+        }
+        if (this.btnPlacement) {
+            this.btnPlacement.node.off(Button.EventType.CLICK, this.onBtnPlacementClicked, this);
+        }
+        if (this.btnCancel) {
+            this.btnCancel.node.off(Button.EventType.CLICK, this.onBtnCancelClicked, this);
+        }
+        
+        for (const item of this.buildItems) {
+            const button = item.getComponent(Button);
+            if (button) {
+                button.node.off(Button.EventType.CLICK);
+            }
+        }
     }
 }
