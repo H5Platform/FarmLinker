@@ -4,6 +4,7 @@ import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Direct
 import { BuildingManager } from '../managers/BuildingManager';
 import { SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
+import { Building } from '../entities/Building';
 const { ccclass, property } = _decorator;
 
 @ccclass('BuildingPlacementComponent')
@@ -14,6 +15,7 @@ export class BuildingPlacementComponent extends Component {
     private camera: Camera | null = null;
 
     public initialize(buildData: any, buildingManager: BuildingManager): void {
+        this.node.name = buildData.id;
         this.buildData = buildData;
         this.buildingManager = buildingManager;
         const cameraNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_CAMERA);
@@ -81,12 +83,26 @@ export class BuildingPlacementComponent extends Component {
 
     public placeBuilding(): void {
         console.log("Place building");
-        this.buildingManager!.addBuilding(this.buildData.id, this.node);
-        this.isPlacing = false;
+
 
         //@TODO 1.replace this component using craft component
-        //@TODO 2.Move this node to the building contianer node
+        const buildingComponent = this.node.addComponent(Building);
         
+        //@TODO 2.Move this node to the building contianer node
+        const buildingContainer = Director.instance.getScene().getChildByPath(SharedDefines.PATH_BUILDINGS);
+        if (buildingContainer) {
+            this.node.removeFromParent();
+            buildingContainer.addChild(this.node);
+        } else {
+            console.error('BuildingContainer not found, building will remain in current parent');
+            return;
+        }
+        buildingComponent.initialize(this.buildData);
+        // 完成建造
+        buildingComponent.completeConstruction();
+
+        this.buildingManager!.addBuilding(this.buildData.id, this.node);
+        this.isPlacing = false;
         this.destroy();
     }
 

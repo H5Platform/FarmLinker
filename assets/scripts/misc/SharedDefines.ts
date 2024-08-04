@@ -63,6 +63,7 @@ export class SharedDefines {
 
     public static readonly PATH_CAMERA: string = 'Canvas/Camera';
     public static readonly PATH_INPUT_NODE: string = 'Canvas/InputNode';
+    public static readonly PATH_BUILDINGS: string = 'Canvas/Gameplay/Buildings';
 
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
 
@@ -79,6 +80,7 @@ export class SharedDefines {
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
+    public static readonly WINDOW_SHOP_TEXTURES: string = 'textures/shopWindow/';
 
     public static readonly LAYER_GROUND_NAME: string = 'Ground';
     public static readonly LAYER_BUILDING_NAME: string = 'Building';
