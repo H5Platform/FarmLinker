@@ -5244,6 +5244,8 @@
       "__uuid__": "70f7b1b7-57ce-4adf-8c99-c9631a420bd6",
       "__expectedType__": "cc.Prefab"
     },
+    "coinDisplay": null,
+    "diamondDisplay": null,
     "buyButton": {
       "__id__": 35
     },
@@ -5266,7 +5268,14 @@
     },
     "fileId": "59zfCmrulBLayqLNo2uEXN",
     "instance": null,
-    "targetOverrides": null,
+    "targetOverrides": [
+      {
+        "__id__": 233
+      },
+      {
+        "__id__": 235
+      }
+    ],
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 202
@@ -5274,6 +5283,50 @@
       {
         "__id__": 194
       }
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 230
+    },
+    "sourceInfo": null,
+    "propertyPath": [
+      "coinDisplay"
+    ],
+    "target": {
+      "__id__": 194
+    },
+    "targetInfo": {
+      "__id__": 234
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "b3x1tSbPpKupGPOLUNB5yk"
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 230
+    },
+    "sourceInfo": null,
+    "propertyPath": [
+      "diamondDisplay"
+    ],
+    "target": {
+      "__id__": 202
+    },
+    "targetInfo": {
+      "__id__": 236
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "d3lLrG+UNIlbx7YKu6vstf"
     ]
   }
 ]

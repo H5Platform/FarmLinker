@@ -1,4 +1,4 @@
-import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget } from 'cc';
+import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers } from 'cc';
 import { PlayerState } from '../entities/PlayerState';
 import { InventoryComponent } from '../components/InventoryComponent';
 import { InputComponent } from '../components/InputComonent';
@@ -22,6 +22,7 @@ export class PlayerController extends Component {
     private _playerState: PlayerState;
     private _inputComponent: InputComponent | null = null;
     private _inventoryComponent: InventoryComponent;
+    private _camera : Camera;
     private currentBuildingPlacement: BuildingPlacementComponent | null = null;
     
 
@@ -40,10 +41,15 @@ export class PlayerController extends Component {
     protected onLoad(): void {
         this._playerState = new PlayerState();
         this._inventoryComponent = this.node.getComponent(InventoryComponent);
+
+        if (!this._camera) {
+            this._camera = director.getScene().getComponentInChildren(Camera);
+        }
         
         const inputNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_INPUT_NODE);
         if (inputNode) {
             this._inputComponent = inputNode.getComponent(InputComponent);
+            this._inputComponent.onClick = this.handleClick.bind(this);
         }
         else{
             console.error('No InputNode found');
@@ -57,6 +63,48 @@ export class PlayerController extends Component {
 
     update(deltaTime: number) {
         
+    }
+
+    private handleClick(event: EventTouch): void {
+        const colliders = this.getCollidersByClickPosition(event.getLocation());
+        if (colliders) {
+            for (const collider of colliders) {
+                //get layer of collider
+                console.log('Layer:', collider.node.layer);
+                //if layer is fence, do something
+                if (collider.node.layer === Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME)) {
+                    
+                }
+            }
+        }
+    }
+
+    private getCollidersByClickPosition(position: Vec2):readonly Collider2D[] | null {
+        if (!this._camera) {
+            console.error('Camera not set. Cannot perform touch detection.');
+            return;
+        }
+        const touchLocation = position;
+        const worldPosition = this._camera.screenToWorld(new Vec3(touchLocation.x, touchLocation.y, 0));
+
+        
+
+        const result = PhysicsSystem2D.instance.testPoint(new Vec2(worldPosition.x, worldPosition.y));
+
+        if (result.length > 0) {
+            //const hitCollider = result[0].node.;
+            console.log('Hit object:', result[0].node.name);
+            // 在这里处理击中对象的逻辑
+            // 可以根据对象的标签或其他属性来判断是否为篱笆
+            // if (hitCollider.node.layer === PlayerController.FENCE_MASK) {
+            //     console.log('Hit a fence');
+            //     // 处理击中篱笆的逻辑
+            // }
+            
+        } else {
+            console.log('Did not hit any object');
+        }
+        return result;
     }
 
     public startBuildingPlacement(buildData: any,placementContainer:Node): void {

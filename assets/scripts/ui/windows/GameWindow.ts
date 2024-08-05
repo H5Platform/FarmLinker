@@ -35,6 +35,9 @@ export class GameWindow extends WindowBase {
 
     @property(Button)
     public btnCraft: Button | null = null;
+    //button shop
+    @property(Button)
+    public btnShop: Button | null = null;
     
     private cropButtons: Node[] = [];
 
@@ -110,6 +113,10 @@ export class GameWindow extends WindowBase {
         if (this.btnCraft) {
             this.btnCraft.node.on(Button.EventType.CLICK, this.onBtnCraftClicked, this);
         }
+        //btnShop click event
+        if (this.btnShop) {
+            this.btnShop.node.on(Button.EventType.CLICK, this.onBtnShopClicked, this);
+        }
     }
 
     private onPlayerLeveUp(): void 
@@ -135,14 +142,13 @@ export class GameWindow extends WindowBase {
         const playerLevel = this.playerController?.playerState.level || 1;
 
         let lastCropType = -1;
-        console.log('cropDataList: ' + cropDataList.length);
         const content = this.scrollViewCrops.content;
         for (let i = 0; i < cropDataList.length; ++i) {
             
             const cropData = cropDataList[i];
             //check if croptype == -1 or croptype != cropdata.croptype
             const curCropType = parseInt(cropData.crop_type);
-            console.log('curCropType: ' + curCropType + ',' + ' lastCropType: ' + lastCropType);
+           // console.log('curCropType: ' + curCropType + ',' + ' lastCropType: ' + lastCropType);
             if (!(lastCropType === -1 || curCropType !== lastCropType)) {
                 continue;
             }
@@ -242,6 +248,11 @@ export class GameWindow extends WindowBase {
 
     private onBtnCraftClicked(): void {
         WindowManager.instance.show(SharedDefines.WINDOW_CRAFT_NAME);
+    }
+
+    //btnshop clicked
+    private onBtnShopClicked(): void {
+        WindowManager.instance.show(SharedDefines.WINDOW_SHOP_NAME);
     }
 }
 

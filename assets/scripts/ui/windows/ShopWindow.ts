@@ -5,6 +5,8 @@ import { InventoryComponent, InventoryItem } from '../../components/InventoryCom
 import { ItemDataManager } from '../../managers/ItemDataManager';
 import { ResourceManager } from '../../managers/ResourceManager';
 import { SharedDefines } from '../../misc/SharedDefines';
+import { CoinDisplay } from '../components/CoinDisplay';
+import { DiamondDisplay } from '../components/DiamondDisplay';
 
 
 const { ccclass, property } = _decorator;
@@ -32,6 +34,11 @@ export class ShopWindow extends WindowBase {
     @property(Prefab)
     private itemPrefab: Prefab | null = null;
 
+    @property(CoinDisplay)
+    public coinDisplay: CoinDisplay | null = null;
+    @property(DiamondDisplay)
+    public diamondDisplay: DiamondDisplay | null = null;
+
     @property(Button)
     private buyButton: Button | null = null;
 
@@ -55,6 +62,12 @@ export class ShopWindow extends WindowBase {
     public show(): void {
         super.show();
         this.switchToMode(this.currentMode);
+        if (this.coinDisplay) {
+            this.coinDisplay.refreshDisplay();
+        }
+        if (this.diamondDisplay) {
+            this.diamondDisplay.refreshDisplay();
+        }
         if (this.currentMode === ShopMode.BUY) {
             this.showBuyItems();
         } else {
@@ -71,6 +84,13 @@ export class ShopWindow extends WindowBase {
         if (this.gameController) {
             this.playerController = this.gameController.getPlayerController();
             this.inventoryComponent = this.playerController?.getComponent(InventoryComponent);
+
+            if (this.coinDisplay) {
+                this.coinDisplay.initialize(this.playerController.playerState);
+            }
+            if (this.diamondDisplay) {
+                this.diamondDisplay.initialize(this.playerController.playerState);
+            }
         }
     }
 
@@ -153,7 +173,7 @@ export class ShopWindow extends WindowBase {
 
         const sprite = itemNode.getComponentInChildren(Sprite)!;
         const label = itemNode.getComponentInChildren(Label)!;
-        const button = itemNode.getComponent(Button)!;
+        const button = itemNode.getComponentInChildren(Button)!;
 
         // Load and set sprite
         ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame).then(spriteFrame => {
@@ -163,7 +183,7 @@ export class ShopWindow extends WindowBase {
         });
 
         // Set label text
-        label.string = isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
+        label.string = item.description;//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
 
         // Setup button click event
         button.node.off(Button.EventType.CLICK);

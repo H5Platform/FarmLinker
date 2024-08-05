@@ -1,7 +1,7 @@
 {
   "list": [
     {
-      "id": "400101",
+      "id": "100101",
       "name": "Build_Bakery",
       "description": "面包坊",
       "level_need": "1",
@@ -9,7 +9,7 @@
       "texture": "Build_04"
     },
     {
-      "id": "400102",
+      "id": "100102",
       "name": "Build_Jam",
       "description": "果酱工厂",
       "level_need": "3",
@@ -17,7 +17,7 @@
       "texture": ""
     },
     {
-      "id": "400103",
+      "id": "100103",
       "name": "Build_Dairy",
       "description": "奶制品厂",
       "level_need": "4",

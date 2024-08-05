@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0",
+  "uuid": "a9e74f14-c5be-4896-a5c8-652a647bd301",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0@6c48a",
-      "displayName": "CropsCarrot_02",
+      "uuid": "a9e74f14-c5be-4896-a5c8-652a647bd301@6c48a",
+      "displayName": "Item_100103",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0",
+        "imageUuidOrDatabaseUri": "a9e74f14-c5be-4896-a5c8-652a647bd301",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,8 +34,8 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0@f9941",
-      "displayName": "CropsCarrot_02",
+      "uuid": "a9e74f14-c5be-4896-a5c8-652a647bd301@f9941",
+      "displayName": "Item_100103",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0@6c48a",
+        "imageUuidOrDatabaseUri": "a9e74f14-c5be-4896-a5c8-652a647bd301@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "53f1ff68-72e4-4062-ae93-7f85f0bc6be0@6c48a"
+    "redirect": "a9e74f14-c5be-4896-a5c8-652a647bd301@6c48a"
   }
 }

@@ -77,6 +77,7 @@ export class SharedDefines {
 
 
     public static readonly WINDOW_CRAFT_NAME: string = 'CraftWindow';
+    public static readonly WINDOW_SHOP_NAME: string = 'ShopWindow';
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
@@ -85,6 +86,7 @@ export class SharedDefines {
     public static readonly LAYER_GROUND_NAME: string = 'Ground';
     public static readonly LAYER_BUILDING_NAME: string = 'Building';
     public static readonly LAYER_OBSTACLE_NAME: string = 'Obstacle';
+    public static readonly LAYER_FENCE_NAME: string = 'Fence';
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;
