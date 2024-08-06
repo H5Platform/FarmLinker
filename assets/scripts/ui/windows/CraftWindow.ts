@@ -152,8 +152,8 @@ export class CraftWindow extends WindowBase {
         }
     }
 
-    public show(): void {
-        super.show();
+    public show(...args: any[]): void {
+        super.show(...args);
         this.switchView(ViewType.BUILDING);
     }
 

@@ -5,6 +5,7 @@ import { SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
+import { AnimalDataManager } from '../managers/AnimalDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -28,8 +29,8 @@ export class GameController extends Component {
         this.setGameViewVisibility(false);
     }
 
-    start() {
-        this.preloadJsonDatas();
+    async start() {
+        await this.preloadJsonDatas();
         this.initializePlayerController();
     }
 
@@ -37,12 +38,13 @@ export class GameController extends Component {
         
     }
 
-    public preloadJsonDatas(): void 
+    public async preloadJsonDatas(): Promise<void> 
     {
         //load json data
-        CropDataManager.instance.loadCropData();
-        ItemDataManager.instance.loadItemData();
-        BuildDataManager.instance.loadBuildData();
+        await CropDataManager.instance.loadCropData();
+        await ItemDataManager.instance.loadItemData();
+        await BuildDataManager.instance.loadBuildData();
+        await AnimalDataManager.instance.loadAnimalData();
     }
 
     //create getplayerController() method

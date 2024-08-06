@@ -1,6 +1,14 @@
 import { _decorator, Component, EventTarget } from 'cc';
 const { ccclass, property } = _decorator;
 
+export enum ItemType {
+    NONE,
+    CROP,
+    CROPSEED,
+    ANIMAL,
+    ANIMALCUB,
+}
+
 export class InventoryItem {
     
     id: string;
@@ -12,6 +20,7 @@ export class InventoryItem {
     sellPrice: number;
     iconName: string;
     quantity: number;
+    detailId: string;
 
     // constructor(id: string, name: string, description: string, itemType: string, expGain: number, buyPrice: number, sellPrice: number, iconName: string) {
     //     this.id = id;
@@ -29,11 +38,12 @@ export class InventoryItem {
         this.name = jsonItemData.name;
         this.description = jsonItemData.description;
         this.itemType = jsonItemData.item_type;
-        this.expGain = jsonItemData.exp_gain;
+        this.expGain = jsonItemData.exp_get;
         this.buyPrice = jsonItemData.buy_price;
         this.sellPrice = jsonItemData.sell_price;
-        this.iconName = jsonItemData.icon_name;
+        this.iconName = jsonItemData.png;
         this.quantity = 1;
+        this.detailId = jsonItemData.detail_id;
     }
 }
 
@@ -104,6 +114,10 @@ export class InventoryComponent extends Component {
 
     public getItem(itemId: string): InventoryItem | undefined {
         return this.items.get(itemId);
+    }
+
+    public getItemsByType(itemType: string): InventoryItem[] {
+        return Array.from(this.items.values()).filter(item => item.itemType === itemType);
     }
 
     public getAllItems(): InventoryItem[] {

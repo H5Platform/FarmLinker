@@ -1,10 +1,18 @@
-import { _decorator, Component, Node, Prefab, instantiate,Sprite } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate,Sprite, Camera } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowBase } from './base/WindowBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('WindowManager')
 export class WindowManager extends Component {
+    @property(Camera)
+    private camera: Camera | null = null;
+    //getter camera
+    public get uiCamera(): Camera | null {
+        return this.camera;
+    }
+    
+
     private static _instance: WindowManager | null = null;
     private windowMap: Map<string, WindowBase> = new Map();
 
@@ -29,7 +37,7 @@ export class WindowManager extends Component {
         }
     }
 
-    public async show(name: string): Promise<void> {
+    public async show(name: string,...args: any[]): Promise<void> {
         let windowBase = this.windowMap.get(name);
 
         if (!windowBase) {
@@ -63,7 +71,7 @@ export class WindowManager extends Component {
         }
 
         // Show the window
-        windowBase.show();
+        windowBase.show(...args);
          // Ensure the window is on top
          windowBase.node.setSiblingIndex(windowBase.node.parent!.children.length - 1);
     }

@@ -14,7 +14,7 @@ export class WindowBase extends Component {
         }
      }
 
-    public show(): void {
+    public show(...args: any[]): void {
         this.node.active = true;
     }
 

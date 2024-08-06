@@ -64,9 +64,9 @@ export class GameWindow extends WindowBase {
         this.initializeCropButtons();
     }
 
-    public show(): void 
+    public show(...args: any[]): void 
     {
-        super.show();
+        super.show(...args);
         //set crop container invisible
         this.scrollViewCrops.node.active = false;
         this.gameController?.startGame();

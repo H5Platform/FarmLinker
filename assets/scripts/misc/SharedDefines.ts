@@ -17,6 +17,13 @@ export enum CropState
     HARVESTING
 }
 
+export enum FarmSelectionType{
+    NONE,
+    BUILDING,
+    PLOT,
+    FENCE
+}
+
 export enum GameState {
     LOADING = 'loading',
     MAIN_MENU = 'main_menu',
@@ -74,10 +81,12 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_PLACEMENT_BUILDING: string = 'player-placement-building';
 
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
+    public static readonly EVENT_ANIMAL_HARVEST: string = 'animal-harvest';
 
 
     public static readonly WINDOW_CRAFT_NAME: string = 'CraftWindow';
     public static readonly WINDOW_SHOP_NAME: string = 'ShopWindow';
+    public static readonly WINDOW_SELECTION_NAME: string = 'FarmSelectionWindow';
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
@@ -94,11 +103,13 @@ export class SharedDefines {
     public static readonly JSON_CROP_DATA: string = 'data/CropsData';
     public static readonly JSON_ITEM_DATA: string = 'data/ItemData';
     public static readonly JSON_BUILD_DATA: string = 'data/BuildData';
+    public static readonly JSON_ANIMAL_DATA: string = 'data/AnimalData';
 
     public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
     public static readonly PREFAB_CROP_GRAPE: string = 'entities/crops/Grape';
     public static readonly PREFAB_CROP_CABBAGE: string = 'entities/crops/Cabbage';
+    public static readonly PREFAB_ANIMAL:string = 'entities/animal/Animal';
 
     public static readonly PREFAB_PLACEMENT_BUILDING: string = 'entities/buildings/placementBuilding';
 }

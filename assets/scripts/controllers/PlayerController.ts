@@ -1,15 +1,20 @@
-import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers } from 'cc';
+import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString } from 'cc';
 import { PlayerState } from '../entities/PlayerState';
-import { InventoryComponent } from '../components/InventoryComponent';
+import { InventoryComponent, InventoryItem } from '../components/InventoryComponent';
 import { InputComponent } from '../components/InputComonent';
 import { BuildingManager } from '../managers/BuildingManager';
 import { BuildingPlacementComponent } from '../components/BuildingPlacementComponent';
-import { SharedDefines } from '../misc/SharedDefines';
+import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
+import { WindowManager } from '../ui/WindowManager';
+import { ItemDataManager } from '../managers/ItemDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
 export class PlayerController extends Component {
+
+    @property(CCString)
+    public initialItemIds: string[] = [];
 
     @property(Prefab)
     public placementBuildingPrefab: Prefab = null;
@@ -58,7 +63,14 @@ export class PlayerController extends Component {
     }
 
     start() {
-        
+        //for initial items
+        for (const itemId of this.initialItemIds) {
+            const item = ItemDataManager.instance.getItemById(itemId);
+            if (item) {
+                const inventoryItem = new InventoryItem(item);
+                this._inventoryComponent.addItem(inventoryItem);
+            }
+        }
     }
 
     update(deltaTime: number) {
@@ -69,11 +81,11 @@ export class PlayerController extends Component {
         const colliders = this.getCollidersByClickPosition(event.getLocation());
         if (colliders) {
             for (const collider of colliders) {
+                const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
                 //get layer of collider
-                console.log('Layer:', collider.node.layer);
-                //if layer is fence, do something
-                if (collider.node.layer === Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME)) {
-                    
+                
+                if (collider.node.layer & fenceLayer) {
+                    this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
                 }
             }
         }
@@ -105,6 +117,10 @@ export class PlayerController extends Component {
             console.log('Did not hit any object');
         }
         return result;
+    }
+
+    private showSelectionWindow(farmSelectionType:FarmSelectionType,selectedNode: Node,clickLocation:Vec2): void {
+        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,farmSelectionType,selectedNode,clickLocation);
     }
 
     public startBuildingPlacement(buildData: any,placementContainer:Node): void {

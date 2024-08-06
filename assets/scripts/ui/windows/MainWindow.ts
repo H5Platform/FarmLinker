@@ -15,8 +15,8 @@ export class MainWindow extends WindowBase {
         console.log('MainWindow initialized');
     }
 
-    public show(): void {
-        super.show();
+    public show(...args: any[]): void {
+        super.show(...args);
         console.log('MainWindow shown');
     }
 

@@ -59,8 +59,8 @@ export class ShopWindow extends WindowBase {
         this.showBuyItems();
     }
 
-    public show(): void {
-        super.show();
+    public show(...args: any[]): void {
+        super.show(...args);
         this.switchToMode(this.currentMode);
         if (this.coinDisplay) {
             this.coinDisplay.refreshDisplay();
