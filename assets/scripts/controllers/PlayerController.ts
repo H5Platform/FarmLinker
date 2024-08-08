@@ -11,6 +11,7 @@ import { ItemDataManager } from '../managers/ItemDataManager';
 import { DragDropComponent } from '../components/DragDropComponent';
 import { Fence } from '../entities/Fence';
 import { Animal } from '../entities/Animal';
+import { PlotTile } from '../entities/PlotTile';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -88,12 +89,33 @@ export class PlayerController extends Component {
     private handleClick(event: EventTouch): void {
         const colliders = this.getCollidersByClickPosition(event.getLocation());
         if (colliders) {
+            const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
+            //plot layer
+            const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
             for (const collider of colliders) {
-                const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
+
                 //get layer of collider
                 
                 if (collider.node.layer & fenceLayer) {
-                    this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
+                    const fenceComponent = collider.node.getComponent(Fence);
+                    if (fenceComponent) {
+                        fenceComponent.select(this.dragDropComponent,event.getLocation());
+                    }
+                    else{
+                        console.error('Fence node does not have Fence component');
+                        return;
+                    }
+                    //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
+                }
+                else if(collider.node.layer & plotLayer){
+                    const plotTile = collider.node.getComponent(PlotTile);
+                    if (plotTile) {
+                        this.dragDropComponent.registerDropZone(plotTile);
+                        plotTile.select(this.dragDropComponent);
+                    }else{
+                        console.error('PlotTile node does not have PlotTile component');
+                        return;
+                    }
                 }
             }
         }
@@ -125,26 +147,6 @@ export class PlayerController extends Component {
             console.log('Did not hit any object');
         }
         return result;
-    }
-
-    private showSelectionWindow(farmSelectionType:FarmSelectionType,selectedNode: Node,clickLocation:Vec2): void {
-        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,farmSelectionType,selectedNode,clickLocation,this.onSelectionItemClicked.bind(this));
-    }
-
-    //#region Plant crop && animal
-    private async onSelectionItemClicked(selectionType:FarmSelectionType,id:string){
-        console.log('onSelectionItemClicked');
-        if (selectionType === FarmSelectionType.FENCE) {
-            const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
-            const animalNode = instantiate(animalPrefab);
-            animalNode.name = id;
-            const animal = animalNode.getComponent(Animal);
-            animal.initialize(id);
-            const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
-            gameplayNode.addChild(animal.node);
-            //animalNode.setWorldPosition(worldPos);
-            this.dragDropComponent.startDragging(animal, animalNode);
-        }
     }
     //#endregion
 

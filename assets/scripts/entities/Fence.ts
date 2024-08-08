@@ -1,10 +1,11 @@
 // Fence.ts
 
-import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate } from 'cc';
+import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
-import { SharedDefines } from '../misc/SharedDefines';
-import { IDropZone, IDraggable } from '../components/DragDropComponent';
+import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { IDropZone, IDraggable, DragDropComponent } from '../components/DragDropComponent';
+import { WindowManager } from '../ui/WindowManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
@@ -14,6 +15,7 @@ export class Fence extends Component implements IDropZone{
 
     private occupiedSpace: number = 0;
     private animals: Animal[] = [];
+    private dragDropComponent: DragDropComponent | null = null;
 
     public getAvailableSpace(): number {
         return this.capacity - this.occupiedSpace;
@@ -37,6 +39,8 @@ export class Fence extends Component implements IDropZone{
 
     public addAnimal(animal: Animal): boolean {
         if (this.canAcceptAnimal(animal)) {
+            animal.eventTarget.once(SharedDefines.EVENT_ANIMAL_HARVEST, this.onAnimalHarvest, this);
+            animal.startGrowing();
             this.animals.push(animal);
             this.occupiedSpace += 1;//parseInt(animal.gridCapacity);
             return true;
@@ -66,6 +70,24 @@ export class Fence extends Component implements IDropZone{
         return rect.contains(point);
     }
 
+    public select(dragComponent : DragDropComponent,touchPos:Vec2): void {
+        //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
+        this.dragDropComponent = dragComponent;
+        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.FENCE,this.node,touchPos,this.onSelectionWindowItemClicked.bind(this));
+    }
+
+    private async onSelectionWindowItemClicked(id:string): Promise<void> {
+        const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
+        const animalNode = instantiate(animalPrefab);
+        animalNode.name = id;
+        const animal = animalNode.getComponent(Animal);
+        animal.initialize(id);
+        const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
+        gameplayNode.addChild(animal.node);
+        //animalNode.setWorldPosition(worldPos);
+        this.dragDropComponent.startDragging(animal, animalNode);
+    }
+
     //#region IDraggable implementation
     public getNode(): Node {
         return this.node;
@@ -85,8 +107,14 @@ export class Fence extends Component implements IDropZone{
             const worldPos = animal.node.getWorldPosition();
             this.node.addChild(animal.node);
             animal.node.setWorldPosition(worldPos);
+
             this.addAnimal(draggable);
         }
     }
     //#endregion
+
+    private onAnimalHarvest(animal:Animal): void {
+        console.log('onAnimalHarvest',animal);
+        this.removeAnimal(animal);
+    }
 }

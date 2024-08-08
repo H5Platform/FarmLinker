@@ -10,6 +10,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
 export class Animal extends Component implements IDraggable {
+
     @property
     public id: string = '';
 
@@ -60,7 +61,7 @@ export class Animal extends Component implements IDraggable {
         this.gridCapacity = animalData.grid_capacity;
 
         this.updateSprite(animalData.png);
-        this.startGrowing();
+        //this.startGrowing();
     }
 
     private updateSprite(pngName: string): void {

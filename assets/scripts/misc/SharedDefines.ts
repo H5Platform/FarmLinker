@@ -99,6 +99,7 @@ export class SharedDefines {
     public static readonly LAYER_BUILDING_NAME: string = 'Building';
     public static readonly LAYER_OBSTACLE_NAME: string = 'Obstacle';
     public static readonly LAYER_FENCE_NAME: string = 'Fence';
+    public static readonly LAYER_PLOTTILE_NAME: string = 'PlotTile';
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
     public static readonly CROP_GROWTH_TIME: number = 60;

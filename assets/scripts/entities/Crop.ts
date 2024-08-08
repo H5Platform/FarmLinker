@@ -6,10 +6,12 @@ import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { GameController } from '../controllers/GameController';
+import { IDraggable } from '../components/DragDropComponent';
+import { ResourceManager } from '../managers/ResourceManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Crop')
-export class Crop extends Component {
+export class Crop extends Component implements IDraggable {
     @property
     public id: string = '';
 
@@ -46,7 +48,7 @@ export class Crop extends Component {
     public cropType: CropType = CropType.CORN;
 
 
-    private cropData: any[] = [];
+    private cropDatas: any[] = [];
     private cropDataIndex: number = 0;
     private harvestItemId: string = '';
     private levelRequirement: number = 0;
@@ -67,21 +69,28 @@ export class Crop extends Component {
         }
     }
 
-    public initialize(cropType : CropType) : void{
+    public initialize(id : string) : void{
         this.currentGrowthStage = 0;
         this.cropState = CropState.NONE;
-        this.cropType = cropType;
-        this.loadCropData();
-        if (this.cropData.length > this.cropDataIndex) {
-            this.setupData(this.cropData[this.cropDataIndex]); // 初始化时使用第一级数据
+        this.loadCropData(id);
+        if (this.cropDatas.length > this.cropDataIndex) {
+            this.setupData(this.cropDatas[this.cropDataIndex]); // 初始化时使用第一级数据
+            
         } else {
             console.error(`No crop data found for crop type: ${this.cropType}`);
             return;
         }
+        this.updateSprite(`${SharedDefines.WINDOW_GAME_TEXTURES}${this.cropDatas[0].icon}`);
     }
 
-    private loadCropData(): void {
-        this.cropData = CropDataManager.instance.filterCropDataByCropType(this.cropType.toString());
+    private loadCropData(id:string): void {
+        const cropData = CropDataManager.instance.findCropDataById(id);
+        if (!cropData) {
+            console.error(`No crop data found for id: ${id}`);
+            return;
+        }
+        this.cropType = parseInt(cropData.crop_type) as CropType;
+        this.cropDatas = CropDataManager.instance.filterCropDataByCropType(this.cropType.toString());
        // this.cropData.sort((a, b) => parseInt(a.id) - parseInt(b.id)); 
     }
 
@@ -104,7 +113,7 @@ export class Crop extends Component {
             // 这里可以添加升级后的属性变化逻辑
             this.price *= 1.5;  // 价格增加50%
             this.yieldAmount *= 1.2;  // 产量增加20%
-            this.updateSprite();  // 更新精灵图片
+            this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);  // 更新精灵图片
             return true;
         }
         return false;
@@ -114,22 +123,52 @@ export class Crop extends Component {
         return this.level >= Crop.MAX_LEVEL;
     }
 
-    private updateSprite(): void {
-        if (this.sprite && this.currentGrowthStage < this.growSprites.length) {
-            this.sprite.spriteFrame = this.growSprites[this.currentGrowthStage];
+    private updateSprite(pngPath:string): void {
+        if (this.sprite ) {
+            ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
+                if (texture) {
+                    this.sprite.spriteFrame = texture as SpriteFrame;
+                }
+            });
         }
     }
 
-    setPosition(position: Vec3): void 
+    internalSetPosition(position: Vec3): void 
     {
         this.node.position = new Vec3(position.x + this.bottomOffset.x, position.y + this.bottomOffset.y, position.z + this.bottomOffset.z);
     }
+
+    //#region IDraggable implementation
+    public setPosition(position: Vec3): void {
+        this.node.position = position;
+    }
+
+    public onDragStart(): void {
+
+    }
+
+    public onDragging(newPosition: Vec3): void {
+        this.setPosition(newPosition);
+    }
+
+    public onDragEnd(endPosition: Vec3, isDestroy: boolean): boolean {
+        if (isDestroy) {
+            this.node.destroy();
+            return true;
+        }
+        // this.setPosition(endPosition);
+        // this.node.setWorldPosition(endPosition);
+        return true;
+    }
+
+    //#endregion
 
     public startGrowing(): void {
         // 在这里添加作物开始生长的逻辑
         console.log(`Crop ${this.id} started growing`);
         this.cropState = CropState.GROWING;
-        this.updateSprite();
+        
+        this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);
         this.scheduleNextGrowth();
     }
 
@@ -152,8 +191,8 @@ export class Crop extends Component {
 
     private grow(): void {
         this.currentGrowthStage++;
-        this.setupData(this.cropData[this.currentGrowthStage]);
-        this.updateSprite();
+        this.setupData(this.cropDatas[this.currentGrowthStage]);
+        this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);
         this.scheduleNextGrowth();
     }
 

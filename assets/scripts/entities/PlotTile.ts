@@ -1,7 +1,9 @@
-import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget} from 'cc';
-import { IDropZone,IDraggable } from '../components/DragDropComponent';
+import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
+import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
-import { SharedDefines } from '../misc/SharedDefines';
+import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { ResourceManager } from '../managers/ResourceManager';
+import { WindowManager } from '../ui/WindowManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -14,6 +16,7 @@ export class PlotTile extends Component implements IDropZone {
     private polygonCollider: PolygonCollider2D | null = null;
 
     private occupiedCrop: Crop | null = null;
+    private dragDropComponent: DragDropComponent | null = null;
 
     public eventTarget: EventTarget = new EventTarget();
 
@@ -23,12 +26,12 @@ export class PlotTile extends Component implements IDropZone {
             console.error('PlotTile: PolygonCollider2D component is missing!');
         }
         //listening to click event
-        this.node.on(Node.EventType.TOUCH_END, this.onTouchStart, this);
+        //this.node.on(Node.EventType.TOUCH_END, this.onTouchStart, this);
     }
 
     //ondestroy
     public onDestroy(): void {
-        this.node.off(Node.EventType.TOUCH_END, this.onTouchStart, this);
+       // this.node.off(Node.EventType.TOUCH_END, this.onTouchStart, this);
     }
 
     public getWorldPosition(): Vec2 {
@@ -66,6 +69,33 @@ export class PlotTile extends Component implements IDropZone {
         }
         this.eventTarget.emit(SharedDefines.EVENT_PLOT_SELECTED,this);
     }
+
+    //#region select
+
+    public select(dragComponent : DragDropComponent): void {
+        if (this.isOccupied) {
+            //TODO: 当被占用时再选中应该显示浇花、割草等操作
+            return;
+        }
+        else{
+            this.dragDropComponent = dragComponent;
+            WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+        }
+    }
+
+    private async onSelectionWindowItemClicked(id:string): Promise<void> {
+        const cropPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
+        const cropNode = instantiate(cropPrefab);
+        cropNode.name = id;
+        const crop = cropNode.getComponent(Crop);
+        crop.initialize(id);
+        const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
+        gameplayNode.addChild(crop.node);
+        //cropNode.setWorldPosition(worldPos);
+        this.dragDropComponent.startDragging(crop, cropNode);
+    }
+
+    //#endregion
 
     private isPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
         let inside = false;
@@ -112,6 +142,8 @@ export class PlotTile extends Component implements IDropZone {
         }
     }
 
+    //#region IDraggable
+
     public canAcceptDrop(draggable: IDraggable): boolean {
         return !this.isOccupied && draggable instanceof Crop;
     }
@@ -119,11 +151,10 @@ export class PlotTile extends Component implements IDropZone {
     public onDrop(draggable: IDraggable): void {
         if (draggable instanceof Crop) {
             console.log('drop crop , name = ' + this.node.name);
-            this.isOccupied = true;
-            const worldPos = this.getWorldPosition();
             draggable.node.removeFromParent();
             this.node.addChild(draggable.node);
             draggable.node.position = Vec3.ZERO;
+            this.occupy(draggable)
             draggable.startGrowing();
         }
     }
@@ -133,4 +164,6 @@ export class PlotTile extends Component implements IDropZone {
         console.log('crop harvest , name = ' + this.node.name);
         this.clear();
     }
+
+    //#endregion
 }

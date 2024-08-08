@@ -4929,7 +4929,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -5251,6 +5251,9 @@
     },
     "sellButton": {
       "__id__": 49
+    },
+    "closeButton": {
+      "__id__": 215
     },
     "_id": ""
   },

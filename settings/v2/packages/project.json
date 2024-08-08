@@ -23,6 +23,10 @@
     {
       "name": "Fence",
       "value": 8
+    },
+    {
+      "name": "PlotTile",
+      "value": 16
     }
   ]
 }

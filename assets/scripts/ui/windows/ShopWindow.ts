@@ -7,6 +7,7 @@ import { ResourceManager } from '../../managers/ResourceManager';
 import { SharedDefines } from '../../misc/SharedDefines';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
+import { WindowManager } from '../WindowManager';
 
 
 const { ccclass, property } = _decorator;
@@ -44,6 +45,9 @@ export class ShopWindow extends WindowBase {
 
     @property(Button)
     private sellButton: Button | null = null;
+
+    @property(Button)
+    private closeButton: Button | null = null;
 
     private playerController: PlayerController | null = null;
     private inventoryComponent: InventoryComponent | null = null;
@@ -97,6 +101,7 @@ export class ShopWindow extends WindowBase {
     private setupEventListeners(): void {
         this.buyButton?.node.on(Button.EventType.CLICK, this.onBuyButtonClicked, this);
         this.sellButton?.node.on(Button.EventType.CLICK, this.onSellButtonClicked, this);
+        this.closeButton?.node.on(Button.EventType.CLICK, this.hide, this);
     }
 
     private onBuyButtonClicked(): void {
@@ -111,6 +116,10 @@ export class ShopWindow extends WindowBase {
         this.currentMode = ShopMode.SELL;
         this.switchToMode(ShopMode.SELL);
         this.showSellItems();
+    }
+
+    private onBtnCloseClicked(): void {
+        WindowManager.instance.hide(SharedDefines.WINDOW_SHOP_NAME);
     }
 
     private switchToMode(mode: ShopMode): void {

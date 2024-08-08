@@ -47,6 +47,10 @@ export class DragDropComponent extends Component {
     }
 
     public registerDropZone(dropZone: IDropZone): void {
+        //if drop zone is already registered, do nothing
+        if (this.dropZones.indexOf(dropZone) !== -1) {
+            return;
+        }
         this.dropZones.push(dropZone);
     }
 

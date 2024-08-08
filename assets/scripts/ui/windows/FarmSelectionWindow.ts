@@ -27,7 +27,7 @@ export class FarmSelectionWindow extends WindowBase {
     private fence : Fence | null = null;
     private playerController: PlayerController | null = null;
     private inventoryComponent: InventoryComponent | null = null;
-    private callback: (FarmSelectionType,string)=>void | null = null;
+    private callback: (string)=>void | null = null;
    // private currentPlotTile: PlotTile | null = null;
 
     public initialize(): void {
@@ -44,7 +44,7 @@ export class FarmSelectionWindow extends WindowBase {
         }
         this.currentSelectionType = args[0] as FarmSelectionType;
         this.currentSelectionNode = args[1] as Node;
-        this.callback = args[3] as ()=>void;
+        this.callback = args[3] as (string)=>void;
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
             const plotTileItem = this.currentSelectionNode!.getComponent(PlotTile);
             if (plotTileItem) {
@@ -59,6 +59,9 @@ export class FarmSelectionWindow extends WindowBase {
                 console.error("FarmSelectionWindow: plotTileItem is null");
                 return;
             }
+            this.clickLocation = args[2] as Vec2;
+            const animations = this.getItemsByType(ItemType.CROPSEED);
+            this.updateScrollView(animations);
         }
         else if(this.currentSelectionType === FarmSelectionType.FENCE){
             this.clickLocation = args[2] as Vec2;
@@ -122,7 +125,7 @@ export class FarmSelectionWindow extends WindowBase {
         //     // TODO: Implement planting logic
         //     this.hide();
         // }
-        this.callback(this.currentSelectionType,data.detailId);
+        this.callback(data.detailId);
         // if(this.currentSelectionType === FarmSelectionType.FENCE){
         //     const worldPos = WindowManager.instance.uiCamera.screenToWorld(new Vec3( this.clickLocation.x,this.clickLocation.y,0));
         //     if(this.fence.tryAddAnimal(data.detailId,worldPos)){
@@ -134,7 +137,7 @@ export class FarmSelectionWindow extends WindowBase {
         //     }
             
         // }
-
+        WindowManager.instance.hide(SharedDefines.WINDOW_SELECTION_NAME);
     }
 
 
