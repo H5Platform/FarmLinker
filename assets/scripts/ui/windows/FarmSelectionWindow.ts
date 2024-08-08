@@ -27,6 +27,7 @@ export class FarmSelectionWindow extends WindowBase {
     private fence : Fence | null = null;
     private playerController: PlayerController | null = null;
     private inventoryComponent: InventoryComponent | null = null;
+    private callback: (FarmSelectionType,string)=>void | null = null;
    // private currentPlotTile: PlotTile | null = null;
 
     public initialize(): void {
@@ -43,6 +44,7 @@ export class FarmSelectionWindow extends WindowBase {
         }
         this.currentSelectionType = args[0] as FarmSelectionType;
         this.currentSelectionNode = args[1] as Node;
+        this.callback = args[3] as ()=>void;
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
             const plotTileItem = this.currentSelectionNode!.getComponent(PlotTile);
             if (plotTileItem) {
@@ -120,17 +122,18 @@ export class FarmSelectionWindow extends WindowBase {
         //     // TODO: Implement planting logic
         //     this.hide();
         // }
-        if(this.currentSelectionType === FarmSelectionType.FENCE){
-            const worldPos = WindowManager.instance.uiCamera.screenToWorld(new Vec3( this.clickLocation.x,this.clickLocation.y,0));
-            if(this.fence.tryAddAnimal(data.detailId,worldPos)){
-                this.inventoryComponent?.removeItem(data.detailId,1);
-            }
-            else{
-                console.log("Add animal failed,Fence is full");
-                return;
-            }
+        this.callback(this.currentSelectionType,data.detailId);
+        // if(this.currentSelectionType === FarmSelectionType.FENCE){
+        //     const worldPos = WindowManager.instance.uiCamera.screenToWorld(new Vec3( this.clickLocation.x,this.clickLocation.y,0));
+        //     if(this.fence.tryAddAnimal(data.detailId,worldPos)){
+        //         this.inventoryComponent?.removeItem(data.id,1);
+        //     }
+        //     else{
+        //         console.log("Add animal failed,Fence is full");
+        //         return;
+        //     }
             
-        }
+        // }
 
     }
 

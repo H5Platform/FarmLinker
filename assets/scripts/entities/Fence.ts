@@ -4,10 +4,11 @@ import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
 import { SharedDefines } from '../misc/SharedDefines';
+import { IDropZone, IDraggable } from '../components/DragDropComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
-export class Fence extends Component {
+export class Fence extends Component implements IDropZone{
     @property
     public capacity: number = 0;
 
@@ -19,7 +20,7 @@ export class Fence extends Component {
     }
 
     public canAcceptAnimal(animal: Animal): boolean {
-        const requiredSpace = parseInt(animal.gridCapacity);
+        const requiredSpace = 1;//parseInt(animal.gridCapacity);
         return this.getAvailableSpace() >= requiredSpace;
     }
 
@@ -37,7 +38,7 @@ export class Fence extends Component {
     public addAnimal(animal: Animal): boolean {
         if (this.canAcceptAnimal(animal)) {
             this.animals.push(animal);
-            this.occupiedSpace += parseInt(animal.gridCapacity);
+            this.occupiedSpace += 1;//parseInt(animal.gridCapacity);
             return true;
         }
         return false;
@@ -64,4 +65,28 @@ export class Fence extends Component {
         const rect = new Rect(worldPos.x - size.width / 2, worldPos.y - size.height / 2, size.width, size.height);
         return rect.contains(point);
     }
+
+    //#region IDraggable implementation
+    public getNode(): Node {
+        return this.node;
+    }
+
+    public canAcceptDrop(draggable: IDraggable): boolean {
+        if (draggable instanceof Animal) {
+            return this.canAcceptAnimal(draggable);
+        }
+        return false;
+    }
+
+    public onDrop(draggable: IDraggable): void {
+
+        if (draggable instanceof Animal) {
+            const animal = draggable as Animal;
+            const worldPos = animal.node.getWorldPosition();
+            this.node.addChild(animal.node);
+            animal.node.setWorldPosition(worldPos);
+            this.addAnimal(draggable);
+        }
+    }
+    //#endregion
 }

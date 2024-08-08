@@ -85,10 +85,8 @@ export class BuildingPlacementComponent extends Component {
         console.log("Place building");
 
 
-        //@TODO 1.replace this component using craft component
         const buildingComponent = this.node.addComponent(Building);
         
-        //@TODO 2.Move this node to the building contianer node
         const buildingContainer = Director.instance.getScene().getChildByPath(SharedDefines.PATH_BUILDINGS);
         if (buildingContainer) {
             this.node.removeFromParent();

@@ -1,14 +1,15 @@
 // Animal.ts
 
-import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3 } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
 import { SharedDefines } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
+import { IDraggable } from '../components/DragDropComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
-export class Animal extends Component {
+export class Animal extends Component implements IDraggable {
     @property
     public id: string = '';
 
@@ -66,7 +67,7 @@ export class Animal extends Component {
         //TODO 目前字段定义有问题，需要修改，暂时先不管。
         //这里的pngName实际是AnimalData中的png字段，与Items表中的png字段不一致。
         if (this.sprite) {
-            ResourceManager.instance.loadAsset(`${SharedDefines.WINDOW_SHOP_TEXTURES}` + pngName + '/spriteFrame', SpriteFrame).then((texture) => {
+            ResourceManager.instance.loadAsset(`${SharedDefines.ANIMALS_TEXTURES}` + pngName + '/spriteFrame', SpriteFrame).then((texture) => {
                 if (texture) {
                     this.sprite.spriteFrame = texture as SpriteFrame;
                 }
@@ -92,6 +93,31 @@ export class Animal extends Component {
         this.eventTarget.emit(Animal.growthCompleteEvent, this);
         this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
     }
+
+    //#region IDraggable implementation
+    public setPosition(position: Vec3): void {
+        this.node.position = position;
+    }
+
+    public onDragStart(): void {
+        
+    }
+
+    public onDragging(newPosition: Vec3): void {
+        this.setPosition(newPosition);
+    }
+
+    public onDragEnd(endPosition: Vec3, isDestroy: boolean): boolean {
+        if (isDestroy) {
+            this.node.destroy();
+            return true;
+        }
+       // this.setPosition(endPosition);
+      // this.node.setWorldPosition(endPosition);
+        return true;
+    }
+
+    //#endregion
 
     public harvest(): void {
         if (!this.isAdult) {

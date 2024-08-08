@@ -119,7 +119,7 @@
       "buy_price": "2",
       "sell_price": "0",
       "png": "Item_200102",
-      "detail_id": ""
+      "detail_id": "1021"
     },
     {
       "id": "200103",
@@ -141,7 +141,7 @@
       "buy_price": "4",
       "sell_price": "0",
       "png": "Item_200104",
-      "detail_id": ""
+      "detail_id": "1041"
     },
     {
       "id": "200105",
@@ -152,7 +152,7 @@
       "buy_price": "5",
       "sell_price": "0",
       "png": "Item_200105",
-      "detail_id": ""
+      "detail_id": "1051"
     },
     {
       "id": "200106",
@@ -163,7 +163,7 @@
       "buy_price": "8",
       "sell_price": "0",
       "png": "Item_200106",
-      "detail_id": ""
+      "detail_id": "1061"
     },
     {
       "id": "200107",
@@ -174,7 +174,7 @@
       "buy_price": "10",
       "sell_price": "0",
       "png": "Item_200107",
-      "detail_id": ""
+      "detail_id": "1071"
     },
     {
       "id": "200108",
@@ -185,7 +185,7 @@
       "buy_price": "12",
       "sell_price": "0",
       "png": "Item_200108",
-      "detail_id": ""
+      "detail_id": "1081"
     },
     {
       "id": "200109",
@@ -196,7 +196,7 @@
       "buy_price": "15",
       "sell_price": "0",
       "png": "Item_200109",
-      "detail_id": ""
+      "detail_id": "1091"
     },
     {
       "id": "300101",
@@ -273,7 +273,7 @@
       "buy_price": "10",
       "sell_price": "0",
       "png": "Item_400101",
-      "detail_id": "1011"
+      "detail_id": "2011"
     },
     {
       "id": "400102",
@@ -284,7 +284,7 @@
       "buy_price": "15",
       "sell_price": "0",
       "png": "Item_400102",
-      "detail_id": "1021"
+      "detail_id": "2021"
     },
     {
       "id": "400103",
@@ -295,7 +295,7 @@
       "buy_price": "30",
       "sell_price": "0",
       "png": "Item_400103",
-      "detail_id": ""
+      "detail_id": "2031"
     },
     {
       "id": "400104",
@@ -306,7 +306,7 @@
       "buy_price": "50",
       "sell_price": "0",
       "png": "Item_400104",
-      "detail_id": ""
+      "detail_id": "2041"
     },
     {
       "id": "400105",
@@ -317,7 +317,7 @@
       "buy_price": "40",
       "sell_price": "0",
       "png": "Item_400105",
-      "detail_id": ""
+      "detail_id": "2051"
     },
     {
       "id": "400106",
@@ -328,7 +328,7 @@
       "buy_price": "70",
       "sell_price": "0",
       "png": "Item_400106",
-      "detail_id": ""
+      "detail_id": "2061"
     },
     {
       "id": "500101",

@@ -8,6 +8,9 @@ import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
+import { DragDropComponent } from '../components/DragDropComponent';
+import { Fence } from '../entities/Fence';
+import { Animal } from '../entities/Animal';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -29,6 +32,7 @@ export class PlayerController extends Component {
     private _inventoryComponent: InventoryComponent;
     private _camera : Camera;
     private currentBuildingPlacement: BuildingPlacementComponent | null = null;
+    private dragDropComponent: DragDropComponent | null = null;
     
 
     //getter playerstate
@@ -60,6 +64,10 @@ export class PlayerController extends Component {
             console.error('No InputNode found');
             return;
         }
+        this.dragDropComponent = inputNode.addComponent(DragDropComponent);
+        const fence = Director.instance.getScene().getComponentInChildren(Fence);
+        this.dragDropComponent.registerDropZone(fence);
+        
     }
 
     start() {
@@ -120,8 +128,27 @@ export class PlayerController extends Component {
     }
 
     private showSelectionWindow(farmSelectionType:FarmSelectionType,selectedNode: Node,clickLocation:Vec2): void {
-        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,farmSelectionType,selectedNode,clickLocation);
+        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,farmSelectionType,selectedNode,clickLocation,this.onSelectionItemClicked.bind(this));
     }
+
+    //#region Plant crop && animal
+    private async onSelectionItemClicked(selectionType:FarmSelectionType,id:string){
+        console.log('onSelectionItemClicked');
+        if (selectionType === FarmSelectionType.FENCE) {
+            const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
+            const animalNode = instantiate(animalPrefab);
+            animalNode.name = id;
+            const animal = animalNode.getComponent(Animal);
+            animal.initialize(id);
+            const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
+            gameplayNode.addChild(animal.node);
+            //animalNode.setWorldPosition(worldPos);
+            this.dragDropComponent.startDragging(animal, animalNode);
+        }
+    }
+    //#endregion
+
+    //#region building placement
 
     public startBuildingPlacement(buildData: any,placementContainer:Node): void {
         const buildingNode = instantiate(this.placementBuildingPrefab);
@@ -180,6 +207,8 @@ export class PlayerController extends Component {
             this._inputComponent.onTouchCancel = null;
         }
     }
+
+    //#endregion
 
     public harvestCrop(cropValue: number): void {
         this._playerState.addGold(cropValue);

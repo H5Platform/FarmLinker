@@ -31,6 +31,10 @@ export class DragDropComponent extends Component {
     private startDragPosition: Vec3 = new Vec3();
 
     onLoad() {
+
+    }
+
+    protected start(): void {
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
     }
@@ -85,7 +89,6 @@ export class DragDropComponent extends Component {
                 let worldPos = acceptedDropZone.getNode().getWorldPosition();
                 this.currentDraggingObject.onDragEnd(worldPos,false);
                 acceptedDropZone.onDrop(this.currentDraggingObject);
-                
             }
             else {
                 this.currentDraggingObject.onDragEnd(this.startDragPosition,true);
@@ -104,7 +107,8 @@ export class DragDropComponent extends Component {
 
     private getMousePosition(): Vec3 {
         const mousePos = this.currentMousePos;
-        return this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
+        return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
+        : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
     }
 
     onDestroy() {

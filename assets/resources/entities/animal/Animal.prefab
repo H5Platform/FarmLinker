@@ -129,7 +129,7 @@
     "_isTrimmedMode": true,
     "_useGrayscale": false,
     "_atlas": {
-      "__uuid__": "8959b139-b905-418b-8d7c-34b9b08efd1d",
+      "__uuid__": "d4cab752-93cd-4f22-90cf-5e4313fc9cb3",
       "__expectedType__": "cc.SpriteAtlas"
     },
     "_id": ""
@@ -156,7 +156,9 @@
     "timeMin": 0,
     "levelNeed": 0,
     "gridCapacity": "",
-    "sprite": null,
+    "sprite": {
+      "__id__": 4
+    },
     "_id": ""
   },
   {
@@ -172,6 +174,7 @@
       "__id__": 0
     },
     "fileId": "adH4fOpvtOR7i8ESiuBPHn",
+    "instance": null,
     "targetOverrides": null
   }
 ]
