@@ -55,6 +55,12 @@ export class Crop extends Component implements IDraggable {
     private cropState:CropState = CropState.NONE;
     private static readonly MAX_LEVEL: number = 5;  // 假设最大等级为5
 
+    //getter sourceInventoryItem
+    public get SourceInventoryItem(): InventoryItem | null {
+        return this.sourceInventoryItem;
+    }
+    private sourceInventoryItem: InventoryItem | null = null;
+
     private cooldownComponent: CooldownComponent | null = null;
     private currentGrowthStage: number = 0;
 
@@ -67,6 +73,11 @@ export class Crop extends Component implements IDraggable {
         if (!this.cooldownComponent) {
             this.cooldownComponent = this.addComponent(CooldownComponent);
         }
+    }
+
+    public initializeWithInventoryItem(inventoryItem: InventoryItem): void {
+        this.sourceInventoryItem = inventoryItem;
+        this.initialize(inventoryItem.detailId);
     }
 
     public initialize(id : string) : void{

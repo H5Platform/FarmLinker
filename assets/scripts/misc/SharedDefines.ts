@@ -68,12 +68,17 @@ export class SharedDefines {
 
     public static readonly INIT_PLOT_NUM: number = 5;
 
+    public static readonly COOLDOWN_SELECTION_TIME: number = 0.5;
+
     public static readonly PATH_CAMERA: string = 'Canvas/Camera';
     public static readonly PATH_GAMEPLAY: string = 'Canvas/Gameplay';
     public static readonly PATH_INPUT_NODE: string = 'Canvas/InputNode';
     public static readonly PATH_BUILDINGS: string = 'Canvas/Gameplay/Buildings';
 
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
+    public static readonly EVENT_PLOT_OCCUPIED: string = 'plotOccupied';
+
+    public static readonly EVENT_FENCE_ANIMAL_ADDED: string = 'fence-animal-added';
 
     public static readonly EVENT_PLAYER_LEVEL_UP: string = 'player-level-up';
     public static readonly EVENT_PLAYER_EXP_CHANGE: string = 'player-exp-change';
@@ -102,7 +107,7 @@ export class SharedDefines {
     public static readonly LAYER_PLOTTILE_NAME: string = 'PlotTile';
 
     public static readonly CROP_GROWTH_STAGES: number = 4;
-    public static readonly CROP_GROWTH_TIME: number = 60;
+    public static readonly CROP_GROWTH_TIME: number = 10;
 
     public static readonly JSON_CROP_DATA: string = 'data/CropsData';
     public static readonly JSON_ITEM_DATA: string = 'data/ItemData';

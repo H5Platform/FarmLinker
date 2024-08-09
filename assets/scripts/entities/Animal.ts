@@ -6,6 +6,7 @@ import { SharedDefines } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
+import { InventoryItem } from '../components/InventoryComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
@@ -32,6 +33,12 @@ export class Animal extends Component implements IDraggable {
     @property(Sprite)
     public sprite: Sprite | null = null;
 
+    //getter sourceInventoryItem
+    public get SourceInventoryItem(): InventoryItem | null {
+        return this.sourceInventoryItem;
+    }
+    private sourceInventoryItem: InventoryItem | null = null;
+
     private cooldownComponent: CooldownComponent | null = null;
     private isAdult: boolean = false;
 
@@ -43,6 +50,11 @@ export class Animal extends Component implements IDraggable {
         if (!this.cooldownComponent) {
             this.cooldownComponent = this.addComponent(CooldownComponent);
         }
+    }
+
+    public initializeWithInventoryItem(inventoryItem: InventoryItem): void {
+        this.sourceInventoryItem = inventoryItem;
+        this.initialize(inventoryItem.detailId);
     }
 
     public initialize(animalId: string): void {

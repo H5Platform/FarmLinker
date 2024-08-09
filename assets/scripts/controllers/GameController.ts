@@ -6,6 +6,8 @@ import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
+import { Fence } from '../entities/Fence';
+import { Animal } from '../entities/Animal';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -16,6 +18,9 @@ export class GameController extends Component {
 
     @property(Node)
     private gameplayContainer: Node| null = null;
+
+    @property(Fence)
+    private fence: Fence| null = null;
 
     @property(PlotTile)
     private plotTiles: PlotTile[] = [];
@@ -36,6 +41,11 @@ export class GameController extends Component {
 
     update(deltaTime: number) {
         
+    }
+
+    protected onDestroy(): void {
+        this.resetPlotTiles();
+        this.eventTarget.removeAll(this);
     }
 
     public async preloadJsonDatas(): Promise<void> 
@@ -67,11 +77,15 @@ export class GameController extends Component {
 
     public startGame(): void {
         this.setGameViewVisibility(true);
-
+        this.setupEventListeners();
         //instantiate playerControllerprefab
         
         const plotNum = SharedDefines.INIT_PLOT_NUM + this.playerController.playerState.level - 1;
         this.initializePlotTiles(plotNum);
+    }
+
+    private setupEventListeners(): void {
+        this.fence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
     }
 
     private initializePlayerController(): void {
@@ -93,6 +107,7 @@ export class GameController extends Component {
                 //if i < availablePlotTileNum set plottile visible
                 //else set plottile invisible
                 plotTile.node.active = i < availablePlotTileNum;
+                plotTile.eventTarget.on(SharedDefines.EVENT_PLOT_OCCUPIED,this.onPlotOccupied.bind(this));
                 plotTile.eventTarget.on(SharedDefines.EVENT_PLOT_SELECTED, (plotTile:PlotTile)=>{
                     this.eventTarget.emit(SharedDefines.EVENT_PLOT_SELECTED, plotTile);
                 }, this)
@@ -103,7 +118,40 @@ export class GameController extends Component {
         }
     }
 
+    private resetPlotTiles(): void {
+        if (this.plotTiles) {
+            for (let i = 0; i < this.plotTiles.length; i++) {
+                const plotTile = this.plotTiles[i];
+                if (!plotTile) continue;
+                plotTile.clear();
+                plotTile.eventTarget.off(SharedDefines.EVENT_PLOT_OCCUPIED,this.onPlotOccupied);
+            }
+        }
+    }
 
+    private onPlotOccupied(plotTile: PlotTile): void {
+        const inventoryComponent = this.playerController?.inventoryComponent;
+        if (!inventoryComponent) {
+            console.error('inventoryComponent is not set in GameController');
+            return;
+        }
+        const crop = plotTile.OcuippedCrop;
+        if (!crop) {
+            console.error('crop is not set in GameController');
+            return;
+        }
+        inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
+    }
+
+    private onFenceAnimalAdded(animal: Animal): void {
+        const inventoryComponent = this.playerController?.inventoryComponent;
+        if (!inventoryComponent) {
+            console.error('inventoryComponent is not set in GameController');
+            return;
+        }
+        
+        inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
+    }
 }
 
 

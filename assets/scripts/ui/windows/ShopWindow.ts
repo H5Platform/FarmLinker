@@ -183,6 +183,7 @@ export class ShopWindow extends WindowBase {
         const sprite = itemNode.getComponentInChildren(Sprite)!;
         const label = itemNode.getComponentInChildren(Label)!;
         const button = itemNode.getComponentInChildren(Button)!;
+        const price = button.node.getComponentInChildren(Label)!;
 
         // Load and set sprite
         ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame).then(spriteFrame => {
@@ -193,6 +194,7 @@ export class ShopWindow extends WindowBase {
 
         // Set label text
         label.string = item.description;//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
+        price.string = isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
 
         // Setup button click event
         button.node.off(Button.EventType.CLICK);

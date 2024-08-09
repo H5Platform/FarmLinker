@@ -26,6 +26,10 @@ export class DragDropComponent extends Component {
 
     private currentDraggingObject: IDraggable | null = null;
     private dropZones: IDropZone[] = [];
+    //getter isdragging
+    public get IsDragging(): boolean {
+        return this.isDragging;
+    }
     private isDragging: boolean = false;
     private currentMousePos: Vec2 = new Vec2();
     private startDragPosition: Vec3 = new Vec3();

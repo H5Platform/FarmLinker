@@ -1,11 +1,13 @@
 // Fence.ts
 
-import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director } from 'cc';
+import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
 import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
 import { IDropZone, IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { WindowManager } from '../ui/WindowManager';
+import { InventoryItem } from '../components/InventoryComponent';
+import { CooldownComponent } from '../components/CooldownComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
@@ -16,6 +18,13 @@ export class Fence extends Component implements IDropZone{
     private occupiedSpace: number = 0;
     private animals: Animal[] = [];
     private dragDropComponent: DragDropComponent | null = null;
+    private cooldownComponent: CooldownComponent | null = null;
+
+    public eventTarget: EventTarget = new EventTarget();
+
+    protected onLoad(): void {
+        this.cooldownComponent = this.addComponent(CooldownComponent);
+    }
 
     public getAvailableSpace(): number {
         return this.capacity - this.occupiedSpace;
@@ -71,17 +80,20 @@ export class Fence extends Component implements IDropZone{
     }
 
     public select(dragComponent : DragDropComponent,touchPos:Vec2): void {
+        if (this.cooldownComponent.isOnCooldown('select')) {
+            return; // if cooldown is on, ignore this select
+        }
         //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
         this.dragDropComponent = dragComponent;
         WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.FENCE,this.node,touchPos,this.onSelectionWindowItemClicked.bind(this));
     }
 
-    private async onSelectionWindowItemClicked(id:string): Promise<void> {
+    private async onSelectionWindowItemClicked(inventoryItem:InventoryItem): Promise<void> {
         const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
         const animalNode = instantiate(animalPrefab);
-        animalNode.name = id;
+        animalNode.name = inventoryItem.detailId;
         const animal = animalNode.getComponent(Animal);
-        animal.initialize(id);
+        animal.initializeWithInventoryItem(inventoryItem);
         const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
         gameplayNode.addChild(animal.node);
         //animalNode.setWorldPosition(worldPos);
@@ -108,7 +120,10 @@ export class Fence extends Component implements IDropZone{
             this.node.addChild(animal.node);
             animal.node.setWorldPosition(worldPos);
 
-            this.addAnimal(draggable);
+            if(this.addAnimal(draggable)){
+                this.eventTarget.emit(SharedDefines.EVENT_FENCE_ANIMAL_ADDED,animal);
+            }
+            this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         }
     }
     //#endregion

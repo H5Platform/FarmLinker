@@ -67,6 +67,7 @@ export class FarmSelectionWindow extends WindowBase {
             this.clickLocation = args[2] as Vec2;
             this.fence = this.currentSelectionNode!.getComponent(Fence);
             const animations = this.getItemsByType(ItemType.ANIMALCUB);
+            console.log(`animation count: ${animations.length}`);
             this.updateScrollView(animations);
         }
         
@@ -80,11 +81,11 @@ export class FarmSelectionWindow extends WindowBase {
         const itemCount = Math.min(items.length, 5);
 
         // 设置 ScrollView 的大小
-        const scrollViewHeight = itemCount * 110;
-        const uiTransform = this.scrollView.node.getComponent(UITransform);
-        if (uiTransform) {
-            uiTransform.height = scrollViewHeight;
-        }
+        // const scrollViewHeight = itemCount * 110;
+        // const uiTransform = this.scrollView.node.getComponent(UITransform);
+        // if (uiTransform) {
+        //     uiTransform.height = scrollViewHeight;
+        // }
 
         // 禁用或启用滚动
         this.scrollView.vertical = items.length > 1;
@@ -125,7 +126,8 @@ export class FarmSelectionWindow extends WindowBase {
         //     // TODO: Implement planting logic
         //     this.hide();
         // }
-        this.callback(data.detailId);
+        
+        this.callback(data);
         // if(this.currentSelectionType === FarmSelectionType.FENCE){
         //     const worldPos = WindowManager.instance.uiCamera.screenToWorld(new Vec3( this.clickLocation.x,this.clickLocation.y,0));
         //     if(this.fence.tryAddAnimal(data.detailId,worldPos)){

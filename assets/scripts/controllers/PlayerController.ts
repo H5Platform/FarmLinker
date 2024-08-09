@@ -1,4 +1,4 @@
-import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString } from 'cc';
+import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString, CCInteger } from 'cc';
 import { PlayerState } from '../entities/PlayerState';
 import { InventoryComponent, InventoryItem } from '../components/InventoryComponent';
 import { InputComponent } from '../components/InputComonent';
@@ -16,6 +16,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
 export class PlayerController extends Component {
+
+
+    @property(CCInteger)
+    public initialMoney: number = 20;
+    @property(CCInteger)
+    public initialLevel: number = 1;
 
     @property(CCString)
     public initialItemIds: string[] = [];
@@ -72,6 +78,9 @@ export class PlayerController extends Component {
     }
 
     start() {
+        //for initial money
+        this._playerState.addGold(this.initialMoney);
+        this._playerState.level = this.initialLevel;
         //for initial items
         for (const itemId of this.initialItemIds) {
             const item = ItemDataManager.instance.getItemById(itemId);
@@ -87,6 +96,10 @@ export class PlayerController extends Component {
     }
 
     private handleClick(event: EventTouch): void {
+        //if dragging, return
+        if (this.dragDropComponent && this.dragDropComponent.IsDragging) {
+            return; 
+        }
         const colliders = this.getCollidersByClickPosition(event.getLocation());
         if (colliders) {
             const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);

@@ -261,7 +261,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 961.5566037735849,
+      "x": 960,
       "y": 540,
       "z": 0
     },
@@ -351,7 +351,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -533,7 +533,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -2825,7 +2825,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -3163,7 +3163,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -3263,7 +3263,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -3315,7 +3315,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1923.1132075471698,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -3530,6 +3530,9 @@
     },
     "gameplayContainer": {
       "__id__": 11
+    },
+    "fence": {
+      "__id__": 20
     },
     "plotTiles": [
       null,

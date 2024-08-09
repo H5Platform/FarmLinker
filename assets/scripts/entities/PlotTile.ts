@@ -4,6 +4,9 @@ import { Crop } from './Crop';
 import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
+import { PlayerController } from '../controllers/PlayerController';
+import { InventoryItem } from '../components/InventoryComponent';
+import { CooldownComponent } from '../components/CooldownComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -15,6 +18,12 @@ export class PlotTile extends Component implements IDropZone {
     public gridPosition: Vec2 = new Vec2(0, 0);
     private polygonCollider: PolygonCollider2D | null = null;
 
+    private cooldownComponent: CooldownComponent | null = null;
+
+    //getter ocuippedCrop
+    public get OcuippedCrop(): Crop | null {
+        return this.occupiedCrop;
+    }
     private occupiedCrop: Crop | null = null;
     private dragDropComponent: DragDropComponent | null = null;
 
@@ -27,6 +36,7 @@ export class PlotTile extends Component implements IDropZone {
         }
         //listening to click event
         //this.node.on(Node.EventType.TOUCH_END, this.onTouchStart, this);
+        this.cooldownComponent = this.addComponent(CooldownComponent);
     }
 
     //ondestroy
@@ -44,6 +54,7 @@ export class PlotTile extends Component implements IDropZone {
         this.occupiedCrop = crop;
         this.node.addChild(crop.node);
         this.isOccupied = true;
+        this.eventTarget.emit(SharedDefines.EVENT_PLOT_OCCUPIED,this);
         crop.eventTarget.on(SharedDefines.EVENT_CROP_HARVEST, this.onCropHarvest, this);
     }
 
@@ -73,6 +84,10 @@ export class PlotTile extends Component implements IDropZone {
     //#region select
 
     public select(dragComponent : DragDropComponent): void {
+        if (this.cooldownComponent.isOnCooldown('select')) {
+            return; // if cooldown is on, ignore this select
+        }
+
         if (this.isOccupied) {
             //TODO: 当被占用时再选中应该显示浇花、割草等操作
             return;
@@ -83,12 +98,12 @@ export class PlotTile extends Component implements IDropZone {
         }
     }
 
-    private async onSelectionWindowItemClicked(id:string): Promise<void> {
+    private async onSelectionWindowItemClicked(inventoryItem:InventoryItem): Promise<void> {
         const cropPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
         const cropNode = instantiate(cropPrefab);
-        cropNode.name = id;
+        cropNode.name = inventoryItem.detailId;
         const crop = cropNode.getComponent(Crop);
-        crop.initialize(id);
+        crop.initializeWithInventoryItem(inventoryItem);
         const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
         gameplayNode.addChild(crop.node);
         //cropNode.setWorldPosition(worldPos);
@@ -156,6 +171,7 @@ export class PlotTile extends Component implements IDropZone {
             draggable.node.position = Vec3.ZERO;
             this.occupy(draggable)
             draggable.startGrowing();
+            this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         }
     }
 
