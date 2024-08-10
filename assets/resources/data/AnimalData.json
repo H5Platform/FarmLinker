@@ -5,7 +5,9 @@
       "name": "AnimalChicken_01",
       "description": "鸡_幼年",
       "farm_type": "2",
+      "animal_type": "1",
       "time_min": "60",
+      "harvest_item_id": "",
       "level_need": "1",
       "grid_capacity": "10",
       "png": "AnimalChicken_01"
@@ -15,7 +17,9 @@
       "name": "AnimalChicken_02",
       "description": "鸡_成年",
       "farm_type": "2",
+      "animal_type": "1",
       "time_min": "0",
+      "harvest_item_id": "300101",
       "level_need": "1",
       "grid_capacity": "10",
       "png": "AnimalChicken_02"
@@ -25,7 +29,9 @@
       "name": "AnimalGoose_01",
       "description": "鹅_幼年",
       "farm_type": "2",
+      "animal_type": "2",
       "time_min": "120",
+      "harvest_item_id": "",
       "level_need": "1",
       "grid_capacity": "12",
       "png": "AnimalGoose_01"
@@ -35,7 +41,9 @@
       "name": "AnimalGoose_02",
       "description": "鹅_成年",
       "farm_type": "2",
+      "animal_type": "2",
       "time_min": "0",
+      "harvest_item_id": "300102",
       "level_need": "1",
       "grid_capacity": "12",
       "png": "AnimalGoose_02"
@@ -45,7 +53,9 @@
       "name": "AnimalSheep_01",
       "description": "羊_幼年",
       "farm_type": "2",
+      "animal_type": "3",
       "time_min": "180",
+      "harvest_item_id": "",
       "level_need": "2",
       "grid_capacity": "8",
       "png": "AnimalSheep_01"
@@ -55,7 +65,9 @@
       "name": "AnimalSheep_02",
       "description": "羊_成年",
       "farm_type": "2",
+      "animal_type": "3",
       "time_min": "0",
+      "harvest_item_id": "300103",
       "level_need": "2",
       "grid_capacity": "8",
       "png": "AnimalSheep_02"
@@ -65,7 +77,9 @@
       "name": "AnimalCattle_01",
       "description": "牛_幼年",
       "farm_type": "2",
+      "animal_type": "4",
       "time_min": "240",
+      "harvest_item_id": "",
       "level_need": "3",
       "grid_capacity": "5",
       "png": "AnimalCattle_01"
@@ -75,7 +89,9 @@
       "name": "AnimalCattle_02",
       "description": "牛_成年",
       "farm_type": "2",
+      "animal_type": "4",
       "time_min": "0",
+      "harvest_item_id": "300104",
       "level_need": "3",
       "grid_capacity": "5",
       "png": "AnimalCattle_02"
@@ -85,7 +101,9 @@
       "name": "AnimalPig_01",
       "description": "猪_幼年",
       "farm_type": "2",
+      "animal_type": "5",
       "time_min": "300",
+      "harvest_item_id": "",
       "level_need": "3",
       "grid_capacity": "6",
       "png": "AnimalPig_01"
@@ -95,7 +113,9 @@
       "name": "AnimalPig_02",
       "description": "猪_成年",
       "farm_type": "2",
+      "animal_type": "5",
       "time_min": "0",
+      "harvest_item_id": "300105",
       "level_need": "3",
       "grid_capacity": "6",
       "png": "AnimalPig_02"
@@ -105,7 +125,9 @@
       "name": "AnimalHorse_01",
       "description": "马_幼年",
       "farm_type": "2",
+      "animal_type": "6",
       "time_min": "480",
+      "harvest_item_id": "",
       "level_need": "4",
       "grid_capacity": "3",
       "png": "AnimalHorse_01"
@@ -115,7 +137,9 @@
       "name": "AnimalHorse_02",
       "description": "马_成年",
       "farm_type": "2",
+      "animal_type": "6",
       "time_min": "0",
+      "harvest_item_id": "300106",
       "level_need": "4",
       "grid_capacity": "3",
       "png": "AnimalHorse_02"

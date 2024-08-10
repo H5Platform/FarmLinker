@@ -8,7 +8,9 @@ interface AnimalData {
     name: string;
     description: string;
     farm_type: string;
+    animal_type: string;
     time_min: string;
+    harvest_item_id:string;
     level_need: string;
     grid_capacity: string;
     png: string;
@@ -48,6 +50,10 @@ export class AnimalDataManager {
 
     public findAnimalDataByName(name: string): AnimalData | undefined {
         return this.animalDataList.find(animal => animal.name === name);
+    }
+
+    public filterAnimalDataByAnimalType(cropType: string): AnimalData[] {
+        return this.animalDataList.filter(crop => crop.animal_type === cropType);
     }
 
     public filterAnimalDataByFarmType(farmType: string): AnimalData[] {

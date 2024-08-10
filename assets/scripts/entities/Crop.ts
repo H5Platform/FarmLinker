@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { CropState, CropType, SharedDefines } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -52,7 +52,7 @@ export class Crop extends Component implements IDraggable {
     private cropDataIndex: number = 0;
     private harvestItemId: string = '';
     private levelRequirement: number = 0;
-    private cropState:CropState = CropState.NONE;
+    private growState:GrowState = GrowState.NONE;
     private static readonly MAX_LEVEL: number = 5;  // 假设最大等级为5
 
     //getter sourceInventoryItem
@@ -82,7 +82,7 @@ export class Crop extends Component implements IDraggable {
 
     public initialize(id : string) : void{
         this.currentGrowthStage = 0;
-        this.cropState = CropState.NONE;
+        this.growState = GrowState.NONE;
         this.loadCropData(id);
         if (this.cropDatas.length > this.cropDataIndex) {
             this.setupData(this.cropDatas[this.cropDataIndex]); // 初始化时使用第一级数据
@@ -177,7 +177,7 @@ export class Crop extends Component implements IDraggable {
     public startGrowing(): void {
         // 在这里添加作物开始生长的逻辑
         console.log(`Crop ${this.id} started growing`);
-        this.cropState = CropState.GROWING;
+        this.growState = GrowState.GROWING;
         
         this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);
         this.scheduleNextGrowth();
@@ -187,7 +187,7 @@ export class Crop extends Component implements IDraggable {
         if (!this.isGrowEnd()) {
             this.cooldownComponent?.startCooldown(
                 'growth',
-                SharedDefines.CROP_GROWTH_TIME,
+                this.growthTime,
                 () => this.grow()
             );
         } else {
@@ -209,14 +209,14 @@ export class Crop extends Component implements IDraggable {
 
     private onGrowthComplete(): void {
         console.log(`Crop ${this.id} has completed growing`);
-        this.cropState = CropState.HARVESTING;
+        this.growState = GrowState.HARVESTING;
         this.eventTarget.emit(Crop.growthCompleteEvent, this);
         this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
     }
 
     public harvest():void
     {
-        if (this.cropState != CropState.HARVESTING || this.harvestItemId == "") {
+        if (this.growState != GrowState.HARVESTING || this.harvestItemId == "") {
             console.error(`Crop ${this.node.name} is not ready to harvest`);
             return;
         }
@@ -246,7 +246,7 @@ export class Crop extends Component implements IDraggable {
             playerController.inventoryComponent.addItem(inventoryItem);
         }
 
-        this.cropState = CropState.NONE;
+        this.growState = GrowState.NONE;
         this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
         this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
         //destroy node

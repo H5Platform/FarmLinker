@@ -1,12 +1,14 @@
 // Animal.ts
 
-import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3 } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3, director } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { SharedDefines } from '../misc/SharedDefines';
+import { GrowState, SharedDefines } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
 import { InventoryItem } from '../components/InventoryComponent';
+import { GameController } from '../controllers/GameController';
+import { ItemDataManager } from '../managers/ItemDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
@@ -25,6 +27,9 @@ export class Animal extends Component implements IDraggable {
     public timeMin: number = 0;
 
     @property
+    public growthTime: number = 0;     // 以秒为单位
+
+    @property
     public levelNeed: number = 0;
 
     @property
@@ -33,6 +38,9 @@ export class Animal extends Component implements IDraggable {
     @property(Sprite)
     public sprite: Sprite | null = null;
 
+    private growthStages: any[] = [];
+    private currentGrowthStageIndex: number = 0;
+
     //getter sourceInventoryItem
     public get SourceInventoryItem(): InventoryItem | null {
         return this.sourceInventoryItem;
@@ -40,7 +48,8 @@ export class Animal extends Component implements IDraggable {
     private sourceInventoryItem: InventoryItem | null = null;
 
     private cooldownComponent: CooldownComponent | null = null;
-    private isAdult: boolean = false;
+    private growState:GrowState = GrowState.NONE;
+    private harvestItemId: string = '';
 
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();
@@ -58,29 +67,61 @@ export class Animal extends Component implements IDraggable {
     }
 
     public initialize(animalId: string): void {
-        const animalData = AnimalDataManager.instance.findAnimalDataById(animalId);
-        if (!animalData) {
-            console.error(`No animal data found for id: ${animalId}`);
+        // const animalData = AnimalDataManager.instance.findAnimalDataById(animalId);
+        // if (!animalData) {
+        //     console.error(`No animal data found for id: ${animalId}`);
+        //     return;
+        // }
+
+        // this.id = animalData.id;
+        // this.name = animalData.name;
+        // this.description = animalData.description;
+        // this.farmType = animalData.farm_type;
+        // this.timeMin = parseInt(animalData.time_min);
+        // this.levelNeed = parseInt(animalData.level_need);
+        // this.gridCapacity = animalData.grid_capacity;
+
+        // this.updateSprite(animalData.png);
+        this.currentGrowthStageIndex = 0;
+        this.growState = GrowState.NONE;
+        this.loadAnimalData(animalId);
+        if (this.growthStages.length > 0) {
+            this.setupData(this.growthStages[0]);
+        } else {
+            console.error(`No growth stages found for animal with id: ${animalId}`);
+        }
+        this.updateSprite(`${SharedDefines.WINDOW_SHOP_TEXTURES}${this.sourceInventoryItem.iconName}`);
+    }
+
+    private loadAnimalData(id: string): void {
+        const baseAnimalData = AnimalDataManager.instance.findAnimalDataById(id);
+        if (!baseAnimalData) {
+            console.error(`No animal data found for id: ${id}`);
             return;
         }
+    
+        // 加载所有生长阶段
+        const animalType = baseAnimalData.animal_type; 
+        this.growthStages = AnimalDataManager.instance.filterAnimalDataByAnimalType(animalType);
+    }
 
+    private setupData(animalData: any): void {
         this.id = animalData.id;
         this.name = animalData.name;
         this.description = animalData.description;
+        this.growthTime = parseInt(animalData.time_min) /* SharedDefines.TIME_MINUTE*/;
+        this.harvestItemId = animalData.harvest_item_id;
         this.farmType = animalData.farm_type;
         this.timeMin = parseInt(animalData.time_min);
         this.levelNeed = parseInt(animalData.level_need);
         this.gridCapacity = animalData.grid_capacity;
-
-        this.updateSprite(animalData.png);
-        //this.startGrowing();
     }
 
-    private updateSprite(pngName: string): void {
+    private updateSprite(pngPath:string): void {
         //TODO 目前字段定义有问题，需要修改，暂时先不管。
         //这里的pngName实际是AnimalData中的png字段，与Items表中的png字段不一致。
         if (this.sprite) {
-            ResourceManager.instance.loadAsset(`${SharedDefines.ANIMALS_TEXTURES}` + pngName + '/spriteFrame', SpriteFrame).then((texture) => {
+            ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
                 if (texture) {
                     this.sprite.spriteFrame = texture as SpriteFrame;
                 }
@@ -88,21 +129,40 @@ export class Animal extends Component implements IDraggable {
         }
     }
 
+    private isGrowEnd(): boolean 
+    {
+        return this.growthTime == 0;
+    }
+
     public startGrowing(): void {
-        if (this.timeMin > 0) {
+        this.growState = GrowState.GROWING;
+        
+        this.updateSprite(`${SharedDefines.ANIMALS_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        this.scheduleNextGrowth();
+    }
+
+    private scheduleNextGrowth(): void {
+        if (!this.isGrowEnd()) {
             this.cooldownComponent?.startCooldown(
                 'growth',
-                this.timeMin * SharedDefines.TIME_MINUTE,
-                () => this.onGrowthComplete()
+                this.growthTime,
+                () => this.grow()
             );
         } else {
             this.onGrowthComplete();
         }
     }
 
+    private grow(): void {
+        this.currentGrowthStageIndex++;
+        this.setupData(this.growthStages[this.currentGrowthStageIndex]);
+        this.updateSprite(`${SharedDefines.ANIMALS_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        this.scheduleNextGrowth();
+    }
+
     private onGrowthComplete(): void {
-        this.isAdult = true;
         console.log(`Animal ${this.name} has completed growing`);
+        this.growState = GrowState.HARVESTING;
         this.eventTarget.emit(Animal.growthCompleteEvent, this);
         this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
     }
@@ -133,11 +193,36 @@ export class Animal extends Component implements IDraggable {
     //#endregion
 
     public harvest(): void {
-        if (!this.isAdult) {
-            console.error(`Animal ${this.name} is not ready to harvest`);
+        if (this.growState != GrowState.HARVESTING || this.harvestItemId == "") {
+            console.error(`Crop ${this.node.name} is not ready to harvest`);
             return;
         }
 
+        //get item by itemdatamanager
+        const item = ItemDataManager.instance.getItemById(this.harvestItemId);
+        if (!item) {
+            console.error(`Item ${this.harvestItemId} not found`);
+            return;
+        }
+
+        //find gamecontroller in scene
+        const gameControllerNode = director.getScene()?.getChildByName('GameController');
+        if (gameControllerNode) {
+            const gameController = gameControllerNode.getComponent(GameController);
+            if (!gameController) {
+                console.error('GameController not found');
+                return;
+            }
+            const playerController = gameController.getPlayerController();
+            if (!playerController) {
+                console.error('PlayerController not found');
+                return;
+            }
+            playerController.playerState.addExperience(parseInt(item.exp_get));
+            const inventoryItem = new InventoryItem(item);
+            playerController.inventoryComponent.addItem(inventoryItem);
+        }
+        this.growState = GrowState.NONE;
         // Emit harvest event
         this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
 

@@ -10,7 +10,7 @@ export enum CropType {
     GRAPE
 }
 
-export enum CropState
+export enum GrowState
 {
     NONE,
     GROWING,
@@ -64,7 +64,7 @@ export class SharedDefines {
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
 
-    public static readonly TIME_MINUTE: number = 60;
+    public static readonly TIME_MINUTE: number = 1;
 
     public static readonly INIT_PLOT_NUM: number = 5;
 
