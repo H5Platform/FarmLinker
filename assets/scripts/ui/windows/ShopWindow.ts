@@ -148,7 +148,7 @@ export class ShopWindow extends WindowBase {
         const items = ItemDataManager.instance.getAllItems();
         items.forEach(item => {
             if (parseInt(item.buy_price) > 0) {
-                this.createItemNode(item, true, this.purchaseScrollView!, this.purchaseItemPool);
+                this.createItemNode(item,item.png, true, this.purchaseScrollView!, this.purchaseItemPool);
             }
         });
     }
@@ -156,9 +156,10 @@ export class ShopWindow extends WindowBase {
     private showSellItems(): void {
         this.clearItems(this.sellItemPool, this.sellScrollView!);
         const inventoryItems = this.inventoryComponent?.getAllItems() || [];
+        console.log(`Showing sell items: ${inventoryItems.length}`);
         inventoryItems.forEach(item => {
             if (item.sellPrice > 0) {
-                this.createItemNode(item, false, this.sellScrollView!, this.sellItemPool);
+                this.createItemNode(item,item.iconName, false, this.sellScrollView!, this.sellItemPool);
             }
         });
     }
@@ -171,7 +172,7 @@ export class ShopWindow extends WindowBase {
         scrollView.content!.removeAllChildren();
     }
 
-    private createItemNode(item: any, isBuyMode: boolean, scrollView: ScrollView, itemPool: Node[]): void {
+    private createItemNode(item: any,spriteName:string, isBuyMode: boolean, scrollView: ScrollView, itemPool: Node[]): void {
         let itemNode: Node;
         if (itemPool.length > 0) {
             itemNode = itemPool.pop()!;
@@ -186,7 +187,7 @@ export class ShopWindow extends WindowBase {
         const price = button.node.getComponentInChildren(Label)!;
 
         // Load and set sprite
-        ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame).then(spriteFrame => {
+        ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${spriteName}/spriteFrame`, SpriteFrame).then(spriteFrame => {
             if (spriteFrame) {
                 sprite.spriteFrame = spriteFrame;
             }
@@ -194,7 +195,7 @@ export class ShopWindow extends WindowBase {
 
         // Set label text
         label.string = item.description;//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
-        price.string = isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
+        price.string = isBuyMode ? `${item.buy_price}` : `${item.sellPrice}`;
 
         // Setup button click event
         button.node.off(Button.EventType.CLICK);
