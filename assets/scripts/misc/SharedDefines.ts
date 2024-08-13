@@ -85,6 +85,7 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_GOLD_CHANGE: string = 'player-gold-change';
     public static readonly EVENT_PLAYER_DIAMOND_CHANGE: string = 'player-diamond-change';
     public static readonly EVENT_PLAYER_PLACEMENT_BUILDING: string = 'player-placement-building';
+    public static readonly EVENT_PLAYER_STATE_INIT: string = 'player-state-init';
 
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
     public static readonly EVENT_ANIMAL_HARVEST: string = 'animal-harvest';
@@ -121,4 +122,5 @@ export class SharedDefines {
     public static readonly PREFAB_ANIMAL:string = 'entities/animal/Animal';
 
     public static readonly PREFAB_PLACEMENT_BUILDING: string = 'entities/buildings/placementBuilding';
+
 }

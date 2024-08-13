@@ -4,12 +4,30 @@ import { EventTarget } from 'cc';
 import { SharedDefines } from '../misc/SharedDefines';
 
 export class PlayerState {
+    private _id: string = '';
+    private _nickname: string = '';
+    private _registerTime: Date = new Date();
+    private _lastLoginTime: Date = new Date();
+    private _token: string = '';
     private _level: number;
     private _experience: number;
     private _gold: number;
     private _diamond: number;
 
+    // Getters
+    public get id(): string { return this._id; }
+    public get nickname(): string { return this._nickname; }
+    public get registerTime(): Date { return this._registerTime; }
+    public get lastLoginTime(): Date { return this._lastLoginTime; }
+    public get token(): string { return this._token; }
+    public get level(): number { return this._level; }
+    public get experience(): number { return this._experience; }
+    public get gold(): number { return this._gold; }
+    public get diamond(): number { return this._diamond; }
+
     public eventTarget: EventTarget;
+
+    
 
     constructor(initialLevel: number = 1, initialExperience: number = 0, initialGold: number = 0, initialDiamond: number = 0) {
         this._level = initialLevel;
@@ -19,11 +37,22 @@ export class PlayerState {
         this.eventTarget = new EventTarget();
     }
 
-    // Getters
-    public get level(): number { return this._level; }
-    public get experience(): number { return this._experience; }
-    public get gold(): number { return this._gold; }
-    public get diamond(): number { return this._diamond; }
+    public initialize(userData: any, token: string): void {
+        this._id = userData.id;
+        this._nickname = userData.nickname;
+        this.level = userData.level;
+        this.experience = userData.exp;
+        this.gold = userData.coin;
+        this.diamond = userData.diamond;
+        this._registerTime = new Date(userData.register_time);
+        this._lastLoginTime = new Date(userData.last_login_time);
+        this._token = token;
+
+        // 触发更新事件
+        this.eventTarget.emit(SharedDefines.EVENT_PLAYER_STATE_INIT,this);
+    }
+
+
 
     // Setters with event emission
     public set level(value: number) {

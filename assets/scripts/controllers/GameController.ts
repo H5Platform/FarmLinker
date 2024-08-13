@@ -8,6 +8,7 @@ import { BuildDataManager } from '../managers/BuildDataManager';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { Fence } from '../entities/Fence';
 import { Animal } from '../entities/Animal';
+import { NetworkManager } from '../managers/NetworkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -37,6 +38,8 @@ export class GameController extends Component {
     async start() {
         await this.preloadJsonDatas();
         this.initializePlayerController();
+        this.setupEventListeners();
+        this.login();
     }
 
     update(deltaTime: number) {
@@ -46,6 +49,7 @@ export class GameController extends Component {
     protected onDestroy(): void {
         this.resetPlotTiles();
         this.eventTarget.removeAll(this);
+        NetworkManager.instance.eventTarget.removeAll(this);
     }
 
     public async preloadJsonDatas(): Promise<void> 
@@ -77,7 +81,7 @@ export class GameController extends Component {
 
     public startGame(): void {
         this.setGameViewVisibility(true);
-        this.setupEventListeners();
+        
         //instantiate playerControllerprefab
         
         const plotNum = SharedDefines.INIT_PLOT_NUM + this.playerController.playerState.level - 1;
@@ -86,6 +90,9 @@ export class GameController extends Component {
 
     private setupEventListeners(): void {
         this.fence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
+
+        const networkManager = NetworkManager.instance;
+        networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
     }
 
     private initializePlayerController(): void {
@@ -97,6 +104,17 @@ export class GameController extends Component {
             console.error('playerControllerPrefab is not set in GameController');
             return;
         }
+    }
+
+    private async login(): Promise<void> {
+        //TODO replace userid with real user id
+        const userid = "123";
+        await NetworkManager.instance.login(userid);
+    }
+
+    private onLoginSuccess(userData:any,token:string): void {
+        console.log('login success');
+        this.playerController.playerState.initialize(userData,token);
     }
 
     private initializePlotTiles(availablePlotTileNum : number): void {

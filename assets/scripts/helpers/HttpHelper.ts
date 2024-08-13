@@ -75,7 +75,6 @@ async function examplePost() {
             if (headers) {
                 Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]));
             }
-
             xhr.send(data ? JSON.stringify(data) : null);
         });
     }
