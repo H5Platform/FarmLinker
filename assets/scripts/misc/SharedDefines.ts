@@ -24,12 +24,58 @@ export enum FarmSelectionType{
     FENCE
 }
 
+export enum SceneItemType {
+    None = 0,
+    Crop = 1,
+    Animal = 2,
+    Building = 3
+}
+
+export enum SceneItemState {
+    None = 0,
+    InProgress = 1,
+    Complete = 2
+}
+
+export enum CommandType {
+    None = 0,
+    Craft = 1,
+    Upgrade = 2
+}
+
+export enum CommandState {
+    None = 0,
+    InProgress = 1,
+    Complete = 2
+}
+
 export enum GameState {
     LOADING = 'loading',
     MAIN_MENU = 'main_menu',
     PLAYING = 'playing',
     PAUSED = 'paused',
     GAME_OVER = 'game_over',
+}
+
+export class SceneItem{
+    id: string;
+    item_id: string;
+    type: SceneItemType;
+    x: number;
+    y: number;
+    state: SceneItemState;
+    userid: string;
+    parent_node_name: string;
+    command_id: string | null;
+    command?: {
+        id: string;
+        userid: string;
+        targetid: string;
+        target_type: SceneItemType;
+        state: CommandState;
+        start_time: Date;
+        type: CommandType;
+    };
 }
 
 export class SharedDefines {

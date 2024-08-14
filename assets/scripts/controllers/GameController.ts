@@ -1,7 +1,7 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3 } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -9,6 +9,9 @@ import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { Fence } from '../entities/Fence';
 import { Animal } from '../entities/Animal';
 import { NetworkManager } from '../managers/NetworkManager';
+import { ResourceManager } from '../managers/ResourceManager';
+import { Crop } from '../entities/Crop';
+import { Building } from '../entities/Building';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -93,6 +96,7 @@ export class GameController extends Component {
 
         const networkManager = NetworkManager.instance;
         networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
+        networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
     }
 
     private initializePlayerController(): void {
@@ -104,17 +108,6 @@ export class GameController extends Component {
             console.error('playerControllerPrefab is not set in GameController');
             return;
         }
-    }
-
-    private async login(): Promise<void> {
-        //TODO replace userid with real user id
-        const userid = "123";
-        await NetworkManager.instance.login(userid);
-    }
-
-    private onLoginSuccess(userData:any,token:string): void {
-        console.log('login success');
-        this.playerController.playerState.initialize(userData,token);
     }
 
     private initializePlotTiles(availablePlotTileNum : number): void {
@@ -170,6 +163,154 @@ export class GameController extends Component {
         
         inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
     }
+
+    //#region network relates
+    
+    private async login(): Promise<void> {
+        //TODO replace userid with real user id
+        const userid = "123";
+        await NetworkManager.instance.login(userid);
+
+        await NetworkManager.instance.requestSceneItemsByUserId(userid,this.playerController?.playerState.token);
+    }
+
+    private onLoginSuccess(userData:any,token:string): void {
+        console.log('login success');
+        this.playerController.playerState.initialize(userData,token);
+    }
+
+    private async onGetUserSceneItems(data:any): Promise<void> {
+        if(!data.success){
+            console.error('get user scene items failed');
+            return;
+        }
+        const sceneItems = data.data as SceneItem[];
+        for (const item of sceneItems) {
+            let node: Node | null = null;
+            let component: Component | null = null;
+
+            switch (item.type) {
+                case SceneItemType.Crop:
+                    node = await this.createCropNode(item);
+                    component = node?.getComponent(Crop);
+                    break;
+                case SceneItemType.Animal:
+                    node = await this.createAnimalNode(item);
+                    component = node?.getComponent(Animal);
+                    break;
+                case SceneItemType.Building:
+                    node = await this.createBuildingNode(item);
+                    component = node?.getComponent(Building);
+                    break;
+            }
+
+            if (node && component) {
+                this.setupSceneItem(node, component, item);
+            }
+        }
+    }
+
+    private async createCropNode(item: SceneItem): Promise<Node | null> {
+        const cropData = CropDataManager.instance.findCropDataById(item.item_id);
+        if (!cropData) return null;
+
+        const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
+        if (!prefab) return null;
+
+        const node = instantiate(prefab);
+        const crop = node.getComponent(Crop);
+        if (crop) {
+            crop.initialize(item.item_id);
+        }
+        return node;
+    }
+
+    private async createAnimalNode(item: SceneItem): Promise<Node | null> {
+        const animalData = AnimalDataManager.instance.findAnimalDataById(item.item_id);
+        if (!animalData) return null;
+
+        const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
+        if (!prefab) return null;
+
+        const node = instantiate(prefab);
+        const animal = node.getComponent(Animal);
+        if (animal) {
+            animal.initialize(item.item_id);
+        }
+        return node;
+    }
+
+    private async createBuildingNode(item: SceneItem): Promise<Node | null> {
+        const buildData = BuildDataManager.instance.findBuildDataById(item.item_id);
+        if (!buildData) return null;
+
+        const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_PLACEMENT_BUILDING);
+        if (!prefab) return null;
+
+        const node = instantiate(prefab);
+        const building = node.getComponent(Building);
+        if (building) {
+            building.initialize(buildData);
+        }
+        return node;
+    }
+
+    private setupSceneItem(node: Node, component: Component, item: SceneItem): void {
+        // 设置位置
+        node.setWorldPosition(new Vec3(item.x, item.y, 0));
+
+        // 设置父节点
+        const parentNode = this.node.getChildByName(item.parent_node_name);
+        if (parentNode) {
+            node.parent = parentNode;
+        } else {
+            console.warn(`Parent node ${item.parent_node_name} not found for item ${item.id}`);
+            this.gameplayContainer?.addChild(node);
+        }
+
+        // 设置状态
+        // if (component instanceof Crop || component instanceof Animal || component instanceof Building) {
+        //     switch (item.state) {
+        //         case SceneItemState.InProgress:
+        //             component.startGrowing();
+        //             break;
+        //         case SceneItemState.Complete:
+        //             component.completeGrowth();
+        //             break;
+        //     }
+        // }
+
+        // 处理命令
+        if (item.command) {
+            this.handleCommand(component, item.command);
+        }
+    }
+
+    private handleCommand(component: Component, command: SceneItem['command']): void {
+        if (!command) return;
+
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - command.start_time.getTime();
+
+        switch (command.type) {
+            case CommandType.Craft:
+                // 处理制作命令
+                break;
+            case CommandType.Upgrade:
+                // if (component instanceof Building) {
+                //     // 处理升级命令
+                //     if (command.state === CommandState.InProgress) {
+                //         component.continueUpgrade(elapsedTime);
+                //     } else if (command.state === CommandState.Complete) {
+                //         component.completeUpgrade();
+                //     }
+                // }
+                break;
+        }
+    }
+
+    //#endregion
+
 }
 
 

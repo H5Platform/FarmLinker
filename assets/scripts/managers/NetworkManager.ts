@@ -15,8 +15,11 @@ interface LoginResp{
 export class NetworkManager extends Component {
     public static readonly API_LOGIN: string = "/login";
 
+    public static readonly API_GET_USER_SCENE_ITEMS: string = "/game/getUserSceneItems";
+
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
+    public static readonly EVENT_GET_USER_SCENE_ITEMS = 'get-user-scene-items';
 
     private static _instance: NetworkManager | null = null;
 
@@ -25,6 +28,8 @@ export class NetworkManager extends Component {
 
     @property
     private loginPort: number = 3000; // 登录服务器端口
+    @property
+    private gameServerPort: number = 3001; // 游戏服务器端口
 
     @property
     private maxLoginRetries: number = 3;
@@ -115,6 +120,24 @@ export class NetworkManager extends Component {
         }
 
         return false;
+    }
+
+    public async requestSceneItemsByUserId(userId: string, session: string): Promise<void> {
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_GET_USER_SCENE_ITEMS}`;
+        console.log(url);
+        const headers = {
+            'Authorization': session,
+        };
+
+        const data = { userid: userId };
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            this.eventTarget.emit(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, result.data);
+            
+        } catch (error) {
+            this.handleError(error);
+        }
     }
 
     private buildUrl(endpoint: string): string {
