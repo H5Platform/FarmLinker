@@ -74,6 +74,7 @@ export class SceneItem{
         target_type: SceneItemType;
         state: CommandState;
         start_time: Date;
+        duration: number;
         type: CommandType;
     };
 }

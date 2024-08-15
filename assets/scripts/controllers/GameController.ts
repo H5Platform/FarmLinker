@@ -180,6 +180,7 @@ export class GameController extends Component {
     }
 
     private async onGetUserSceneItems(data:any): Promise<void> {
+        console.log('get user scene items',data);
         if(!data.success){
             console.error('get user scene items failed');
             return;
@@ -220,8 +221,19 @@ export class GameController extends Component {
         const node = instantiate(prefab);
         const crop = node.getComponent(Crop);
         if (crop) {
-            crop.initialize(item.item_id);
+            crop.initializeWithSceneItem(item);
         }
+
+        //find plot tile in plot tiles with item.parent_node_name
+        const plotTile = this.plotTiles?.find(tile => tile.node.name === item.parent_node_name);
+        if(plotTile){
+            plotTile.plant(crop);
+        }
+        else{
+            console.error(`Plot tile ${item.parent_node_name} not found`);
+        }
+
+
         return node;
     }
 
@@ -259,14 +271,14 @@ export class GameController extends Component {
         // 设置位置
         node.setWorldPosition(new Vec3(item.x, item.y, 0));
 
-        // 设置父节点
-        const parentNode = this.node.getChildByName(item.parent_node_name);
-        if (parentNode) {
-            node.parent = parentNode;
-        } else {
-            console.warn(`Parent node ${item.parent_node_name} not found for item ${item.id}`);
-            this.gameplayContainer?.addChild(node);
-        }
+        // // 设置父节点
+        // const parentNode = this.node.getChildByName(item.parent_node_name);
+        // if (parentNode) {
+        //     node.parent = parentNode;
+        // } else {
+        //     console.warn(`Parent node ${item.parent_node_name} not found for item ${item.id}`);
+        //     this.gameplayContainer?.addChild(node);
+        // }
 
         // 设置状态
         // if (component instanceof Crop || component instanceof Animal || component instanceof Building) {

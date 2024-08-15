@@ -16,10 +16,12 @@ export class NetworkManager extends Component {
     public static readonly API_LOGIN: string = "/login";
 
     public static readonly API_GET_USER_SCENE_ITEMS: string = "/game/getUserSceneItems";
+    public static readonly API_PLANT: string = "/game/plant";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
     public static readonly EVENT_GET_USER_SCENE_ITEMS = 'get-user-scene-items';
+    public static readonly EVENT_PLANT = 'plant';
 
     private static _instance: NetworkManager | null = null;
 
@@ -133,10 +135,38 @@ export class NetworkManager extends Component {
         try {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response);
-            this.eventTarget.emit(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, result.data);
+            this.eventTarget.emit(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, result);
             
         } catch (error) {
             this.handleError(error);
+        }
+    }
+
+    public async plantCrop(userId: string, itemId: string, x: number, y: number,parent_node_name: string, token: string): Promise<boolean> {
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_PLANT}`;
+        
+        const headers = {
+            'Authorization': token,
+            ...this.defaultHeaders
+        };
+    
+        const data = {
+            userid: userId,
+            itemid: itemId,
+            x: x,
+            y: y,
+            parent_node_name:parent_node_name
+        };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            this.eventTarget.emit(NetworkManager.EVENT_PLANT, result);
+            return result.success;
+
+        } catch (error) {
+            this.handleError(error);
+            return false;
         }
     }
 

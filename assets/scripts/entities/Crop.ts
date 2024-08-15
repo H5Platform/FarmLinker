@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, CropType, SharedDefines } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines, SceneItem, CommandState } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -63,6 +63,10 @@ export class Crop extends Component implements IDraggable {
 
     private cooldownComponent: CooldownComponent | null = null;
     private currentGrowthStage: number = 0;
+    private totalGrowthTime: number = 0;
+    private remainingGrowthTime: number = 0;
+
+    private sceneItem: SceneItem | null = null;
 
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();
@@ -94,6 +98,23 @@ export class Crop extends Component implements IDraggable {
         this.updateSprite(`${SharedDefines.WINDOW_GAME_TEXTURES}${this.cropDatas[0].icon}`);
     }
 
+    public initializeWithSceneItem(sceneItem: SceneItem): void {
+        this.sceneItem = sceneItem;
+        this.growState = GrowState.NONE;
+        this.loadCropData(sceneItem.item_id);
+        
+        if (this.cropDatas.length > 0) {
+            this.setupDataFromSceneItem(sceneItem);
+        } else {
+            console.error(`No crop data found for crop type: ${this.cropType}`);
+            return;
+        }
+
+      //  this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.cropDataIndex].icon}`);
+        
+        
+    }
+
     private loadCropData(id:string): void {
         const cropData = CropDataManager.instance.findCropDataById(id);
         if (!cropData) {
@@ -111,6 +132,38 @@ export class Crop extends Component implements IDraggable {
         this.growthTime = cropData.time_min /* SharedDefines.TIME_MINUTE*/;
         this.harvestItemId = cropData.harvest_item_id;
         this.levelRequirement = cropData.level_need;
+    }
+
+    private setupDataFromSceneItem(sceneItem: SceneItem): void {
+        this.id = sceneItem.item_id;
+        this.totalGrowthTime = this.calculateTotalGrowthTime();
+        this.remainingGrowthTime = this.calculateRemainingTime(sceneItem);
+        this.cropDataIndex = this.calculateCurrentStage();
+        console.log(`Current stage: ${this.cropDataIndex}`);
+        this.setupData(this.cropDatas[this.cropDataIndex]);
+    }
+
+    private calculateTotalGrowthTime(): number {
+        return this.cropDatas.reduce((total, data) => total + parseInt(data.time_min), 0);
+    }
+
+    private calculateRemainingTime(sceneItem: SceneItem): number {
+        if (sceneItem.command && sceneItem.command.duration) {
+            
+            return Math.max(0, this.totalGrowthTime - (sceneItem.command.duration / 60)); // convert to minutes
+        }
+        return this.totalGrowthTime;
+    }
+
+    private calculateCurrentStage(): number {
+        let accumulatedTime = 0;
+        for (let i = 0; i < this.cropDatas.length; i++) {
+            accumulatedTime += parseInt(this.cropDatas[i].time_min);
+            if (accumulatedTime > this.totalGrowthTime - this.remainingGrowthTime) {
+                return i;
+            }
+        }
+        return this.cropDatas.length - 1;
     }
 
     public calculateYield(time: number): number {
@@ -177,9 +230,27 @@ export class Crop extends Component implements IDraggable {
     public startGrowing(): void {
         // 在这里添加作物开始生长的逻辑
         console.log(`Crop ${this.id} started growing`);
+        if(this.sceneItem)
+        {
+            if (this.sceneItem.command.state === CommandState.Complete) {
+                this.onGrowthComplete();
+            } else if (this.sceneItem.command.state === CommandState.InProgress) {
+                this.continueGrowing(this.sceneItem);
+            }
+        }
+        else{
+            this.growState = GrowState.GROWING;
+
+            this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);
+            this.scheduleNextGrowth();
+        }
+
+    }
+
+    private continueGrowing(sceneItem: SceneItem): void {
+        console.log(`Crop ${this.id} continued growing`);
         this.growState = GrowState.GROWING;
-        
-        this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);
+        this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.cropDataIndex].png}`);
         this.scheduleNextGrowth();
     }
 

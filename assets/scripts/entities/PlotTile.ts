@@ -7,6 +7,8 @@ import { WindowManager } from '../ui/WindowManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
 import { CooldownComponent } from '../components/CooldownComponent';
+import { NetworkManager } from '../managers/NetworkManager';
+import { GameController } from '../controllers/GameController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -19,12 +21,15 @@ export class PlotTile extends Component implements IDropZone {
     private polygonCollider: PolygonCollider2D | null = null;
 
     private cooldownComponent: CooldownComponent | null = null;
+    private gameController: GameController | null = null;
 
     //getter ocuippedCrop
     public get OcuippedCrop(): Crop | null {
         return this.occupiedCrop;
     }
     private occupiedCrop: Crop | null = null;
+
+    private currentDraggable: IDraggable | null = null;
     private dragDropComponent: DragDropComponent | null = null;
 
     public eventTarget: EventTarget = new EventTarget();
@@ -36,6 +41,10 @@ export class PlotTile extends Component implements IDropZone {
         }
         //listening to click event
         //this.node.on(Node.EventType.TOUCH_END, this.onTouchStart, this);
+        this.gameController = Director.instance.getScene().getComponentInChildren(GameController);
+        if (!this.gameController) {
+            console.error('PlotTile: GameController not found!');
+        }
         this.cooldownComponent = this.addComponent(CooldownComponent);
     }
 
@@ -166,13 +175,47 @@ export class PlotTile extends Component implements IDropZone {
     public onDrop(draggable: IDraggable): void {
         if (draggable instanceof Crop) {
             console.log('drop crop , name = ' + this.node.name);
-            draggable.node.removeFromParent();
-            this.node.addChild(draggable.node);
-            draggable.node.position = Vec3.ZERO;
-            this.occupy(draggable)
-            draggable.startGrowing();
-            this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+            
+            const crop = draggable as Crop;
+            const playerController = this.gameController?.getPlayerController();
+            if (!playerController) {
+                console.error('PlotTile: PlayerController not found!');
+                return;
+            }
+            NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result)=>{
+                if(!result.success || this.currentDraggable === null){
+            
+                    console.log('crop plant failed , name = ' + this.node.name);
+                    return;
+                }
+                this.plant(this.currentDraggable as Crop);
+                this.currentDraggable = null;
+            });
+            const worldPos = this.node.getWorldPosition();
+            this.currentDraggable = draggable;
+            NetworkManager.instance.plantCrop(
+                playerController.playerState.id,
+                crop.id,
+                worldPos.x,
+                worldPos.y,
+                this.node.name,
+                playerController.playerState.token
+            );
+            
         }
+    }
+
+    public plant(crop : Crop): void {
+        if(crop.node.parent){
+            crop.node.removeFromParent();
+        }
+        this.node.addChild(crop.node);
+        crop.node.position = Vec3.ZERO;
+        this.occupy(crop);
+        crop.startGrowing();
+        //this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
+        NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_PLANT, this.plant);
+
     }
 
     private onCropHarvest(crop: Crop): void 
