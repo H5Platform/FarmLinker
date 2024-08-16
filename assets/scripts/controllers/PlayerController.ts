@@ -78,17 +78,17 @@ export class PlayerController extends Component {
     }
 
     start() {
-        //for initial money
-        this._playerState.addGold(this.initialMoney);
-        this._playerState.level = this.initialLevel;
-        //for initial items
-        for (const itemId of this.initialItemIds) {
-            const item = ItemDataManager.instance.getItemById(itemId);
-            if (item) {
-                const inventoryItem = new InventoryItem(item);
-                this._inventoryComponent.addItem(inventoryItem);
-            }
-        }
+        // //for initial money
+        // this._playerState.addGold(this.initialMoney);
+        // this._playerState.level = this.initialLevel;
+        // //for initial items
+        // for (const itemId of this.initialItemIds) {
+        //     const item = ItemDataManager.instance.getItemById(itemId);
+        //     if (item) {
+        //         const inventoryItem = new InventoryItem(item);
+        //         this._inventoryComponent.addItem(inventoryItem);
+        //     }
+        // }
     }
 
     update(deltaTime: number) {

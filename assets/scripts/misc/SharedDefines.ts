@@ -57,6 +57,25 @@ export enum GameState {
     GAME_OVER = 'game_over',
 }
 
+export class NetworkUser{
+    id: string;
+    nickname: string;
+    level: number;
+    exp: number;
+    coin: number;
+    diamond: number;
+    register_time: Date;
+    last_login_time: Date;
+    inventory_items?: NetworkInventoryItem[];
+}
+
+export class NetworkInventoryItem{
+    id: string;
+    num: number;
+    type: number;
+    item_id: string;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;

@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3 } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { CommandState, CommandType, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, NetworkInventoryItem, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -177,6 +177,8 @@ export class GameController extends Component {
     private onLoginSuccess(userData:any,token:string): void {
         console.log('login success');
         this.playerController.playerState.initialize(userData,token);
+        const networkInventoryItems = userData.inventory_items as NetworkInventoryItem[];
+        this.playerController.inventoryComponent.initialize(networkInventoryItems);
     }
 
     private async onGetUserSceneItems(data:any): Promise<void> {

@@ -17,6 +17,8 @@ export class NetworkManager extends Component {
 
     public static readonly API_GET_USER_SCENE_ITEMS: string = "/game/getUserSceneItems";
     public static readonly API_PLANT: string = "/game/plant";
+    public static readonly API_ADD_INVENTORY_ITEM: string = "/inventory/add";
+    public static readonly API_REMOVE_INVENTORY_ITEM: string = "/inventory/remove";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -164,6 +166,56 @@ export class NetworkManager extends Component {
             this.eventTarget.emit(NetworkManager.EVENT_PLANT, result);
             return result.success;
 
+        } catch (error) {
+            this.handleError(error);
+            return false;
+        }
+    }
+
+    public async addInventoryItem(token: string,userId: string, itemId: string, type: string, delta: number): Promise<boolean> {
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_ADD_INVENTORY_ITEM}`;
+        
+        const headers = {
+            'Authorization': token,
+            ...this.defaultHeaders
+        };
+    
+        const data = {
+            userId,
+            itemId,
+            type,
+            quantity: delta
+        };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            return result.success;
+        } catch (error) {
+            this.handleError(error);
+            return false;
+        }
+    }
+
+    public async removeInventoryItem(token: string,userId: string, itemId: string, type: string, delta: number): Promise<boolean> {
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_REMOVE_INVENTORY_ITEM}`;
+        
+        const headers = {
+            'Authorization': token,
+            ...this.defaultHeaders
+        };
+    
+        const data = {
+            userId,
+            itemId,
+            type,
+            quantity: delta
+        };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            return result.success;
         } catch (error) {
             this.handleError(error);
             return false;
