@@ -5,13 +5,11 @@ import { InputComponent } from '../components/InputComonent';
 import { BuildingManager } from '../managers/BuildingManager';
 import { BuildingPlacementComponent } from '../components/BuildingPlacementComponent';
 import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
-import { ResourceManager } from '../managers/ResourceManager';
-import { WindowManager } from '../ui/WindowManager';
-import { ItemDataManager } from '../managers/ItemDataManager';
 import { DragDropComponent } from '../components/DragDropComponent';
 import { Fence } from '../entities/Fence';
-import { Animal } from '../entities/Animal';
 import { PlotTile } from '../entities/PlotTile';
+import { ItemDataManager } from '../managers/ItemDataManager';
+import { NetworkManager } from '../managers/NetworkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -78,17 +76,19 @@ export class PlayerController extends Component {
     }
 
     start() {
-        // //for initial money
-        // this._playerState.addGold(this.initialMoney);
-        // this._playerState.level = this.initialLevel;
-        // //for initial items
-        // for (const itemId of this.initialItemIds) {
-        //     const item = ItemDataManager.instance.getItemById(itemId);
-        //     if (item) {
-        //         const inventoryItem = new InventoryItem(item);
-        //         this._inventoryComponent.addItem(inventoryItem);
-        //     }
-        // }
+        if(NetworkManager.instance.SimulateNetwork){
+            //for initial money
+            this._playerState.addGold(this.initialMoney);
+            this._playerState.level = this.initialLevel;
+            //for initial items
+            for (const itemId of this.initialItemIds) {
+                const item = ItemDataManager.instance.getItemById(itemId);
+                if (item) {
+                    const inventoryItem = new InventoryItem(item);
+                    this._inventoryComponent.addItem(inventoryItem);
+                }
+            }
+        }
     }
 
     update(deltaTime: number) {

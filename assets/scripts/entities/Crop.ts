@@ -138,6 +138,7 @@ export class Crop extends Component implements IDraggable {
         this.id = sceneItem.item_id;
         this.totalGrowthTime = this.calculateTotalGrowthTime();
         this.remainingGrowthTime = this.calculateRemainingTime(sceneItem);
+        console.log(`Total growth time: ${this.totalGrowthTime} sceneItem.duration = ${sceneItem.command.duration} ,remainingGrowthTime = ${this.remainingGrowthTime}`);
         this.cropDataIndex = this.calculateCurrentStage();
         console.log(`Current stage: ${this.cropDataIndex}`);
         this.setupData(this.cropDatas[this.cropDataIndex]);
@@ -248,7 +249,7 @@ export class Crop extends Component implements IDraggable {
     }
 
     private continueGrowing(sceneItem: SceneItem): void {
-        console.log(`Crop ${this.id} continued growing`);
+        console.log(`Crop ${this.id} continued growing this.cropDataIndex:${this.cropDataIndex}`);
         this.growState = GrowState.GROWING;
         this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.cropDataIndex].png}`);
         this.scheduleNextGrowth();

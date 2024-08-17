@@ -92,7 +92,7 @@ export class SceneItem{
         targetid: string;
         target_type: SceneItemType;
         state: CommandState;
-        start_time: Date;
+        start_time: string;
         duration: number;
         type: CommandType;
     };

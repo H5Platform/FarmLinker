@@ -71,8 +71,8 @@
     "__prefab": {
       "__id__": 3
     },
-    "initialMoney": 0,
-    "initialLevel": 1,
+    "initialMoney": 20,
+    "initialLevel": 6,
     "initialItemIds": [
       "200101",
       "200103",

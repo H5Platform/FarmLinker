@@ -44,6 +44,15 @@ export class NetworkManager extends Component {
     })
     private defaultHeadersJson: string = '{}';
 
+    @property
+    private simulateNetwork:boolean = false;
+
+    //getter simulateNetwork
+    public get SimulateNetwork():boolean{
+        return this.simulateNetwork;
+    }
+    
+
     private get defaultHeaders(): Record<string, string> {
         try {
             return JSON.parse(this.defaultHeadersJson);
@@ -145,6 +154,11 @@ export class NetworkManager extends Component {
     }
 
     public async plantCrop(userId: string, itemId: string, x: number, y: number,parent_node_name: string, token: string): Promise<boolean> {
+        if(this.simulateNetwork){
+            this.eventTarget.emit(NetworkManager.EVENT_PLANT, { success: true });
+            return true;
+        }
+
         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_PLANT}`;
         
         const headers = {
@@ -173,6 +187,10 @@ export class NetworkManager extends Component {
     }
 
     public async addInventoryItem(token: string,userId: string, itemId: string, type: string, delta: number): Promise<boolean> {
+        if(this.simulateNetwork){
+            return true;
+        }
+
         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_ADD_INVENTORY_ITEM}`;
         
         const headers = {
@@ -198,6 +216,10 @@ export class NetworkManager extends Component {
     }
 
     public async removeInventoryItem(token: string,userId: string, itemId: string, type: string, delta: number): Promise<boolean> {
+        if(this.simulateNetwork){
+            return true;
+        }
+
         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_REMOVE_INVENTORY_ITEM}`;
         
         const headers = {

@@ -558,13 +558,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 129,
-      "g": 182,
-      "b": 90,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "e357a888-58d6-4a05-adb1-6b099eba7ae4@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -2355,7 +2355,7 @@
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -2467,7 +2467,7 @@
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -2579,7 +2579,7 @@
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -3575,8 +3575,10 @@
     "__prefab": null,
     "baseUrl": "http://127.0.0.1",
     "loginPort": 3000,
+    "gameServerPort": 3001,
     "maxLoginRetries": 3,
     "defaultHeadersJson": "{}",
+    "simulateNetwork": false,
     "_id": "764vQ41f1O8qHJ5tAyEN6t"
   },
   {

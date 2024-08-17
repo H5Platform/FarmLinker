@@ -12,6 +12,7 @@ import { NetworkManager } from '../managers/NetworkManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { Crop } from '../entities/Crop';
 import { Building } from '../entities/Building';
+import { DateHelper } from '../helpers/DateHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -167,6 +168,9 @@ export class GameController extends Component {
     //#region network relates
     
     private async login(): Promise<void> {
+        if(NetworkManager.instance.SimulateNetwork){
+            return;
+        }
         //TODO replace userid with real user id
         const userid = "123";
         await NetworkManager.instance.login(userid);
@@ -191,19 +195,19 @@ export class GameController extends Component {
         for (const item of sceneItems) {
             let node: Node | null = null;
             let component: Component | null = null;
-
+            console.log("item:id" + item.id);
             switch (item.type) {
                 case SceneItemType.Crop:
                     node = await this.createCropNode(item);
                     component = node?.getComponent(Crop);
                     break;
                 case SceneItemType.Animal:
-                    node = await this.createAnimalNode(item);
-                    component = node?.getComponent(Animal);
+                   node = await this.createAnimalNode(item);
+                   component = node?.getComponent(Animal);
                     break;
                 case SceneItemType.Building:
-                    node = await this.createBuildingNode(item);
-                    component = node?.getComponent(Building);
+                   node = await this.createBuildingNode(item);
+                   component = node?.getComponent(Building);
                     break;
             }
 
@@ -214,28 +218,38 @@ export class GameController extends Component {
     }
 
     private async createCropNode(item: SceneItem): Promise<Node | null> {
+        console.log(`Creating crop node for item ${item.id}`);
         const cropData = CropDataManager.instance.findCropDataById(item.item_id);
-        if (!cropData) return null;
+        if (!cropData) {
+            console.log(`Crop data not found for item ${item.id}`);
+            return null;
+        }
 
+        console.log(`Loading prefab for item ${item.id}`);
         const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
-        if (!prefab) return null;
+        if (!prefab) {
+            console.log(`Prefab not found for item ${item.id}`);
+            return null;
+        }
 
         const node = instantiate(prefab);
         const crop = node.getComponent(Crop);
         if (crop) {
+            console.log(`Initializing crop for item ${item.id}`);
             crop.initializeWithSceneItem(item);
         }
 
         //find plot tile in plot tiles with item.parent_node_name
         const plotTile = this.plotTiles?.find(tile => tile.node.name === item.parent_node_name);
         if(plotTile){
+            console.log(`Planting crop for item ${item.id}`);
             plotTile.plant(crop);
         }
         else{
             console.error(`Plot tile ${item.parent_node_name} not found`);
         }
 
-
+        console.log(`Finished creating crop node for item ${item.id}`);
         return node;
     }
 
@@ -304,7 +318,8 @@ export class GameController extends Component {
         if (!command) return;
 
         const currentTime = Date.now();
-        const elapsedTime = currentTime - command.start_time.getTime();
+        const startTime = DateHelper.stringToDate(command.start_time);
+        const elapsedTime = currentTime - startTime.getTime();
 
         switch (command.type) {
             case CommandType.Craft:
