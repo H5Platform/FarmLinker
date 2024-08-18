@@ -15,6 +15,7 @@ interface LoginResp{
 export class NetworkManager extends Component {
     public static readonly API_LOGIN: string = "/login";
 
+    public static readonly API_GET_LATEST_COMMAND_DURATION: string = "/game/getLatestCommandDuration";
     public static readonly API_GET_USER_SCENE_ITEMS: string = "/game/getUserSceneItems";
     public static readonly API_PLANT: string = "/game/plant";
     public static readonly API_ADD_INVENTORY_ITEM: string = "/inventory/add";
@@ -43,6 +44,9 @@ export class NetworkManager extends Component {
         tooltip: 'Enter default headers in JSON format'
     })
     private defaultHeadersJson: string = '{}';
+
+    private token: string = '';
+    private userId: string = '';
 
     @property
     private simulateNetwork:boolean = false;
@@ -110,6 +114,8 @@ export class NetworkManager extends Component {
                 
                 if (result.success) {
                     console.log('Login successful',result);
+                    this.token = result.sessionToken;
+                    this.userId = result.user.id;
                     this.eventTarget.emit(NetworkManager.EVENT_LOGIN_SUCCESS, result.user, result.sessionToken);
                     return;
                 } else {
@@ -150,6 +156,27 @@ export class NetworkManager extends Component {
             
         } catch (error) {
             this.handleError(error);
+        }
+    }
+
+    public async getLatestCommandDuration(sceneItemId: string): Promise<any> {
+        if(this.simulateNetwork){
+            return {success:true,duration:0};
+        }
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_GET_LATEST_COMMAND_DURATION}`;
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+    
+        const data = { sceneItemId };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            return JSON.parse(response);
+        } catch (error) {
+            this.handleError(error);
+            throw error;
         }
     }
 
