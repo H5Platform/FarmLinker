@@ -20,11 +20,13 @@ export class NetworkManager extends Component {
     public static readonly API_PLANT: string = "/game/plant";
     public static readonly API_ADD_INVENTORY_ITEM: string = "/inventory/add";
     public static readonly API_REMOVE_INVENTORY_ITEM: string = "/inventory/remove";
+    public static readonly API_HARVEST: string = "/game/harvest";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
     public static readonly EVENT_GET_USER_SCENE_ITEMS = 'get-user-scene-items';
     public static readonly EVENT_PLANT = 'plant';
+    public static readonly EVENT_HARVEST = 'harvest';
 
     private static _instance: NetworkManager | null = null;
 
@@ -207,6 +209,37 @@ export class NetworkManager extends Component {
             this.eventTarget.emit(NetworkManager.EVENT_PLANT, result);
             return result.success;
 
+        } catch (error) {
+            this.handleError(error);
+            return false;
+        }
+    }
+
+    public async harvest(commandId: string, itemId: string,itemType:number): Promise<boolean> {
+        if (this.simulateNetwork) {
+            this.eventTarget.emit(NetworkManager.EVENT_HARVEST, { success: true });
+            return true;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_HARVEST}`;
+        
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+    
+        const data = {
+            userid: this.userId,
+            commandid: commandId,
+            itemid: itemId,
+            itemtype: itemType
+        };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            this.eventTarget.emit(NetworkManager.EVENT_HARVEST, result);
+            return result.success;
         } catch (error) {
             this.handleError(error);
             return false;

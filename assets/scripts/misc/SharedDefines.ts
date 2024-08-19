@@ -76,6 +76,20 @@ export class NetworkInventoryItem{
     item_id: string;
 }
 
+export class NetworkHarvestResultData{
+    userid: string;
+    item_id: string;
+    exp_gained: number;
+    new_exp: number;
+    new_level: number;
+}
+
+export class NetworkHarvestResult{
+    success: boolean;
+    message: string;
+    result: NetworkHarvestResultData;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;

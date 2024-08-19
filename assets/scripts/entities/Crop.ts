@@ -353,42 +353,57 @@ export class Crop extends Component implements IDraggable {
         this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
     }
 
-    public harvest():void
+    public async harvest():Promise<void>
     {
         if (this.growState != GrowState.HARVESTING || this.harvestItemId == "") {
             console.error(`Crop ${this.node.name} is not ready to harvest`);
             return;
         }
 
-        //get item by itemdatamanager
-        const item = ItemDataManager.instance.getItemById(this.harvestItemId);
-        if (!item) {
-            console.error(`Item ${this.harvestItemId} not found`);
+        const result = await NetworkManager.instance.harvest( this.sceneItem.command_id,this.sceneItem.item_id,this.sceneItem.type);
+        if(result){
+            this.growState = GrowState.NONE;
+            this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
+            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+            //destroy node
+            this.node.destroy();
             return;
         }
-
-        //find gamecontroller in scene
-        const gameControllerNode = director.getScene()?.getChildByName('GameController');
-        if (gameControllerNode) {
-            const gameController = gameControllerNode.getComponent(GameController);
-            if (!gameController) {
-                console.error('GameController not found');
-                return;
-            }
-            const playerController = gameController.getPlayerController();
-            if (!playerController) {
-                console.error('PlayerController not found');
-                return;
-            }
-            playerController.playerState.addExperience(parseInt(item.exp_get));
-            const inventoryItem = new InventoryItem(item);
-            playerController.inventoryComponent.addItem(inventoryItem);
+        else{
+            console.error(`Crop ${this.node.name} harvest failed`);
+            return;
         }
+        
 
-        this.growState = GrowState.NONE;
-        this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
-        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
-        //destroy node
-        this.node.destroy();
+        // //get item by itemdatamanager
+        // const item = ItemDataManager.instance.getItemById(this.harvestItemId);
+        // if (!item) {
+        //     console.error(`Item ${this.harvestItemId} not found`);
+        //     return;
+        // }
+
+        // //find gamecontroller in scene
+        // const gameControllerNode = director.getScene()?.getChildByName('GameController');
+        // if (gameControllerNode) {
+        //     const gameController = gameControllerNode.getComponent(GameController);
+        //     if (!gameController) {
+        //         console.error('GameController not found');
+        //         return;
+        //     }
+        //     const playerController = gameController.getPlayerController();
+        //     if (!playerController) {
+        //         console.error('PlayerController not found');
+        //         return;
+        //     }
+        //     playerController.playerState.addExperience(parseInt(item.exp_get));
+        //     const inventoryItem = new InventoryItem(item);
+        //     playerController.inventoryComponent.addItem(inventoryItem);
+        // }
+
+        // this.growState = GrowState.NONE;
+        // this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
+        // this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+        // //destroy node
+        // this.node.destroy();
     }
 }

@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3 } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { CommandState, CommandType, NetworkInventoryItem, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -13,6 +13,7 @@ import { ResourceManager } from '../managers/ResourceManager';
 import { Crop } from '../entities/Crop';
 import { Building } from '../entities/Building';
 import { DateHelper } from '../helpers/DateHelper';
+import { InventoryItem } from '../components/InventoryComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -98,6 +99,7 @@ export class GameController extends Component {
         const networkManager = NetworkManager.instance;
         networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
         networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
+        networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
     }
 
     private initializePlayerController(): void {
@@ -335,6 +337,21 @@ export class GameController extends Component {
                 //     }
                 // }
                 break;
+        }
+    }
+
+    private onHarvest(result: any): void {
+        console.log('harvest result', result);
+        const networkHarvestResult = result as NetworkHarvestResult;
+        if(networkHarvestResult.success){
+            const networkHarvestResultData = networkHarvestResult.result as NetworkHarvestResultData;
+            this.playerController.playerState.addExperience(networkHarvestResultData.exp_gained);
+            this.playerController.playerState.level = networkHarvestResultData.new_level;
+            const itemData = ItemDataManager.instance.getItemById(networkHarvestResultData.item_id);
+            if(itemData){
+                const inventoryItem = new InventoryItem(itemData,1);
+                this.playerController.inventoryComponent.addItem(inventoryItem);
+            }
         }
     }
 
