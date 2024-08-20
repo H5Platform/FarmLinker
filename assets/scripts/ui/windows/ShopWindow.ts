@@ -4,10 +4,11 @@ import { PlayerController } from '../../controllers/PlayerController';
 import { InventoryComponent, InventoryItem } from '../../components/InventoryComponent';
 import { ItemDataManager } from '../../managers/ItemDataManager';
 import { ResourceManager } from '../../managers/ResourceManager';
-import { SharedDefines } from '../../misc/SharedDefines';
+import { NetworkBuyItemResult, NetworkSellItemResult, SharedDefines } from '../../misc/SharedDefines';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { WindowManager } from '../WindowManager';
+import { NetworkManager } from '../../managers/NetworkManager';
 
 
 const { ccclass, property } = _decorator;
@@ -65,6 +66,7 @@ export class ShopWindow extends WindowBase {
 
     public show(...args: any[]): void {
         super.show(...args);
+        this.setupNetworkEventListeners();
         this.switchToMode(this.currentMode);
         if (this.coinDisplay) {
             this.coinDisplay.refreshDisplay();
@@ -81,7 +83,8 @@ export class ShopWindow extends WindowBase {
 
     public hide(): void {
         super.hide();
-        // 可以在这里添加额外的隐藏逻辑，如清理物品列表等
+        NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_BUY_ITEM, this.onBuyItemResult, this);
+        NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_SELL_ITEM, this.onSellItemResult, this);
     }
 
     private initializeComponents(): void {
@@ -102,6 +105,43 @@ export class ShopWindow extends WindowBase {
         this.buyButton?.node.on(Button.EventType.CLICK, this.onBuyButtonClicked, this);
         this.sellButton?.node.on(Button.EventType.CLICK, this.onSellButtonClicked, this);
         this.closeButton?.node.on(Button.EventType.CLICK, this.hide, this);
+    }
+
+    private setupNetworkEventListeners(): void {
+        NetworkManager.instance.eventTarget.on(NetworkManager.EVENT_BUY_ITEM, this.onBuyItemResult, this);
+        NetworkManager.instance.eventTarget.on(NetworkManager.EVENT_SELL_ITEM, this.onSellItemResult, this);
+    }
+
+    private onBuyItemResult(buyItemResult: NetworkBuyItemResult): void {
+        console.log('onBuyItemResult', buyItemResult);
+        if (buyItemResult.success) {
+            const item = ItemDataManager.instance.getItemById(buyItemResult.data.item_id);
+            if (item) {
+                this.playerController!.playerState.gold = buyItemResult.data.current_coin;
+                const inventoryItem = new InventoryItem(item);
+                this.inventoryComponent?.addItem(inventoryItem);
+                console.log(`Bought item: ${item.name}`);
+                this.showBuyItems(); 
+            }
+        }
+    }
+
+    private onSellItemResult(sellItemResult: NetworkSellItemResult): void {
+        console.log('onSellItemResult', sellItemResult);
+        const item = ItemDataManager.instance.getItemById(sellItemResult.data.item_id);
+        if (item) {
+            const price = parseInt(item.sell_price);
+            if (this.inventoryComponent?.removeItem(item.id)) {
+                this.playerController!.playerState.gold += price;
+                console.log(`Sold item: ${item.name} for ${price} gold`);
+                this.showSellItems(); 
+            } else {
+                console.log("Failed to sell item!");
+            }
+        }
+        else{
+            console.log("The item is not found!");
+        }
     }
 
     private onBuyButtonClicked(): void {
@@ -213,25 +253,16 @@ export class ShopWindow extends WindowBase {
     private buyItem(item: any): void {
         const price = parseInt(item.buy_price);
         if (this.playerController?.playerState.gold >= price) {
-            this.playerController.playerState.gold -= price;
-            const inventoryItem = new InventoryItem(item);
-            this.inventoryComponent?.addItem(inventoryItem);
-            console.log(`Bought item: ${item.name}`);
-            this.showBuyItems(); // Refresh the buy list
+            NetworkManager.instance.buyItem(item.id,1);
+
         } else {
             console.log("Not enough gold to buy this item!");
         }
     }
 
     private sellItem(item: InventoryItem): void {
-        const price = item.sellPrice;
-        if (this.inventoryComponent?.removeItem(item.id)) {
-            this.playerController!.playerState.gold += price;
-            console.log(`Sold item: ${item.name} for ${price} gold`);
-            this.showSellItems(); // Refresh the sell list
-        } else {
-            console.log("Failed to sell item!");
-        }
+        NetworkManager.instance.sellItem(item.id,1);
+        
     }
 
     protected onDestroy(): void {

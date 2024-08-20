@@ -63,6 +63,16 @@ export class Crop extends Component implements IDraggable {
     }
     private sourceInventoryItem: InventoryItem | null = null;
 
+    //getter cooldownComponent
+    public get CooldownComponent(): CooldownComponent | null {
+        if (!this.cooldownComponent) {
+            this.cooldownComponent = this.getComponent(CooldownComponent);
+            if (!this.cooldownComponent) {
+                this.cooldownComponent = this.addComponent(CooldownComponent);
+            }
+        }
+        return this.cooldownComponent;
+    }
     private cooldownComponent: CooldownComponent | null = null;
     private currentGrowthStage: number = 0;
     private totalGrowthTime: number = 0;
@@ -75,10 +85,6 @@ export class Crop extends Component implements IDraggable {
 
     protected onLoad(): void {
         this.node.mobility = 2;
-        this.cooldownComponent = this.getComponent(CooldownComponent);
-        if (!this.cooldownComponent) {
-            this.cooldownComponent = this.addComponent(CooldownComponent);
-        }
     }
 
     public initializeWithInventoryItem(inventoryItem: InventoryItem): void {
@@ -101,6 +107,7 @@ export class Crop extends Component implements IDraggable {
     }
 
     public initializeWithSceneItem(sceneItem: SceneItem): void {
+        console.log(`Crop initialized with scene item`,sceneItem);
         this.sceneItem = sceneItem;
         this.growState = GrowState.NONE;
         this.loadCropData(sceneItem.item_id);
@@ -111,6 +118,7 @@ export class Crop extends Component implements IDraggable {
             console.error(`No crop data found for crop type: ${this.cropType}`);
             return;
         }
+        
     }
 
     private loadCropData(id:string): void {
@@ -126,7 +134,7 @@ export class Crop extends Component implements IDraggable {
     private setupData(cropData: any): void 
     {
         this.id = cropData.id;
-        this.growthTime = cropData.time_min /* SharedDefines.TIME_MINUTE*/;
+        this.growthTime = cropData.time_min * SharedDefines.TIME_MINUTE;
         this.harvestItemId = cropData.harvest_item_id;
         this.levelRequirement = cropData.level_need;
     }
@@ -140,6 +148,7 @@ export class Crop extends Component implements IDraggable {
         this.cropDataIndex = this.calculateCurrentStage(remainingTime);
         console.log(`Current stage: ${this.cropDataIndex}`);
         this.setupData(this.cropDatas[this.cropDataIndex]);
+        this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
     }
 
     private calculateTotalGrowthTime(): number {
@@ -148,7 +157,7 @@ export class Crop extends Component implements IDraggable {
 
     private calculateRemainingTime(): number {
         const currentTime = Date.now() / 1000; // 当前时间（秒）
-        const elapsedTime = (currentTime - this.growthStartTime) / 60; // 已经过去的时间（分钟）
+        const elapsedTime = (currentTime - this.growthStartTime) / SharedDefines.TIME_MINUTE; 
         return Math.max(0, this.totalGrowthTime - elapsedTime);
     }
 
@@ -268,8 +277,9 @@ export class Crop extends Component implements IDraggable {
     }
 
     private scheduleNextGrowth(): void {
+        console.log(`Crop ${this.id}: Scheduling next growth , isGrowEnd:${this.isGrowEnd()} , growthTime:${this.growthTime}`);
         if (!this.isGrowEnd()) {
-            this.cooldownComponent?.startCooldown(
+            this.CooldownComponent?.startCooldown(
                 'growth',
                 this.growthTime,
                 () => this.grow()
@@ -340,6 +350,7 @@ export class Crop extends Component implements IDraggable {
     }
 
     private grow(): void {
+        console.log(`Crop ${this.id}: grow start ...`);
         this.currentGrowthStage++;
         this.setupData(this.cropDatas[this.currentGrowthStage]);
         this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.cropDatas[this.currentGrowthStage].png}`);

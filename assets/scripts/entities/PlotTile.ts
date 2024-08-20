@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
-import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { FarmSelectionType, SceneItem, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
 import { PlayerController } from '../controllers/PlayerController';
@@ -188,7 +188,9 @@ export class PlotTile extends Component implements IDropZone {
                     console.log('crop plant failed , name = ' + this.node.name);
                     return;
                 }
-                this.plant(this.currentDraggable as Crop);
+                const crop = this.currentDraggable as Crop;
+                crop.initializeWithSceneItem(result.data as SceneItem);
+                this.plant(crop);
                 this.currentDraggable = null;
             });
             const worldPos = this.node.getWorldPosition();

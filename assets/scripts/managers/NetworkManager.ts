@@ -21,12 +21,16 @@ export class NetworkManager extends Component {
     public static readonly API_ADD_INVENTORY_ITEM: string = "/inventory/add";
     public static readonly API_REMOVE_INVENTORY_ITEM: string = "/inventory/remove";
     public static readonly API_HARVEST: string = "/game/harvest";
+    public static readonly API_BUY_ITEM: string = "/game/buyItem";
+    public static readonly API_SELL_ITEM: string = "/game/sellItem";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
     public static readonly EVENT_GET_USER_SCENE_ITEMS = 'get-user-scene-items';
     public static readonly EVENT_PLANT = 'plant';
     public static readonly EVENT_HARVEST = 'harvest';
+    public static readonly EVENT_BUY_ITEM = 'buy-item';
+    public static readonly EVENT_SELL_ITEM = 'sell-item';
 
     private static _instance: NetworkManager | null = null;
 
@@ -171,7 +175,7 @@ export class NetworkManager extends Component {
             ...this.defaultHeaders
         };
     
-        const data = { sceneItemId };
+        const data = { userid: this.userId,sceneItemId };
     
         try {
             const response = await HttpHelper.post(url, data, headers);
@@ -297,6 +301,64 @@ export class NetworkManager extends Component {
         try {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response);
+            return result.success;
+        } catch (error) {
+            this.handleError(error);
+            return false;
+        }
+    }
+
+    public async buyItem(itemId: string,num:number): Promise<boolean> {
+        if (this.simulateNetwork) {
+            return true;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_BUY_ITEM}`;
+        
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            itemid: itemId,
+            num: num
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            this.eventTarget.emit(NetworkManager.EVENT_BUY_ITEM, result);
+            return result.success;
+        } catch (error) {
+            this.handleError(error);
+            return false;
+        }
+    }
+
+    public async sellItem(itemId: string,num:number): Promise<boolean> {
+        if (this.simulateNetwork) {
+            return true;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_SELL_ITEM}`;
+        
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            itemid: itemId,
+            num: num
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            this.eventTarget.emit(NetworkManager.EVENT_SELL_ITEM, result);
             return result.success;
         } catch (error) {
             this.handleError(error);

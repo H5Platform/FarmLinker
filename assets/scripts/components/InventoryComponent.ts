@@ -97,21 +97,17 @@ export class InventoryComponent extends Component {
         //     return false;
         // }
 
-        const success = await NetworkManager.instance.addInventoryItem(this.playerController.playerState.token,this.playerController.playerState.id,item.id,item.itemType,1);
-        if (success) {
-            const existingItem = this.items.get(item.id);
-            if (existingItem) {
-                existingItem.quantity += item.quantity;
-                this.eventTarget.emit(InventoryComponent.EVENT_ITEM_UPDATED, existingItem);
-            } else {
-                this.items.set(item.id, { ...item });
-                this.eventTarget.emit(InventoryComponent.EVENT_ITEM_ADDED, item);
-            }
-            console.log(`Added ${item.quantity} of item with id: ${item.id}`);
+        const existingItem = this.items.get(item.id);
+        if (existingItem) {
+            existingItem.quantity += item.quantity;
+            this.eventTarget.emit(InventoryComponent.EVENT_ITEM_UPDATED, existingItem);
+        } else {
+            this.items.set(item.id, { ...item });
+            this.eventTarget.emit(InventoryComponent.EVENT_ITEM_ADDED, item);
         }
+        console.log(`Added ${item.quantity} of item with id: ${item.id}`);
 
-
-        return success;
+        return true;
     }
 
     public async removeItem(itemId: string, quantity: number = 1): Promise<boolean> {
@@ -126,20 +122,14 @@ export class InventoryComponent extends Component {
             return false;
         }
 
-        const success = await NetworkManager.instance.removeInventoryItem(this.playerController.playerState.token,this.playerController.playerState.id,itemId,item.itemType,quantity);
-        if(success)
-        {
-            item.quantity -= quantity;
-            this.eventTarget.emit(InventoryComponent.EVENT_ITEM_UPDATED, item);
-    
-            if (item.quantity === 0) {
-                this.items.delete(itemId);
-                this.eventTarget.emit(InventoryComponent.EVENT_ITEM_REMOVED, itemId);
-            }
+        item.quantity -= quantity;
+        this.eventTarget.emit(InventoryComponent.EVENT_ITEM_UPDATED, item);
+
+        if (item.quantity === 0) {
+            this.items.delete(itemId);
+            this.eventTarget.emit(InventoryComponent.EVENT_ITEM_REMOVED, itemId);
         }
-
-
-        return success;
+        return true;
     }
 
     public getItem(itemId: string): InventoryItem | undefined {

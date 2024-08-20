@@ -21,6 +21,7 @@ export class CooldownComponent extends Component {
         if (this.cooldowns.has(key)) {
             console.warn(`Cooldown with key "${key}" already exists. Overwriting.`);
         }
+        console.log(`Starting cooldown with key "${key}" for ${duration} seconds`);
         this.cooldowns.set(key, {
             remainingTime: duration,
             duration: duration,

@@ -164,7 +164,7 @@ export class GameController extends Component {
             return;
         }
         
-        inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
+        //inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
     }
 
     //#region network relates
@@ -198,6 +198,9 @@ export class GameController extends Component {
             let node: Node | null = null;
             let component: Component | null = null;
             console.log("item:id" + item.id);
+            if(item.state === SceneItemState.Complete && item.command && item.command.state === CommandState.Complete){
+                continue;
+            }
             switch (item.type) {
                 case SceneItemType.Crop:
                     node = await this.createCropNode(item);
@@ -265,8 +268,14 @@ export class GameController extends Component {
         const node = instantiate(prefab);
         const animal = node.getComponent(Animal);
         if (animal) {
-            animal.initialize(item.item_id);
+            animal.initializeWithSceneItem(item);
+            this.fence.addAnimal(animal);
         }
+        else{
+            console.error(`Animal component not found for item ${item.id}`);
+        }
+        
+        
         return node;
     }
 
@@ -344,7 +353,8 @@ export class GameController extends Component {
         console.log('harvest result', result);
         const networkHarvestResult = result as NetworkHarvestResult;
         if(networkHarvestResult.success){
-            const networkHarvestResultData = networkHarvestResult.result as NetworkHarvestResultData;
+            const networkHarvestResultData = networkHarvestResult.data as NetworkHarvestResultData;
+            console.log('networkHarvestResultData',networkHarvestResultData);
             this.playerController.playerState.addExperience(networkHarvestResultData.exp_gained);
             this.playerController.playerState.level = networkHarvestResultData.new_level;
             const itemData = ItemDataManager.instance.getItemById(networkHarvestResultData.item_id);

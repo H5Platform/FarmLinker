@@ -48,6 +48,7 @@ export class Fence extends Component implements IDropZone{
 
     public addAnimal(animal: Animal): boolean {
         if (this.canAcceptAnimal(animal)) {
+            this.node.addChild(animal.node);
             animal.eventTarget.once(SharedDefines.EVENT_ANIMAL_HARVEST, this.onAnimalHarvest, this);
             animal.startGrowing();
             this.animals.push(animal);
