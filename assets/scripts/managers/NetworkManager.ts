@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { SharedDefines } from '../misc/SharedDefines';
+import { SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -186,7 +186,7 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async plantCrop(userId: string, itemId: string, x: number, y: number,parent_node_name: string, token: string): Promise<boolean> {
+    public async plant( itemId: string,sceneType:SceneItemType, x: number, y: number,parent_node_name: string): Promise<boolean> {
         if(this.simulateNetwork){
             this.eventTarget.emit(NetworkManager.EVENT_PLANT, { success: true });
             return true;
@@ -195,13 +195,14 @@ export class NetworkManager extends Component {
         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_PLANT}`;
         
         const headers = {
-            'Authorization': token,
+            'Authorization': this.token,
             ...this.defaultHeaders
         };
     
         const data = {
-            userid: userId,
+            userid: this.userId,
             itemid: itemId,
+            type:(sceneType as number),
             x: x,
             y: y,
             parent_node_name:parent_node_name

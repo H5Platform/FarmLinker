@@ -48,6 +48,16 @@ export class Animal extends Component implements IDraggable {
     }
     private sourceInventoryItem: InventoryItem | null = null;
 
+    //getter cooldownComponent
+    public get CooldownComponent(): CooldownComponent | null {
+        if (!this.cooldownComponent) {
+            this.cooldownComponent = this.getComponent(CooldownComponent);
+            if (!this.cooldownComponent) {
+                this.cooldownComponent = this.addComponent(CooldownComponent);
+            }
+        }
+        return this.cooldownComponent;
+    }
     private cooldownComponent: CooldownComponent | null = null;
     private growState: GrowState = GrowState.NONE;
     private harvestItemId: string = '';
@@ -109,7 +119,7 @@ export class Animal extends Component implements IDraggable {
     private setupData(animalData: any): void {
         this.id = animalData.id;
         this.description = animalData.description;
-        this.growthTime = parseInt(animalData.time_min) /* SharedDefines.TIME_MINUTE*/;
+        this.growthTime = parseInt(animalData.time_min) * SharedDefines.TIME_MINUTE;
         this.harvestItemId = animalData.harvest_item_id;
         this.farmType = animalData.farm_type;
         this.timeMin = parseInt(animalData.time_min);
@@ -126,6 +136,7 @@ export class Animal extends Component implements IDraggable {
         this.currentGrowthStageIndex = this.calculateCurrentStage(remainingTime);
         console.log(`Current stage: ${this.currentGrowthStageIndex}`);
         this.setupData(this.growthStages[this.currentGrowthStageIndex]);
+        this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
     }
 
     private calculateTotalGrowthTime(): number {
@@ -188,7 +199,7 @@ export class Animal extends Component implements IDraggable {
 
     private scheduleNextGrowth(): void {
         if (!this.isGrowEnd()) {
-            this.cooldownComponent?.startCooldown(
+            this.CooldownComponent.startCooldown(
                 'growth',
                 this.growthTime,
                 () => this.grow()

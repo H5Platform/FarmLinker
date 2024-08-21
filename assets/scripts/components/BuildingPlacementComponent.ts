@@ -2,9 +2,10 @@
 
 import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform,  Rect, Sprite, SpriteFrame } from 'cc';
 import { BuildingManager } from '../managers/BuildingManager';
-import { SharedDefines } from '../misc/SharedDefines';
+import { SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { Building } from '../entities/Building';
+import { NetworkManager } from '../managers/NetworkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('BuildingPlacementComponent')
@@ -95,13 +96,24 @@ export class BuildingPlacementComponent extends Component {
             console.error('BuildingContainer not found, building will remain in current parent');
             return;
         }
-        buildingComponent.initialize(this.buildData);
-        // 完成建造
-        buildingComponent.completeConstruction();
 
-        this.buildingManager!.addBuilding(this.buildData.id, this.node);
-        this.isPlacing = false;
-        this.destroy();
+        NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
+            if(!result.success){
+                console.log('plant building failed');
+                return;
+            }
+            buildingComponent.initializeFromSceneItem(result.data as SceneItem);
+            // 完成建造
+            buildingComponent.completeConstruction();
+
+            this.buildingManager!.addBuilding(this.buildData.id, this.node);
+            this.isPlacing = false;
+            this.destroy();
+        });
+        NetworkManager.instance.plant(this.buildData.id,SceneItemType.Building,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
+
+        //buildingComponent.initialize(this.buildData);
+
     }
 
     public cancelPlacement(): void {

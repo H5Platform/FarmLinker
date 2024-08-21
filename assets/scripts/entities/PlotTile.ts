@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
-import { FarmSelectionType, SceneItem, SharedDefines } from '../misc/SharedDefines';
+import { FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
 import { PlayerController } from '../controllers/PlayerController';
@@ -177,11 +177,6 @@ export class PlotTile extends Component implements IDropZone {
             console.log('drop crop , name = ' + this.node.name);
             
             const crop = draggable as Crop;
-            const playerController = this.gameController?.getPlayerController();
-            if (!playerController) {
-                console.error('PlotTile: PlayerController not found!');
-                return;
-            }
             NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result)=>{
                 if(!result.success || this.currentDraggable === null){
             
@@ -195,13 +190,12 @@ export class PlotTile extends Component implements IDropZone {
             });
             const worldPos = this.node.getWorldPosition();
             this.currentDraggable = draggable;
-            NetworkManager.instance.plantCrop(
-                playerController.playerState.id,
+            NetworkManager.instance.plant(
                 crop.id,
+                SceneItemType.Crop,
                 worldPos.x,
                 worldPos.y,
-                this.node.name,
-                playerController.playerState.token
+                this.node.name
             );
             
         }

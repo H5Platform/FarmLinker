@@ -289,7 +289,7 @@ export class GameController extends Component {
         const node = instantiate(prefab);
         const building = node.getComponent(Building);
         if (building) {
-            building.initialize(buildData);
+            building.initializeFromSceneItem(item);
         }
         return node;
     }

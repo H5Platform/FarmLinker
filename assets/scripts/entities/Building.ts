@@ -1,7 +1,8 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
-import { SharedDefines } from '../misc/SharedDefines';
+import { SceneItem, SharedDefines } from '../misc/SharedDefines';
 import { PlayerState } from '../entities/PlayerState';
+import { BuildDataManager } from '../managers/BuildDataManager';
 
 const { ccclass, property } = _decorator;
 
@@ -23,6 +24,8 @@ export class Building extends Component {
     private sprite: Sprite | null = null;
 
     private buildingData: any;
+    private sceneItem: SceneItem | null = null;
+
     private state: BuildingState = BuildingState.NONE;
     private arrowContainer: Node | null = null;
     public eventTarget: EventTarget = new EventTarget();
@@ -40,6 +43,13 @@ export class Building extends Component {
         this.id = buildingData.id;
         this.updateSprite();
         this.setState(BuildingState.CONSTRUCTING);
+    }
+
+    public initializeFromSceneItem(sceneItem: SceneItem): void {
+        this.id = sceneItem.item_id;
+        this.sceneItem = sceneItem;
+        this.buildingData = BuildDataManager.instance.findBuildDataById(this.id);
+        this.initialize(this.buildingData);
     }
 
     private async updateSprite(): Promise<void> {

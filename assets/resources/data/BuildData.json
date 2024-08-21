@@ -4,7 +4,7 @@
       "id": "100101",
       "name": "Build_Bakery",
       "description": "面包坊",
-      "level_need": "2",
+      "level_need": "1",
       "icon": "Build_Bakery",
       "texture": "Build_04"
     },

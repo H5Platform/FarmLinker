@@ -3,11 +3,12 @@
 import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
-import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { IDropZone, IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { WindowManager } from '../ui/WindowManager';
 import { InventoryItem } from '../components/InventoryComponent';
 import { CooldownComponent } from '../components/CooldownComponent';
+import { NetworkManager } from '../managers/NetworkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
@@ -118,12 +119,31 @@ export class Fence extends Component implements IDropZone{
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
             const worldPos = animal.node.getWorldPosition();
-            this.node.addChild(animal.node);
-            animal.node.setWorldPosition(worldPos);
+            //this.node.addChild(animal.node);
+            
 
-            if(this.addAnimal(draggable)){
-                this.eventTarget.emit(SharedDefines.EVENT_FENCE_ANIMAL_ADDED,animal);
-            }
+            NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
+                if(!result.success ){
+            
+                    console.log('animal plant failed , name = ' + animal.node.name);
+                    return;
+                }
+                
+                animal.initializeWithSceneItem(result.data as SceneItem);
+                if(this.addAnimal(animal)){
+                    animal.node.setWorldPosition(worldPos);
+                    this.eventTarget.emit(SharedDefines.EVENT_FENCE_ANIMAL_ADDED,animal);
+                }
+            });
+
+            NetworkManager.instance.plant(
+                animal.id,
+                SceneItemType.Animal,
+                worldPos.x,
+                worldPos.y,
+                this.node.name,
+            );
+
             this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         }
     }
