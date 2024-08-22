@@ -3598,6 +3598,9 @@
     "gameplayContainer": {
       "__id__": 11
     },
+    "buildingContainer": {
+      "__id__": 42
+    },
     "fence": {
       "__id__": 20
     },

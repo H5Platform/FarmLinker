@@ -124,17 +124,8 @@ export class SceneItem{
     state: SceneItemState;
     userid: string;
     parent_node_name: string;
-    command_id: string | null;
-    command?: {
-        id: string;
-        userid: string;
-        targetid: string;
-        target_type: SceneItemType;
-        state: CommandState;
-        start_time: string;
-        duration: number;
-        type: CommandType;
-    };
+    last_updated_time: string;
+    elapsed_time: number;
 }
 
 export class SharedDefines {

@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, CropType, SharedDefines, SceneItem, CommandState } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -142,7 +142,8 @@ export class Crop extends Component implements IDraggable {
     private setupDataFromSceneItem(sceneItem: SceneItem): void {
         this.id = sceneItem.item_id;
         this.totalGrowthTime = this.calculateTotalGrowthTime();
-        this.growthStartTime = DateHelper.stringToDate(sceneItem.command.start_time).getTime() / 1000;
+        console.log(`Crop ${this.id}: last_update_time: ${sceneItem.last_updated_time}`);
+        this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
         console.log(`Total growth time: ${this.totalGrowthTime}, remainingGrowthTime = ${remainingTime}`);
         this.cropDataIndex = this.calculateCurrentStage(remainingTime);
@@ -256,9 +257,9 @@ export class Crop extends Component implements IDraggable {
         console.log(`Crop ${this.id} started growing`);
         if(this.sceneItem)
         {
-            if (this.sceneItem.command.state === CommandState.Complete) {
+            if (this.sceneItem.state === SceneItemState.Complete) {
                 this.onGrowthComplete();
-            } else if (this.sceneItem.command.state === CommandState.InProgress) {
+            } else if (this.sceneItem.state === SceneItemState.InProgress) {
                 this.continueGrowing(this.sceneItem);
             }
         }
@@ -371,7 +372,7 @@ export class Crop extends Component implements IDraggable {
             return;
         }
 
-        const result = await NetworkManager.instance.harvest( this.sceneItem.command_id,this.sceneItem.item_id,this.sceneItem.type);
+        const result = await NetworkManager.instance.harvest( this.sceneItem.id,this.sceneItem.item_id,this.sceneItem.type);
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);

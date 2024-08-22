@@ -2,7 +2,7 @@
 
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3, director } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, SharedDefines, SceneItem, CommandState } from '../misc/SharedDefines';
+import { GrowState, SharedDefines, SceneItem, CommandState, SceneItemState } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
@@ -130,7 +130,7 @@ export class Animal extends Component implements IDraggable {
     private setupDataFromSceneItem(sceneItem: SceneItem): void {
         this.id = sceneItem.item_id;
         this.totalGrowthTime = this.calculateTotalGrowthTime();
-        this.growthStartTime = DateHelper.stringToDate(sceneItem.command.start_time).getTime() / 1000;
+        this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
         console.log(`Total growth time: ${this.totalGrowthTime}, remainingGrowthTime = ${remainingTime}`);
         this.currentGrowthStageIndex = this.calculateCurrentStage(remainingTime);
@@ -178,9 +178,9 @@ export class Animal extends Component implements IDraggable {
     public startGrowing(): void {
         console.log(`Animal ${this.id} started growing`);
         if (this.sceneItem) {
-            if (this.sceneItem.command.state === CommandState.Complete) {
+            if (this.sceneItem.state === SceneItemState.Complete) {
                 this.onGrowthComplete();
-            } else if (this.sceneItem.command.state === CommandState.InProgress) {
+            } else if (this.sceneItem. state === SceneItemState.InProgress) {
                 this.continueGrowing(this.sceneItem);
             }
         } else {
@@ -320,7 +320,7 @@ export class Animal extends Component implements IDraggable {
             return;
         }
 
-        const result = await NetworkManager.instance.harvest(this.sceneItem.command_id, this.sceneItem.item_id, this.sceneItem.type);
+        const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
         if (result) {
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);

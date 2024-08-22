@@ -1,8 +1,9 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
-import { SceneItem, SharedDefines } from '../misc/SharedDefines';
+import { SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { PlayerState } from '../entities/PlayerState';
 import { BuildDataManager } from '../managers/BuildDataManager';
+import { NetworkManager } from '../managers/NetworkManager';
 
 const { ccclass, property } = _decorator;
 
@@ -46,10 +47,22 @@ export class Building extends Component {
     }
 
     public initializeFromSceneItem(sceneItem: SceneItem): void {
+        console.log(`Building initializeFromSceneItem start`);
         this.id = sceneItem.item_id;
         this.sceneItem = sceneItem;
         this.buildingData = BuildDataManager.instance.findBuildDataById(this.id);
+        if (!this.buildingData) {
+            console.error(`Building data not found for id: ${this.id}`);
+            return;
+        }
         this.initialize(this.buildingData);
+        //update state
+        if(sceneItem.state === SceneItemState.Complete){
+            this.setState(BuildingState.COMPLETED); 
+        }
+        else if(sceneItem.state === SceneItemState.InProgress){
+            this.setState(BuildingState.CONSTRUCTING);
+        }
     }
 
     private async updateSprite(): Promise<void> {
@@ -76,6 +89,7 @@ export class Building extends Component {
 
     public setState(newState: BuildingState): void {
         if (this.state !== newState) {
+            console.log(`Building setState to ${newState}`);
             const oldState = this.state;
             this.state = newState;
             this.eventTarget.emit(Building.EVENT_STATE_CHANGED, { oldState, newState });
@@ -86,8 +100,12 @@ export class Building extends Component {
         return this.state;
     }
 
-    public completeConstruction(): void {
-        this.setState(BuildingState.COMPLETED);
+    public async completeConstruction(): Promise<void> {
+        const success = await NetworkManager.instance.harvest(this.sceneItem.command_id,this.id,SceneItemType.Building);
+        if(success){
+            this.setState(BuildingState.COMPLETED);
+        }
+        
     }
 
     // 预留升级方法

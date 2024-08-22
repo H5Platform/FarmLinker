@@ -25,6 +25,9 @@ export class GameController extends Component {
     @property(Node)
     private gameplayContainer: Node| null = null;
 
+    @property(Node)
+    private buildingContainer: Node| null = null;
+
     @property(Fence)
     private fence: Fence| null = null;
 
@@ -198,9 +201,6 @@ export class GameController extends Component {
             let node: Node | null = null;
             let component: Component | null = null;
             console.log("item:id" + item.id);
-            if(item.state === SceneItemState.Complete && item.command && item.command.state === CommandState.Complete){
-                continue;
-            }
             switch (item.type) {
                 case SceneItemType.Crop:
                     node = await this.createCropNode(item);
@@ -287,9 +287,13 @@ export class GameController extends Component {
         if (!prefab) return null;
 
         const node = instantiate(prefab);
-        const building = node.getComponent(Building);
+        this.buildingContainer?.addChild(node);
+        //set position
+        node.setWorldPosition(new Vec3(item.x, item.y, 0));
+        const building = node.addComponent(Building);
         if (building) {
             building.initializeFromSceneItem(item);
+            
         }
         return node;
     }
@@ -320,9 +324,9 @@ export class GameController extends Component {
         // }
 
         // 处理命令
-        if (item.command) {
-            this.handleCommand(component, item.command);
-        }
+        // if (item.command) {
+        //     this.handleCommand(component, item.command);
+        // }
     }
 
     private handleCommand(component: Component, command: SceneItem['command']): void {

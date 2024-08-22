@@ -11,7 +11,7 @@ export class DateHelper {
     public static stringToDate(dateString: string): Date | null {
         if (typeof dateString !== 'string') {
             console.error('Input is not a string', dateString);
-            return null;
+            return new Date();
         }
 
         const date = new Date(dateString);

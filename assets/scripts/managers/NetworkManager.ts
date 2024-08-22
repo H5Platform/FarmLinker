@@ -220,7 +220,7 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async harvest(commandId: string, itemId: string,itemType:number): Promise<boolean> {
+    public async harvest(sceneId: string, itemId: string,itemType:number): Promise<boolean> {
         if (this.simulateNetwork) {
             this.eventTarget.emit(NetworkManager.EVENT_HARVEST, { success: true });
             return true;
@@ -235,7 +235,7 @@ export class NetworkManager extends Component {
     
         const data = {
             userid: this.userId,
-            commandid: commandId,
+            sceneid: sceneId,
             itemid: itemId,
             itemtype: itemType
         };
