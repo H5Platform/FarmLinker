@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkCareResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -23,6 +23,7 @@ export class NetworkManager extends Component {
     public static readonly API_HARVEST: string = "/game/harvest";
     public static readonly API_BUY_ITEM: string = "/game/buyItem";
     public static readonly API_SELL_ITEM: string = "/game/sellItem";
+    public static readonly API_CARE: string = "/game/care";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -31,6 +32,7 @@ export class NetworkManager extends Component {
     public static readonly EVENT_HARVEST = 'harvest';
     public static readonly EVENT_BUY_ITEM = 'buy-item';
     public static readonly EVENT_SELL_ITEM = 'sell-item';
+    public static readonly EVENT_CARE = 'care';
 
     private static _instance: NetworkManager | null = null;
 
@@ -366,6 +368,37 @@ export class NetworkManager extends Component {
             return false;
         }
     }
+
+    public async care(sceneId: string, customId: string): Promise<NetworkCareResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CARE}`;
+        
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId,
+            customid: customId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkCareResult;
+            this.eventTarget.emit(NetworkManager.EVENT_CARE, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+
 
     private buildUrl(endpoint: string): string {
         return `${this.baseUrl}${endpoint}`;

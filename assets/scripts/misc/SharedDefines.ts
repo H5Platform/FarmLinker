@@ -21,7 +21,9 @@ export enum FarmSelectionType{
     NONE,
     BUILDING,
     PLOT,
-    FENCE
+    PLOT_COMMAND,           //浇水、施肥、除虫等
+    FENCE,
+    ANIMAL_COMMAND          //喂养、洗澡等
 }
 
 export enum SceneItemType {
@@ -115,6 +117,18 @@ export class NetworkSellItemResult{
     data: NetworkSellItemResultData;
 }
 
+export class NetworkCareResultData{
+    sceneid: string;
+    command_id: string;
+    care_count: number;
+}
+
+export class NetworkCareResult{
+    success: boolean;
+    message: string;
+    data: NetworkCareResultData;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;
@@ -165,6 +179,7 @@ export class SharedDefines {
     public static readonly INIT_PLOT_NUM: number = 5;
 
     public static readonly COOLDOWN_SELECTION_TIME: number = 0.5;
+    public static readonly COOLDOWN_KEY_CARE: string = 'care';
 
     public static readonly PATH_CAMERA: string = 'Canvas/Camera';
     public static readonly PATH_GAMEPLAY: string = 'Canvas/Gameplay';

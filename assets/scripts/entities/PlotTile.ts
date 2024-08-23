@@ -13,6 +13,11 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
 export class PlotTile extends Component implements IDropZone {
+    //define max care count
+    public static readonly MAX_CARE_COUNT: number = 5;
+    public static readonly CARE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+
+
     @property
     public isOccupied: boolean = false;
 
@@ -28,6 +33,9 @@ export class PlotTile extends Component implements IDropZone {
         return this.occupiedCrop;
     }
     private occupiedCrop: Crop | null = null;
+
+    public careCount: number = 0;
+    private careCooldown: number = 0;
 
     private currentDraggable: IDraggable | null = null;
     private dragDropComponent: DragDropComponent | null = null;
@@ -78,6 +86,10 @@ export class PlotTile extends Component implements IDropZone {
         this.isOccupied = false;
     }
 
+    public canCare(): boolean {
+        return this.careCount >= 0 && this.careCount < PlotTile.MAX_CARE_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_CARE);
+    }
+
     public getNode(): Node 
     {
         return this.node;
@@ -99,15 +111,39 @@ export class PlotTile extends Component implements IDropZone {
 
         if (this.isOccupied) {
             //TODO: 当被占用时再选中应该显示浇花、割草等操作
-            return;
+            WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+            console.log('select plot command , name = ' + this.node.name);
         }
         else{
             this.dragDropComponent = dragComponent;
             WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+            console.log('select plot , name = ' + this.node.name);
         }
     }
 
-    private async onSelectionWindowItemClicked(inventoryItem:InventoryItem): Promise<void> {
+    private async onSelectionWindowItemClicked(data: any): Promise<void> {
+        if (this.isOccupied) {
+            const sceneItem = this.occupiedCrop.SceneItem;
+            if (sceneItem) {
+                const careResult = await NetworkManager.instance.care(sceneItem.id, sceneItem.parent_node_name);
+                if (careResult.success) {
+                    //TODO 更新（缩短）成熟时间
+                    this.careCount = careResult.data.care_count;
+                }
+                else {
+                    console.log("Care failed");
+                }
+            }
+
+        }
+        else {
+            const inventoryItem = data as InventoryItem;
+            await this.createAndStartDraggingCrop(inventoryItem);
+        }
+
+    }
+
+    private async createAndStartDraggingCrop(inventoryItem:InventoryItem): Promise<void> {
         const cropPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
         const cropNode = instantiate(cropPrefab);
         cropNode.name = inventoryItem.detailId;

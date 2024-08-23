@@ -8,6 +8,7 @@ import { ResourceManager } from '../../managers/ResourceManager';
 import { Fence } from '../../entities/Fence';
 import { AnimalDataManager } from '../../managers/AnimalDataManager';
 import { WindowManager } from '../WindowManager';
+import { NetworkManager } from '../../managers/NetworkManager';
 
 //TODO move to touch location when shown
 
@@ -17,6 +18,22 @@ const { ccclass, property } = _decorator;
 export class FarmSelectionWindow extends WindowBase {
     @property(ScrollView)
     private scrollView: ScrollView | null = null;
+    @property(Node)
+    private plotCommandNode: Node | null = null;
+    @property(Node)
+    private animalCommandNode: Node | null = null;
+    @property(Button)
+    private btnCropCare: Button | null = null;
+    @property(Button)
+    private btnCropTreat: Button | null = null;
+    @property(Button)
+    private btnCropCleanse: Button | null = null;
+    @property(Button)
+    private btnAnimalCare: Button | null = null;
+    @property(Button)
+    private btnAnimalTreat: Button | null = null;
+    @property(Button)
+    private btnAnimalCleanse: Button | null = null;
 
     @property(Prefab)
     private itemPrefab: Prefab | null = null;
@@ -34,6 +51,13 @@ export class FarmSelectionWindow extends WindowBase {
         super.initialize();
         this.playerController = this.gameController.getPlayerController();
         this.inventoryComponent = this.playerController.inventoryComponent;
+
+        this.btnCropCare.node.on(Button.EventType.CLICK, this.onCare, this);
+        this.btnCropTreat.node.on(Button.EventType.CLICK, this.onTreat, this);
+        this.btnCropCleanse.node.on(Button.EventType.CLICK, this.onCleanse, this);
+        this.btnAnimalCare.node.on(Button.EventType.CLICK, this.onCare, this);
+        this.btnAnimalTreat.node.on(Button.EventType.CLICK, this.onTreat, this);
+        this.btnAnimalCleanse.node.on(Button.EventType.CLICK, this.onCleanse, this);
     }
 
     public show(...args: any[]): void {
@@ -44,34 +68,48 @@ export class FarmSelectionWindow extends WindowBase {
         }
         this.currentSelectionType = args[0] as FarmSelectionType;
         this.currentSelectionNode = args[1] as Node;
+        this.clickLocation = args[2] as Vec2;
         this.callback = args[3] as (string)=>void;
+        this.updateFarmSelectionViewVisibilityByType(this.currentSelectionType);
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
-            const plotTileItem = this.currentSelectionNode!.getComponent(PlotTile);
-            if (plotTileItem) {
-                if(plotTileItem.isOccupied){
-                    console.log("FarmSelectionWindow: plotTile is occupied");
-                }
-                else{
-
-                }
-            }
-            else{
-                console.error("FarmSelectionWindow: plotTileItem is null");
-                return;
-            }
-            this.clickLocation = args[2] as Vec2;
+            
             const animations = this.getItemsByType(ItemType.CROPSEED);
+            console.log(`crop seed count: ${animations.length}`);
             this.updateScrollView(animations);
         }
         else if(this.currentSelectionType === FarmSelectionType.FENCE){
-            this.clickLocation = args[2] as Vec2;
             this.fence = this.currentSelectionNode!.getComponent(Fence);
             const animations = this.getItemsByType(ItemType.ANIMALCUB);
             console.log(`animation count: ${animations.length}`);
             this.updateScrollView(animations);
         }
         
+        
     }
+
+    private updateFarmSelectionViewVisibilityByType(type:FarmSelectionType): void {
+        console.log(`updateFarmSelectionViewVisibilityByType: ${type}`);
+        if(type === FarmSelectionType.PLOT || type === FarmSelectionType.FENCE){
+            this.scrollView.node.active = true;
+            this.plotCommandNode.active = false;
+            this.animalCommandNode.active = false;
+            console.log("Show scroll view");
+        }
+        else if(type === FarmSelectionType.PLOT_COMMAND){
+            this.scrollView.node.active = false;
+            this.plotCommandNode.active = true;
+            this.animalCommandNode.active = false;
+            console.log("Show plot command");
+        }
+        else if(type === FarmSelectionType.ANIMAL_COMMAND){
+            this.scrollView.node.active = false;
+            this.plotCommandNode.active = false;
+            this.animalCommandNode.active = true;
+            console.log("Show animal command");
+        }
+    }
+
+    //#region handle shop items
 
     private updateScrollView(items:any[]): void {
         if (!this.scrollView || !this.itemPrefab) return;
@@ -118,6 +156,26 @@ export class FarmSelectionWindow extends WindowBase {
 
         this.scrollView!.content.addChild(itemNode);
     }
+
+    //#endregion
+
+//#region handle button click
+
+    private async onCare(): Promise<void> {
+        console.log("onCare");
+        this.onItemSelected(null);
+
+    }
+
+    private onTreat(): void {
+        console.log("onTreat");
+    }
+
+    private onCleanse(): void {
+        console.log("onCleanse");
+    }
+
+//#endregion
 
     private onItemSelected(data:any = null): void {
         // if (this.currentPlotTile && !this.currentPlotTile.isOccupied) {

@@ -79,6 +79,10 @@ export class Crop extends Component implements IDraggable {
     private growthStartTime: number = 0;
 
     private sceneItem: SceneItem | null = null;
+    //getter sceneItem
+    public get SceneItem(): SceneItem | null {
+        return this.sceneItem;
+    }
 
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();

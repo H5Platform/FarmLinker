@@ -123,6 +123,7 @@ export class PlayerController extends Component {
                 else if(collider.node.layer & plotLayer){
                     const plotTile = collider.node.getComponent(PlotTile);
                     if (plotTile) {
+                        
                         this.dragDropComponent.registerDropZone(plotTile);
                         plotTile.select(this.dragDropComponent);
                     }else{
