@@ -112,7 +112,8 @@ export class PlayerController extends Component {
                 if (collider.node.layer & fenceLayer) {
                     const fenceComponent = collider.node.getComponent(Fence);
                     if (fenceComponent) {
-                        fenceComponent.select(this.dragDropComponent,event.getLocation());
+                        const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
+                        fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
                     }
                     else{
                         console.error('Fence node does not have Fence component');

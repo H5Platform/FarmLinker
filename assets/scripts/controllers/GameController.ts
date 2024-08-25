@@ -259,15 +259,17 @@ export class GameController extends Component {
     }
 
     private async createAnimalNode(item: SceneItem): Promise<Node | null> {
+        console.log(`Creating animal node for item ${item.id}`);
         const animalData = AnimalDataManager.instance.findAnimalDataById(item.item_id);
         if (!animalData) return null;
-
+        console.log(`Loading prefab for item ${item.id}`);
         const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
         if (!prefab) return null;
-
+        console.log(`Instantiating prefab for item ${item.id}`);
         const node = instantiate(prefab);
         const animal = node.getComponent(Animal);
         if (animal) {
+            console.log(`Initializing animal for item ${item.id}`);
             animal.initializeWithSceneItem(item);
             this.fence.addAnimal(animal);
         }

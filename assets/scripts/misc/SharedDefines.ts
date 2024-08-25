@@ -41,8 +41,9 @@ export enum SceneItemState {
 
 export enum CommandType {
     None = 0,
-    Craft = 1,
-    Upgrade = 2
+    Care = 1,                   //浇水/喂养
+    Treat = 2,                   //施肥/安抚
+    Cleanse = 3,                 //除虫/洗澡
 }
 
 export enum CommandState {
@@ -129,6 +130,17 @@ export class NetworkCareResult{
     data: NetworkCareResultData;
 }
 
+export class NetworkCommand{
+    id: string;
+    userid: string;
+    customid: string;
+    state: CommandState;
+    last_updated_time: string;
+    type: CommandType;
+    sceneid: string;
+    count: number;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;
@@ -140,6 +152,7 @@ export class SceneItem{
     parent_node_name: string;
     last_updated_time: string;
     elapsed_time: number;
+    commands: NetworkCommand[];
 }
 
 export class SharedDefines {

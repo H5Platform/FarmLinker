@@ -125,10 +125,11 @@ export class PlotTile extends Component implements IDropZone {
         if (this.isOccupied) {
             const sceneItem = this.occupiedCrop.SceneItem;
             if (sceneItem) {
-                const careResult = await NetworkManager.instance.care(sceneItem.id, sceneItem.parent_node_name);
+                const careResult = await NetworkManager.instance.care(sceneItem.id);
                 if (careResult.success) {
-                    //TODO 更新（缩短）成熟时间
+                    //更新（缩短）成熟时间,this.careCount 是当前地块的浇水次数，this.occupiedCrop.CareCount 是当前农作物的浇水次数，两者可能不一致
                     this.careCount = careResult.data.care_count;
+                    this.occupiedCrop.CareCount = this.careCount;
                 }
                 else {
                     console.log("Care failed");

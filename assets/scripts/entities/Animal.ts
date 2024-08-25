@@ -2,7 +2,7 @@
 
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3, director } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, SharedDefines, SceneItem, CommandState, SceneItemState } from '../misc/SharedDefines';
+import { GrowState, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
@@ -65,9 +65,29 @@ export class Animal extends Component implements IDraggable {
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();
 
+    //getter sceneItem
+    public get SceneItem(): SceneItem | null {
+        return this.sceneItem;
+    }
     private sceneItem: SceneItem | null = null;
     private totalGrowthTime: number = 0;
     private growthStartTime: number = 0;
+
+    @property
+    private careCount: number = 0;
+
+    public get CareCount(): number {
+        return this.careCount;
+    }
+
+    public set CareCount(value: number) {
+        if (this.careCount !== value) {
+            this.careCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
 
     protected onLoad(): void {
         this.cooldownComponent = this.getComponent(CooldownComponent);
@@ -129,7 +149,9 @@ export class Animal extends Component implements IDraggable {
 
     private setupDataFromSceneItem(sceneItem: SceneItem): void {
         this.id = sceneItem.item_id;
-        this.totalGrowthTime = this.calculateTotalGrowthTime();
+        this.careCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Care)?.count || 0;
+        console.log(`Animal ${this.id}: Care count: ${this.careCount}`);
+        this.updateTotalGrowthTime();
         this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
         console.log(`Total growth time: ${this.totalGrowthTime}, remainingGrowthTime = ${remainingTime}`);
@@ -139,8 +161,11 @@ export class Animal extends Component implements IDraggable {
         this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
     }
 
-    private calculateTotalGrowthTime(): number {
-        return this.growthStages.reduce((total, data) => total + parseInt(data.time_min), 0);
+    private updateTotalGrowthTime(): void {
+        let baseTime = this.growthStages.reduce((total, data) => total + parseInt(data.time_min), 0);
+        let reductionFactor = Math.max(0, 1 - (this.careCount * 0.05));
+        this.totalGrowthTime = baseTime * reductionFactor;
+        console.log(`Animal ${this.id}: Updated total growth time to ${this.totalGrowthTime} minutes`);
     }
 
     private calculateRemainingTime(): number {
@@ -217,6 +242,7 @@ export class Animal extends Component implements IDraggable {
                 this.updateGrowthTimes(latestDuration);
             }
 
+            this.updateTotalGrowthTime();
             const remainingTime = this.calculateRemainingTime();
             console.log(`Animal ${this.id}: Remaining time: ${remainingTime} minutes`);
             if (remainingTime <= 0 && this.isGrowEnd()) {
@@ -225,7 +251,7 @@ export class Animal extends Component implements IDraggable {
                 console.log(`Animal ${this.id}: Starting cooldown for ${remainingTime} minutes`);
                 this.cooldownComponent?.startCooldown(
                     'growth',
-                    remainingTime,
+                    remainingTime * SharedDefines.TIME_MINUTE,
                     () => this.grow()
                 );
             }
@@ -312,6 +338,12 @@ export class Animal extends Component implements IDraggable {
             return true;
         }
         return true;
+    }
+
+    public stopGrowth(): void {
+        console.log(`Animal ${this.id}: Stopping growth`);
+        this.CooldownComponent?.removeCooldown('growth');
+        this.growState = GrowState.NONE;
     }
 
     public async harvest(): Promise<void> {

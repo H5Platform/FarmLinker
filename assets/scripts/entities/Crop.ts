@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -84,6 +84,20 @@ export class Crop extends Component implements IDraggable {
         return this.sceneItem;
     }
 
+    //getter careCount
+    public get CareCount(): number {
+        return this.careCount;
+    }
+    public set CareCount(value: number) {
+        if (this.careCount !== value) {
+            this.careCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
+    private careCount: number = 0;
+
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();
 
@@ -145,7 +159,10 @@ export class Crop extends Component implements IDraggable {
 
     private setupDataFromSceneItem(sceneItem: SceneItem): void {
         this.id = sceneItem.item_id;
-        this.totalGrowthTime = this.calculateTotalGrowthTime();
+        
+        this.careCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Care)?.count || 0;
+        console.log(`Crop ${this.id}: Care count: ${this.careCount}`);
+        this.updateTotalGrowthTime();
         console.log(`Crop ${this.id}: last_update_time: ${sceneItem.last_updated_time}`);
         this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
@@ -156,8 +173,11 @@ export class Crop extends Component implements IDraggable {
         this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
     }
 
-    private calculateTotalGrowthTime(): number {
-        return this.cropDatas.reduce((total, data) => total + parseInt(data.time_min), 0);
+    private updateTotalGrowthTime(): void {
+        let baseTime = this.cropDatas.reduce((total, data) => total + parseInt(data.time_min), 0);
+        let reductionFactor = Math.max(0, 1 - (this.careCount * 0.05));
+        this.totalGrowthTime = baseTime * reductionFactor;
+        console.log(`Crop ${this.id}: Updated total growth time to ${this.totalGrowthTime} minutes`);
     }
 
     private calculateRemainingTime(): number {
@@ -168,14 +188,22 @@ export class Crop extends Component implements IDraggable {
 
     private calculateCurrentStage(remainingTime: number): number {
         const elapsedTime = this.totalGrowthTime - remainingTime;
+        console.log(`Crop ${this.id}: Elapsed time: ${elapsedTime} minutes`);
         let accumulatedTime = 0;
-        for (let i = 0; i < this.cropDatas.length; i++) {
-            accumulatedTime += parseInt(this.cropDatas[i].time_min);
-            if (accumulatedTime > elapsedTime) {
-                return i;
+        let exptectedStageIndex = 0;
+        if (elapsedTime >= this.totalGrowthTime) {
+            exptectedStageIndex = this.cropDatas.length - 1;
+            console.log(`Crop ${this.id}: Fully grown, expected stage index: ${exptectedStageIndex}`);
+        } else {
+            for (let i = 0; i < this.cropDatas.length; i++) {
+                accumulatedTime += parseInt(this.cropDatas[i].time_min);
+                if (elapsedTime >= accumulatedTime) {
+                    exptectedStageIndex = i;
+                    console.log(`Crop ${this.id}: Expected stage index: ${exptectedStageIndex}, accumulatedTime: ${accumulatedTime}, elapsedTime: ${elapsedTime}`);
+                }
             }
         }
-        return this.cropDatas.length - 1;
+        return exptectedStageIndex;
     }
 
     public calculateYield(time: number): number {
@@ -307,19 +335,22 @@ export class Crop extends Component implements IDraggable {
             if (remainingTime <= 0 && this.isGrowEnd()) {
                 this.onGrowthComplete();
             } else {
+                this.growState = GrowState.GROWING;
                 console.log(`Crop ${this.id}: Starting cooldown for ${remainingTime} minutes`);
                 this.cooldownComponent?.startCooldown(
                     'growth',
-                    remainingTime,
+                    remainingTime * SharedDefines.TIME_MINUTE,
                     () => this.grow()
                 );
             }
         } catch (error) {
             console.error('Failed to get latest command duration:', error);
             // 如果获取失败，使用当前的remainingGrowthTime
+            const remainingTime = this.calculateRemainingTime();
+            this.growState = GrowState.GROWING;
             this.cooldownComponent?.startCooldown(
                 'growth',
-                this.calculateRemainingTime(),
+                remainingTime * SharedDefines.TIME_MINUTE,
                 () => this.grow()
             );
         }
@@ -421,5 +452,11 @@ export class Crop extends Component implements IDraggable {
         // this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
         // //destroy node
         // this.node.destroy();
+    }
+
+    public stopGrowth(): void {
+        console.log(`Crop ${this.id}: Stopping growth`);
+        this.CooldownComponent?.removeCooldown('growth');
+        this.growState = GrowState.NONE;
     }
 }

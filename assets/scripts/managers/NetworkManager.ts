@@ -369,7 +369,7 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async care(sceneId: string, customId: string): Promise<NetworkCareResult> {
+    public async care(sceneId: string): Promise<NetworkCareResult> {
         if (this.simulateNetwork) {
             return null;
         }
@@ -383,8 +383,7 @@ export class NetworkManager extends Component {
 
         const data = {
             userid: this.userId,
-            sceneid: sceneId,
-            customid: customId
+            sceneid: sceneId
         };
 
         try {

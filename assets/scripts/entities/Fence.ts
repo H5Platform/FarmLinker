@@ -33,7 +33,7 @@ export class Fence extends Component implements IDropZone{
 
     public canAcceptAnimal(animal: Animal): boolean {
         const requiredSpace = 1;//parseInt(animal.gridCapacity);
-        return this.getAvailableSpace() >= requiredSpace;
+        return true;//this.getAvailableSpace() >= requiredSpace;
     }
 
     public async tryAddAnimal(animalId:string,worldPos:Vec3 = Vec3.ZERO): Promise<boolean> {
@@ -48,7 +48,9 @@ export class Fence extends Component implements IDropZone{
     }
 
     public addAnimal(animal: Animal): boolean {
+        console.log('addAnimal',animal);
         if (this.canAcceptAnimal(animal)) {
+            console.log('addAnimal canAcceptAnimal',animal);
             this.node.addChild(animal.node);
             animal.eventTarget.once(SharedDefines.EVENT_ANIMAL_HARVEST, this.onAnimalHarvest, this);
             animal.startGrowing();
@@ -81,13 +83,61 @@ export class Fence extends Component implements IDropZone{
         return rect.contains(point);
     }
 
-    public select(dragComponent : DragDropComponent,touchPos:Vec2): void {
+    public select(dragComponent: DragDropComponent, touchPos: Vec2): void {
         if (this.cooldownComponent.isOnCooldown('select')) {
             return; // if cooldown is on, ignore this select
         }
-        //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
+        // Check if any animal is selected
+        for (const animal of this.animals) {
+            const animalNode = animal.node;
+            const animalUITransform = animalNode.getComponent(UITransform);
+            if (animalUITransform) {
+                const worldPos = this.node.getComponent(UITransform).convertToWorldSpaceAR(animalNode.position);
+                const localPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(touchPos.x, touchPos.y, 0));
+              //  const localPos = WindowManager.instance.uiCamera.convertToUINode(worldPos,this.node);
+                console.log(`Animal ${animal.id} worldPos: ${worldPos}, localPos: ${localPos},touchPos = ${touchPos}`);
+                if (animalUITransform.getBoundingBox().contains(new Vec2(localPos.x, localPos.y))) {
+                    console.log(`Animal ${animal.id} is selected`);
+                    // Animal is selected
+                    WindowManager.instance.show(
+                        SharedDefines.WINDOW_SELECTION_NAME,
+                        FarmSelectionType.ANIMAL_COMMAND,
+                        animalNode,
+                        touchPos,
+                        this.onAnimalCommandSelected.bind(this, animal)
+                    );
+                    return;
+                }
+            }
+        }
+
+        // If no animal is selected, proceed with the original fence selection logic
         this.dragDropComponent = dragComponent;
-        WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.FENCE,this.node,touchPos,this.onSelectionWindowItemClicked.bind(this));
+        WindowManager.instance.show(
+            SharedDefines.WINDOW_SELECTION_NAME,
+            FarmSelectionType.FENCE,
+            this.node,
+            touchPos,
+            this.onSelectionWindowItemClicked.bind(this)
+        );
+    }
+
+    private async onAnimalCommandSelected(animal: Animal, command: string): Promise<void> {
+        // Handle the animal command selection
+        console.log(`Animal command selected: ${command} for animal ${animal.node.name}`);
+        // Implement the logic for handling animal commands here
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+        const sceneItem = animal.SceneItem;
+        if (sceneItem) {
+            const careResult = await NetworkManager.instance.care(sceneItem.id);
+            if (careResult.success) {
+                //更新（缩短）成熟时间,this.careCount 是当前地块的浇水次数，this.occupiedCrop.CareCount 是当前农作物的浇水次数，两者可能不一致
+                animal.CareCount = careResult.data.care_count;
+            }
+            else {
+                console.log("Care failed");
+            }
+        }
     }
 
     private async onSelectionWindowItemClicked(inventoryItem:InventoryItem): Promise<void> {
