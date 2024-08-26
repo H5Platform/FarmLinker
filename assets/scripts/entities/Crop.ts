@@ -98,6 +98,35 @@ export class Crop extends Component implements IDraggable {
     }
     private careCount: number = 0;
 
+
+    //getter treatCount
+    public get TreatCount(): number {
+        return this.treatCount;
+    }
+    public set TreatCount(value: number) {
+        if (this.treatCount !== value) {
+            this.treatCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
+    private treatCount: number = 0;
+
+        //getter cleanseCount
+    public get CleanseCount(): number {
+        return this.cleanseCount;
+    }
+    public set CleanseCount(value: number) {
+        if (this.cleanseCount !== value) {
+            this.cleanseCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
+    private cleanseCount: number = 0;
+
     public static readonly growthCompleteEvent = 'growthComplete';
     public eventTarget: EventTarget = new EventTarget();
 
@@ -162,6 +191,10 @@ export class Crop extends Component implements IDraggable {
         
         this.careCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Care)?.count || 0;
         console.log(`Crop ${this.id}: Care count: ${this.careCount}`);
+        this.treatCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Treat)?.count || 0;
+        console.log(`Crop ${this.id}: Treat count: ${this.treatCount}`);
+        this.cleanseCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Cleanse)?.count || 0;
+        console.log(`Crop ${this.id}: Cleanse count: ${this.cleanseCount}`);
         this.updateTotalGrowthTime();
         console.log(`Crop ${this.id}: last_update_time: ${sceneItem.last_updated_time}`);
         this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
@@ -175,8 +208,9 @@ export class Crop extends Component implements IDraggable {
 
     private updateTotalGrowthTime(): void {
         let baseTime = this.cropDatas.reduce((total, data) => total + parseInt(data.time_min), 0);
-        let reductionFactor = Math.max(0, 1 - (this.careCount * 0.05));
-        this.totalGrowthTime = baseTime * reductionFactor;
+        let careReduction = SharedDefines.CARE_TIME_RATIO_REDUCE * this.careCount;
+        let treatReduction = SharedDefines.TREAT_TIME_RATIO_REDUCE * this.treatCount;
+        this.totalGrowthTime = baseTime * (1 - (careReduction + treatReduction));
         console.log(`Crop ${this.id}: Updated total growth time to ${this.totalGrowthTime} minutes`);
     }
 

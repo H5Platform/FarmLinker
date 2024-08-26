@@ -3,7 +3,7 @@
 import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
-import { FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { IDropZone, IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { WindowManager } from '../ui/WindowManager';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -122,20 +122,39 @@ export class Fence extends Component implements IDropZone{
         );
     }
 
-    private async onAnimalCommandSelected(animal: Animal, command: string): Promise<void> {
+    private async onAnimalCommandSelected(animal: Animal, command: CommandType): Promise<void> {
         // Handle the animal command selection
         console.log(`Animal command selected: ${command} for animal ${animal.node.name}`);
         // Implement the logic for handling animal commands here
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         const sceneItem = animal.SceneItem;
         if (sceneItem) {
-            const careResult = await NetworkManager.instance.care(sceneItem.id);
-            if (careResult.success) {
-                //更新（缩短）成熟时间,this.careCount 是当前地块的浇水次数，this.occupiedCrop.CareCount 是当前农作物的浇水次数，两者可能不一致
-                animal.CareCount = careResult.data.care_count;
+            if (command == CommandType.Care) {
+                const careResult = await NetworkManager.instance.care(sceneItem.id);
+                if (careResult.success) {
+                    animal.CareCount = careResult.data.care_count;
+                }
+                else {
+                    console.log("Care failed");
+                }
             }
-            else {
-                console.log("Care failed");
+            else if (command == CommandType.Treat) {
+                const treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                if (treatResult.success) {
+                    animal.TreatCount = treatResult.data.treat_count;
+                }
+                else {
+                    console.log("Treat failed");
+                }
+            }
+            else if (command == CommandType.Cleanse) {
+                const cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                if (cleanseResult.success) {
+                    animal.CleanseCount = cleanseResult.data.cleanse_count;
+                }
+                else {
+                    console.log("Cleanse failed");
+                }
             }
         }
     }

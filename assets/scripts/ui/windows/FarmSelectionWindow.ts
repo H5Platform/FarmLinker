@@ -3,7 +3,7 @@ import { WindowBase } from '../base/WindowBase';
 import { PlayerController } from '../../controllers/PlayerController';
 import { InventoryComponent, InventoryItem, ItemType } from '../../components/InventoryComponent';
 import { PlotTile } from '../../entities/PlotTile';
-import { FarmSelectionType, SharedDefines } from '../../misc/SharedDefines';
+import { CommandType, FarmSelectionType, SharedDefines } from '../../misc/SharedDefines';
 import { ResourceManager } from '../../managers/ResourceManager';
 import { Fence } from '../../entities/Fence';
 import { AnimalDataManager } from '../../managers/AnimalDataManager';
@@ -163,16 +163,18 @@ export class FarmSelectionWindow extends WindowBase {
 
     private async onCare(): Promise<void> {
         console.log("onCare");
-        this.onItemSelected(null);
+        this.onItemSelected(CommandType.Care);
 
     }
 
     private onTreat(): void {
         console.log("onTreat");
+        this.onItemSelected(CommandType.Treat);
     }
 
     private onCleanse(): void {
         console.log("onCleanse");
+        this.onItemSelected(CommandType.Cleanse);
     }
 
 //#endregion

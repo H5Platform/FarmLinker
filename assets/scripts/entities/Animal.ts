@@ -89,6 +89,40 @@ export class Animal extends Component implements IDraggable {
         }
     }
 
+    //add treatCount
+    @property
+    private treatCount: number = 0;
+    
+    public get TreatCount(): number {
+        return this.treatCount;
+    }
+    //set treatCount
+    public set TreatCount(value: number) {
+        if (this.treatCount !== value) {
+            this.treatCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
+
+    //add cleanseCount
+    @property
+    private cleanseCount: number = 0;
+
+    public get CleanseCount(): number {
+        return this.cleanseCount;
+    }
+    //setter cleanseCount
+    public set CleanseCount(value: number) {
+        if (this.cleanseCount !== value) {
+            this.cleanseCount = value;
+            this.stopGrowth();
+            this.updateTotalGrowthTime();
+            this.requestNextGrowth();
+        }
+    }
+
     protected onLoad(): void {
         this.cooldownComponent = this.getComponent(CooldownComponent);
         if (!this.cooldownComponent) {
@@ -150,7 +184,9 @@ export class Animal extends Component implements IDraggable {
     private setupDataFromSceneItem(sceneItem: SceneItem): void {
         this.id = sceneItem.item_id;
         this.careCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Care)?.count || 0;
-        console.log(`Animal ${this.id}: Care count: ${this.careCount}`);
+        this.treatCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Treat)?.count || 0;
+        this.cleanseCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Cleanse)?.count || 0;
+        console.log(`Animal ${this.id}: Care count: ${this.careCount} , Treat count: ${this.treatCount} , Cleanse count: ${this.cleanseCount}`);
         this.updateTotalGrowthTime();
         this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
@@ -162,10 +198,12 @@ export class Animal extends Component implements IDraggable {
     }
 
     private updateTotalGrowthTime(): void {
+
         let baseTime = this.growthStages.reduce((total, data) => total + parseInt(data.time_min), 0);
-        let reductionFactor = Math.max(0, 1 - (this.careCount * 0.05));
-        this.totalGrowthTime = baseTime * reductionFactor;
-        console.log(`Animal ${this.id}: Updated total growth time to ${this.totalGrowthTime} minutes`);
+        let careReduction = SharedDefines.CARE_TIME_RATIO_REDUCE * this.careCount;
+        let treatReduction = SharedDefines.TREAT_TIME_RATIO_REDUCE * this.treatCount;
+        this.totalGrowthTime = baseTime * (1 - (careReduction + treatReduction));
+        console.log(`Crop ${this.id}: Updated total growth time to ${this.totalGrowthTime} minutes`);
     }
 
     private calculateRemainingTime(): number {
@@ -176,14 +214,22 @@ export class Animal extends Component implements IDraggable {
 
     private calculateCurrentStage(remainingTime: number): number {
         const elapsedTime = this.totalGrowthTime - remainingTime;
+        console.log(`Crop ${this.id}: Elapsed time: ${elapsedTime} minutes`);
         let accumulatedTime = 0;
-        for (let i = 0; i < this.growthStages.length; i++) {
-            accumulatedTime += parseInt(this.growthStages[i].time_min);
-            if (accumulatedTime > elapsedTime) {
-                return i;
+        let exptectedStageIndex = 0;
+        if (elapsedTime >= this.totalGrowthTime) {
+            exptectedStageIndex = this.growthStages.length - 1;
+            console.log(`Crop ${this.id}: Fully grown, expected stage index: ${exptectedStageIndex}`);
+        } else {
+            for (let i = 0; i < this.growthStages.length; i++) {
+                accumulatedTime += parseInt(this.growthStages[i].time_min);
+                if (elapsedTime >= accumulatedTime) {
+                    exptectedStageIndex = i;
+                    console.log(`Crop ${this.id}: Expected stage index: ${exptectedStageIndex}, accumulatedTime: ${accumulatedTime}, elapsedTime: ${elapsedTime}`);
+                }
             }
         }
-        return this.growthStages.length - 1;
+        return exptectedStageIndex;
     }
 
     private updateSprite(pngPath: string): void {

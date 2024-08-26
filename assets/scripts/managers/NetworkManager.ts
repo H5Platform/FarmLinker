@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkCareResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -24,6 +24,10 @@ export class NetworkManager extends Component {
     public static readonly API_BUY_ITEM: string = "/game/buyItem";
     public static readonly API_SELL_ITEM: string = "/game/sellItem";
     public static readonly API_CARE: string = "/game/care";
+    public static readonly API_TREAT: string = "/game/treat";
+    public static readonly API_CLEANSE: string = "/game/cleanse";
+
+    
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -33,6 +37,8 @@ export class NetworkManager extends Component {
     public static readonly EVENT_BUY_ITEM = 'buy-item';
     public static readonly EVENT_SELL_ITEM = 'sell-item';
     public static readonly EVENT_CARE = 'care';
+    public static readonly EVENT_TREAT = 'treat';
+    public static readonly EVENT_CLEANSE = 'cleanse';
 
     private static _instance: NetworkManager | null = null;
 
@@ -397,7 +403,62 @@ export class NetworkManager extends Component {
         }
     }
 
+    public async treat(sceneId: string): Promise<NetworkTreatResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
 
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_TREAT}`;
+        
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkTreatResult;
+            this.eventTarget.emit(NetworkManager.EVENT_TREAT, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    //cleanse
+    public async cleanse(sceneId: string): Promise<NetworkCleanseResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CLEANSE}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkCleanseResult;
+            this.eventTarget.emit(NetworkManager.EVENT_CLEANSE, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
 
     private buildUrl(endpoint: string): string {
         return `${this.baseUrl}${endpoint}`;

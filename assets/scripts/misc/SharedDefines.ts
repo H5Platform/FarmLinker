@@ -130,6 +130,30 @@ export class NetworkCareResult{
     data: NetworkCareResultData;
 }
 
+export class NetworkTreatResultData{
+    sceneid: string;
+    command_id: string;
+    treat_count: number;
+}
+
+export class NetworkTreatResult{
+    success: boolean;
+    message: string;
+    data: NetworkTreatResultData;
+}
+
+export class NetworkCleanseResultData{
+    sceneid: string;
+    command_id: string;
+    cleanse_count: number;
+}
+
+export class NetworkCleanseResult{
+    success: boolean;
+    message: string;
+    data: NetworkCleanseResultData;
+}
+
 export class NetworkCommand{
     id: string;
     userid: string;
@@ -186,6 +210,9 @@ export class SharedDefines {
     // // 音频相关
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
+
+    public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
+    public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
 
     public static readonly TIME_MINUTE: number = 60;
 
