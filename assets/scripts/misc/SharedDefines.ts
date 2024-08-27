@@ -36,7 +36,8 @@ export enum SceneItemType {
 export enum SceneItemState {
     None = 0,
     InProgress = 1,
-    Complete = 2
+    Complete = 2,
+    Disease = 3
 }
 
 export enum CommandType {
@@ -44,6 +45,7 @@ export enum CommandType {
     Care = 1,                   //浇水/喂养
     Treat = 2,                   //施肥/安抚
     Cleanse = 3,                 //除虫/洗澡
+    Disease = 4,                //生病
 }
 
 export enum CommandState {
@@ -154,6 +156,12 @@ export class NetworkCleanseResult{
     data: NetworkCleanseResultData;
 }
 
+export class NetworkDiseaseStatusResult{
+    success: boolean;
+    message: string;
+    is_sick: boolean;
+}
+
 export class NetworkCommand{
     id: string;
     userid: string;
@@ -213,6 +221,8 @@ export class SharedDefines {
 
     public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
     public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
+
+    public static readonly DISEASE_STATUS_UPDATE_INTERVAL: number = 60 * 60;    //每小时更新一次生病状态
 
     public static readonly TIME_MINUTE: number = 60;
 

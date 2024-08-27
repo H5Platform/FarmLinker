@@ -166,6 +166,8 @@ export class Crop extends Component implements IDraggable {
             return;
         }
         
+        // Start the disease status update cycle
+        this.scheduleDiseaseStatusUpdate();
     }
 
     private loadCropData(id:string): void {
@@ -446,7 +448,7 @@ export class Crop extends Component implements IDraggable {
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
             this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
-            //destroy node
+            this.stopDiseaseStatusUpdates();
             this.node.destroy();
             return;
         }
@@ -492,5 +494,55 @@ export class Crop extends Component implements IDraggable {
         console.log(`Crop ${this.id}: Stopping growth`);
         this.CooldownComponent?.removeCooldown('growth');
         this.growState = GrowState.NONE;
+    }
+
+    private async updateDiseaseStatus(): Promise<void> {
+        if (!this.sceneItem || !this.sceneItem.id) {
+            console.warn('Cannot update disease status: Scene item or ID is not set');
+            return;
+        }
+
+        try {
+            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id);
+            if (result && result.success) {
+                // Handle the updated disease status
+                if (result.is_sick) {
+                    // Implement logic for when the crop becomes sick
+                    console.log(`Crop ${this.id} has become sick`);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update disease status:', error);
+        }
+
+        // Schedule the next update
+        this.scheduleDiseaseStatusUpdate();
+    }
+
+    private scheduleDiseaseStatusUpdate(): void {
+        const currentTime = Date.now() / 1000;
+        let nextUpdateTime = SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL;
+
+        const diseaseCommand = this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease);
+        const lastUpdateTime = diseaseCommand 
+            ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
+            : DateHelper.stringToDate(this.sceneItem?.last_updated_time || '').getTime() / 1000;
+
+        const timeSinceLastUpdate = currentTime - lastUpdateTime;
+        const missedIntervals = Math.floor(timeSinceLastUpdate / SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL);
+        //Put missedIntervals as parameter to server
+        nextUpdateTime = Math.max(0, SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL - timeSinceLastUpdate);
+        console.log(`Disease nextUpdateTIme:${nextUpdateTime}`);
+        this.unschedule(this.updateDiseaseStatus);
+        this.scheduleOnce(this.updateDiseaseStatus, nextUpdateTime);
+    }
+
+    public stopDiseaseStatusUpdates(): void {
+        this.unschedule(this.updateDiseaseStatus);
+    }
+
+    protected onDestroy(): void {
+        this.stopDiseaseStatusUpdates();
+        // Any other cleanup code...
     }
 }

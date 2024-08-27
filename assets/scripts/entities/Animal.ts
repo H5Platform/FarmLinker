@@ -157,6 +157,9 @@ export class Animal extends Component implements IDraggable {
         } else {
             console.error(`No growth stages found for animal with id: ${sceneItem.item_id}`);
         }
+
+        // Start the disease status update cycle
+        this.scheduleDiseaseStatusUpdate();
     }
 
     private loadAnimalData(id: string): void {
@@ -407,5 +410,65 @@ export class Animal extends Component implements IDraggable {
         } else {
             console.error(`Animal ${this.node.name} harvest failed`);
         }
+    }
+
+    private async updateDiseaseStatus(): Promise<void> {
+        if (!this.sceneItem || !this.sceneItem.id) {
+            console.warn('Cannot update disease status: Scene item or ID is not set');
+            return;
+        }
+
+        try {
+            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id);
+            if (result && result.success) {
+                // Handle the updated disease status
+                if (result.is_sick) {
+                    // Implement logic for when the crop becomes sick
+                    console.log(`Crop ${this.id} has become sick`);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update disease status:', error);
+        }
+
+        // Schedule the next update
+        this.scheduleDiseaseStatusUpdate();
+    }
+
+    private async scheduleDiseaseStatusUpdate(): Promise<void> {
+        const currentTime = Date.now() / 1000;
+        const interval = SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL;
+
+        const diseaseCommand = this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease);
+        const lastUpdateTime = diseaseCommand 
+            ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
+            : DateHelper.stringToDate(this.sceneItem?.last_updated_time || '').getTime() / 1000;
+
+        const timeSinceLastUpdate = currentTime - lastUpdateTime;
+        const missedIntervals = Math.floor(timeSinceLastUpdate / interval);
+
+        console.log(`animal ${this.id}: Time since last update: ${timeSinceLastUpdate.toFixed(2)}s, Missed intervals: ${missedIntervals}`);
+
+        // Execute missed updates
+        for (let i = 0; i < missedIntervals; i++) {
+            await this.updateDiseaseStatus();
+        }
+
+        // Calculate time until next update
+        const nextUpdateTime = interval - (timeSinceLastUpdate % interval);
+        console.log(`animal  ${this.id}: Next disease status update in ${nextUpdateTime.toFixed(2)}s`);
+
+        // Schedule next update
+        this.unschedule(this.updateDiseaseStatus);
+        this.scheduleOnce(this.updateDiseaseStatus, nextUpdateTime);
+    }
+
+    public stopDiseaseStatusUpdates(): void {
+        this.unschedule(this.updateDiseaseStatus);
+    }
+
+    protected onDestroy(): void {
+        this.stopDiseaseStatusUpdates();
+        // Any other cleanup code...
     }
 }

@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
-import { FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
 import { PlayerController } from '../controllers/PlayerController';
@@ -122,17 +122,38 @@ export class PlotTile extends Component implements IDropZone {
     }
 
     private async onSelectionWindowItemClicked(data: any): Promise<void> {
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
         if (this.isOccupied) {
             const sceneItem = this.occupiedCrop.SceneItem;
             if (sceneItem) {
-                const careResult = await NetworkManager.instance.care(sceneItem.id);
-                if (careResult.success) {
-                    //更新（缩短）成熟时间,this.careCount 是当前地块的浇水次数，this.occupiedCrop.CareCount 是当前农作物的浇水次数，两者可能不一致
-                    this.careCount = careResult.data.care_count;
-                    this.occupiedCrop.CareCount = this.careCount;
+                if (data == CommandType.Care) {
+                    const careResult = await NetworkManager.instance.care(sceneItem.id);
+                    if (careResult.success) {
+                        
+                        this.careCount = careResult.data.care_count;
+                        this.occupiedCrop.CareCount = this.careCount;
+                    }
+                    else {
+                        console.log("Care failed");
+                    }
                 }
-                else {
-                    console.log("Care failed");
+                else if (data == CommandType.Treat) {
+                    const treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                    if (treatResult.success) {
+                        this.occupiedCrop.TreatCount = treatResult.data.treat_count;
+                    }
+                    else {
+                        console.log("Treat failed");
+                    }
+                }
+                else if(data == CommandType.Cleanse){
+                    const cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                    if (cleanseResult.success) {
+                       // this.occupiedCrop.CleanseCount = cleanseResult.data.cleanse_count;
+                    }
+                    else {
+                        console.log("Cleanse failed");
+                    }
                 }
             }
 

@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkTreatResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -26,6 +26,7 @@ export class NetworkManager extends Component {
     public static readonly API_CARE: string = "/game/care";
     public static readonly API_TREAT: string = "/game/treat";
     public static readonly API_CLEANSE: string = "/game/cleanse";
+    public static readonly API_UPDATE_DISEASE_STATUS: string = '/game/updateDiseaseStatus';
 
     
 
@@ -39,6 +40,7 @@ export class NetworkManager extends Component {
     public static readonly EVENT_CARE = 'care';
     public static readonly EVENT_TREAT = 'treat';
     public static readonly EVENT_CLEANSE = 'cleanse';
+    public static readonly EVENT_UPDATE_DISEASE_STATUS: string = 'update-disease-status';
 
     private static _instance: NetworkManager | null = null;
 
@@ -453,6 +455,38 @@ export class NetworkManager extends Component {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response) as NetworkCleanseResult;
             this.eventTarget.emit(NetworkManager.EVENT_CLEANSE, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    // Disease status update
+    
+    
+
+    public async updateDiseaseStatus(sceneId: string): Promise<NetworkDiseaseStatusResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_UPDATE_DISEASE_STATUS}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkDiseaseStatusResult;
+            this.eventTarget.emit(NetworkManager.EVENT_UPDATE_DISEASE_STATUS, result);
             return result;
         } catch (error) {
             this.handleError(error);
