@@ -72,6 +72,7 @@ export class Animal extends Component implements IDraggable {
     private sceneItem: SceneItem | null = null;
     private totalGrowthTime: number = 0;
     private growthStartTime: number = 0;
+    private isSick: boolean = false;
 
     @property
     private careCount: number = 0;
@@ -396,7 +397,7 @@ export class Animal extends Component implements IDraggable {
     }
 
     public async harvest(): Promise<void> {
-        if (this.growState != GrowState.HARVESTING || this.harvestItemId == "") {
+        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
             console.error(`Animal ${this.node.name} is not ready to harvest`);
             return;
         }
@@ -412,14 +413,14 @@ export class Animal extends Component implements IDraggable {
         }
     }
 
-    private async updateDiseaseStatus(): Promise<void> {
+    private async updateDiseaseStatus(updateDiseaseTimes:number = 1): Promise<void> {
         if (!this.sceneItem || !this.sceneItem.id) {
             console.warn('Cannot update disease status: Scene item or ID is not set');
             return;
         }
 
         try {
-            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id);
+            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id,updateDiseaseTimes);
             if (result && result.success) {
                 // Handle the updated disease status
                 if (result.is_sick) {
@@ -440,6 +441,13 @@ export class Animal extends Component implements IDraggable {
         const interval = SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL;
 
         const diseaseCommand = this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease);
+        if(diseaseCommand && diseaseCommand.state === CommandState.InProgress){
+            this.isSick = true;
+        }
+        else{
+            this.isSick = false;
+        }
+        console.log(`isSick = ${this.isSick}`);
         const lastUpdateTime = diseaseCommand 
             ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
             : DateHelper.stringToDate(this.sceneItem?.last_updated_time || '').getTime() / 1000;
@@ -449,9 +457,10 @@ export class Animal extends Component implements IDraggable {
 
         console.log(`animal ${this.id}: Time since last update: ${timeSinceLastUpdate.toFixed(2)}s, Missed intervals: ${missedIntervals}`);
 
-        // Execute missed updates
-        for (let i = 0; i < missedIntervals; i++) {
-            await this.updateDiseaseStatus();
+        if(missedIntervals > 0){
+            //Put missedIntervals as parameter to server
+            //update missedIntervals times disease status to see if crop is sick
+            this.updateDiseaseStatus(missedIntervals);
         }
 
         // Calculate time until next update
@@ -465,6 +474,17 @@ export class Animal extends Component implements IDraggable {
 
     public stopDiseaseStatusUpdates(): void {
         this.unschedule(this.updateDiseaseStatus);
+    }
+
+    public cleanse(immunityDuration: number): void {
+        this.isSick = false;
+        //this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        
+        // Schedule immunity
+        this.unschedule(this.updateDiseaseStatus);
+        this.scheduleOnce(() => {
+            this.scheduleDiseaseStatusUpdate();
+        }, immunityDuration * 3600); // Convert hours to seconds
     }
 
     protected onDestroy(): void {

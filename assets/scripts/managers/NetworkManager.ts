@@ -466,7 +466,7 @@ export class NetworkManager extends Component {
     
     
 
-    public async updateDiseaseStatus(sceneId: string): Promise<NetworkDiseaseStatusResult> {
+    public async updateDiseaseStatus(sceneId: string,updateDiseaseTimes:number): Promise<NetworkDiseaseStatusResult> {
         if (this.simulateNetwork) {
             return null;
         }
@@ -480,7 +480,8 @@ export class NetworkManager extends Component {
 
         const data = {
             userid: this.userId,
-            sceneid: sceneId
+            sceneid: sceneId,
+            updateDiseaseTimes
         };
 
         try {

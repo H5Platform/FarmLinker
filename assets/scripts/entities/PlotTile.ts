@@ -150,6 +150,8 @@ export class PlotTile extends Component implements IDropZone {
                     const cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
                     if (cleanseResult.success) {
                        // this.occupiedCrop.CleanseCount = cleanseResult.data.cleanse_count;
+                       const immunityDuration = cleanseResult.data.cleanse_count; // Default to 24 hours if not provided
+                        this.occupiedCrop.cleanse(immunityDuration);
                     }
                     else {
                         console.log("Cleanse failed");

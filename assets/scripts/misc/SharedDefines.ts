@@ -37,7 +37,7 @@ export enum SceneItemState {
     None = 0,
     InProgress = 1,
     Complete = 2,
-    Disease = 3
+    Dead = 3
 }
 
 export enum CommandType {
@@ -60,6 +60,11 @@ export enum GameState {
     PLAYING = 'playing',
     PAUSED = 'paused',
     GAME_OVER = 'game_over',
+}
+
+export enum DiseaseState{
+    None = 0,
+    Disease = 1
 }
 
 export class NetworkUser{
@@ -160,6 +165,7 @@ export class NetworkDiseaseStatusResult{
     success: boolean;
     message: string;
     is_sick: boolean;
+    count:  number;
 }
 
 export class NetworkCommand{

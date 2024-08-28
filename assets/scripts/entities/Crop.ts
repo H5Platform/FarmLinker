@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType, DiseaseState } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -54,6 +54,7 @@ export class Crop extends Component implements IDraggable {
     private cropDataIndex: number = 0;
     private harvestItemId: string = '';
     private levelRequirement: number = 0;
+    private isSick: boolean = false;
     private growState:GrowState = GrowState.NONE;
     private static readonly MAX_LEVEL: number = 5;  // 假设最大等级为5
 
@@ -438,7 +439,7 @@ export class Crop extends Component implements IDraggable {
 
     public async harvest():Promise<void>
     {
-        if (this.growState != GrowState.HARVESTING || this.harvestItemId == "") {
+        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
             console.error(`Crop ${this.node.name} is not ready to harvest`);
             return;
         }
@@ -457,37 +458,6 @@ export class Crop extends Component implements IDraggable {
             return;
         }
         
-
-        // //get item by itemdatamanager
-        // const item = ItemDataManager.instance.getItemById(this.harvestItemId);
-        // if (!item) {
-        //     console.error(`Item ${this.harvestItemId} not found`);
-        //     return;
-        // }
-
-        // //find gamecontroller in scene
-        // const gameControllerNode = director.getScene()?.getChildByName('GameController');
-        // if (gameControllerNode) {
-        //     const gameController = gameControllerNode.getComponent(GameController);
-        //     if (!gameController) {
-        //         console.error('GameController not found');
-        //         return;
-        //     }
-        //     const playerController = gameController.getPlayerController();
-        //     if (!playerController) {
-        //         console.error('PlayerController not found');
-        //         return;
-        //     }
-        //     playerController.playerState.addExperience(parseInt(item.exp_get));
-        //     const inventoryItem = new InventoryItem(item);
-        //     playerController.inventoryComponent.addItem(inventoryItem);
-        // }
-
-        // this.growState = GrowState.NONE;
-        // this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
-        // this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
-        // //destroy node
-        // this.node.destroy();
     }
 
     public stopGrowth(): void {
@@ -496,18 +466,19 @@ export class Crop extends Component implements IDraggable {
         this.growState = GrowState.NONE;
     }
 
-    private async updateDiseaseStatus(): Promise<void> {
+    private async updateDiseaseStatus(updateDiseaseTimes:number = 1): Promise<void> {
         if (!this.sceneItem || !this.sceneItem.id) {
             console.warn('Cannot update disease status: Scene item or ID is not set');
             return;
         }
 
         try {
-            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id);
+            const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id,updateDiseaseTimes);
             if (result && result.success) {
                 // Handle the updated disease status
                 if (result.is_sick) {
                     // Implement logic for when the crop becomes sick
+                    this.isSick = true;
                     console.log(`Crop ${this.id} has become sick`);
                 }
             }
@@ -520,17 +491,33 @@ export class Crop extends Component implements IDraggable {
     }
 
     private scheduleDiseaseStatusUpdate(): void {
+        if(this.isSick){
+            this.stopDiseaseStatusUpdates();
+            return;
+        }
         const currentTime = Date.now() / 1000;
         let nextUpdateTime = SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL;
 
         const diseaseCommand = this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease);
+        if(diseaseCommand && diseaseCommand.state === CommandState.InProgress){
+            this.isSick = true;
+        }
+        else{
+            this.isSick = false;
+        }
+        console.log(`isSick = ${this.isSick}`);
         const lastUpdateTime = diseaseCommand 
             ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
             : DateHelper.stringToDate(this.sceneItem?.last_updated_time || '').getTime() / 1000;
 
         const timeSinceLastUpdate = currentTime - lastUpdateTime;
         const missedIntervals = Math.floor(timeSinceLastUpdate / SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL);
-        //Put missedIntervals as parameter to server
+        
+        if(missedIntervals > 0){
+            //Put missedIntervals as parameter to server
+            //update missedIntervals times disease status to see if crop is sick
+            this.updateDiseaseStatus(missedIntervals);
+        }
         nextUpdateTime = Math.max(0, SharedDefines.DISEASE_STATUS_UPDATE_INTERVAL - timeSinceLastUpdate);
         console.log(`Disease nextUpdateTIme:${nextUpdateTime}`);
         this.unschedule(this.updateDiseaseStatus);
@@ -539,6 +526,17 @@ export class Crop extends Component implements IDraggable {
 
     public stopDiseaseStatusUpdates(): void {
         this.unschedule(this.updateDiseaseStatus);
+    }
+
+    public cleanse(immunityDuration: number): void {
+        this.isSick = false;
+        //this.updateSprite(`${SharedDefines.CROPS_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        
+        // Schedule immunity
+        this.unschedule(this.updateDiseaseStatus);
+        this.scheduleOnce(() => {
+            this.scheduleDiseaseStatusUpdate();
+        }, immunityDuration * 3600); // Convert hours to seconds
     }
 
     protected onDestroy(): void {
