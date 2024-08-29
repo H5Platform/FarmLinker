@@ -10,8 +10,76 @@ import { IDraggable } from '../components/DragDropComponent';
 import { ResourceManager } from '../managers/ResourceManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
+import { FarmEntity } from './FarmEntity';
 const { ccclass, property } = _decorator;
 
+@ccclass('Crop')
+export class Crop extends FarmEntity {
+    @property({
+        type: Enum(CropType)
+    })
+    public cropType: CropType = CropType.CORN;
+
+    private cropDatas: any[] = [];
+    private cropDataIndex: number = 0;
+
+    public initialize(id: string): void {
+        this.loadEntityData(id);
+        if (this.growthStages.length > 0) {
+            this.setupData(this.growthStages[0]);
+        } else {
+            console.error(`No growth stages found for crop with id: ${id}`);
+        }
+    }
+
+    public initializeWithSceneItem(sceneItem: SceneItem): void 
+    {
+        this.baseSpritePath = SharedDefines.CROPS_TEXTURES;
+        super.initializeWithSceneItem(sceneItem);
+    }
+
+    protected loadEntityData(id: string): void {
+        const cropData = CropDataManager.instance.findCropDataById(id);
+        if (!cropData) {
+            console.error(`No crop data found for id: ${id}`);
+            return;
+        }
+        this.cropType = parseInt(cropData.crop_type) as CropType;
+        this.growthStages = CropDataManager.instance.filterCropDataByCropType(this.cropType.toString());
+    }
+
+    protected setupData(cropData: any): void {
+        this.id = cropData.id;
+        this.growthTime = cropData.time_min * SharedDefines.TIME_MINUTE;
+        this.harvestItemId = cropData.harvest_item_id;
+        this.levelNeed = cropData.level_need;
+    }
+
+    public async harvest(): Promise<void> {
+        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
+            console.error(`Crop ${this.node.name} is not ready to harvest`);
+            return;
+        }
+
+        const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
+        if(result){
+            this.growState = GrowState.NONE;
+            this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
+            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+            this.stopDiseaseStatusUpdates();
+            this.node.destroy();
+            return;
+        }
+        else{
+            console.error(`Crop ${this.node.name} harvest failed`);
+            return;
+        }
+    }
+
+    // Any additional Crop-specific methods can be added here
+}
+
+/*
 @ccclass('Crop')
 export class Crop extends Component implements IDraggable {
     @property
@@ -544,3 +612,4 @@ export class Crop extends Component implements IDraggable {
         // Any other cleanup code...
     }
 }
+*/

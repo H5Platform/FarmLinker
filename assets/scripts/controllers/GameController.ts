@@ -24,7 +24,8 @@ export class GameController extends Component {
 
     @property(Node)
     private gameplayContainer: Node| null = null;
-
+    @property(Node)
+    private friendGameplayContainer: Node| null = null;
     @property(Node)
     private buildingContainer: Node| null = null;
 
@@ -38,9 +39,9 @@ export class GameController extends Component {
     public eventTarget: EventTarget = new EventTarget();
 
     onLoad(): void {
-
-
+        
         this.setGameViewVisibility(false);
+        this.setFriendGameViewVisibility(false);
     }
 
     async start() {
@@ -79,6 +80,15 @@ export class GameController extends Component {
         }
     }
 
+    //create setFriendGameViewVisibility(visible: boolean): void method
+    public setFriendGameViewVisibility(visible: boolean): void {
+        if (this.friendGameplayContainer) {
+            this.friendGameplayContainer.active = visible;
+        } else {
+            console.warn('friendGameplayContainer is not set in GameController');
+        }
+    }
+
     public setGameViewVisibility(visible: boolean): void {
         if (this.gameplayContainer) {
             this.gameplayContainer.active = visible;
@@ -89,6 +99,7 @@ export class GameController extends Component {
 
     public startGame(): void {
         this.setGameViewVisibility(true);
+        this.setFriendGameViewVisibility(false);
         
         //instantiate playerControllerprefab
         
@@ -180,7 +191,7 @@ export class GameController extends Component {
         const userid = "123";
         await NetworkManager.instance.login(userid);
 
-        await NetworkManager.instance.requestSceneItemsByUserId(userid,this.playerController?.playerState.token);
+        await NetworkManager.instance.requestSceneItemsByUserId(userid);
     }
 
     private onLoginSuccess(userData:any,token:string): void {
@@ -197,21 +208,41 @@ export class GameController extends Component {
             return;
         }
         const sceneItems = data.data as SceneItem[];
+        if(data.userid == this.playerController?.playerState.id){
+            this.initializeSceneItems(this.gameplayContainer,sceneItems);
+        }
+        else{
+            //visit friends's scene
+            this.initializeSceneItems(this.friendGameplayContainer,sceneItems);
+        }
+    }
+
+    public async initializeSceneItems(gameplayContainer:Node,sceneItems:SceneItem[]){
+        if(!gameplayContainer){
+            console.error(`initializeGameplayContainer`);
+            return;
+        }
+        const buildingContainer = gameplayContainer.getChildByName("Buildings");
+        const fence = gameplayContainer.getComponentInChildren(Fence);
+        const plotTiles = gameplayContainer.getComponentsInChildren(PlotTile);
+
         for (const item of sceneItems) {
             let node: Node | null = null;
             let component: Component | null = null;
             console.log("item:id" + item.id);
             switch (item.type) {
                 case SceneItemType.Crop:
-                    node = await this.createCropNode(item);
+                    const plotTile = plotTiles?.find(tile => tile.node.name === item.parent_node_name);
+                    if(!plotTile) continue;
+                    node = await this.createCropNode(plotTile,item);
                     component = node?.getComponent(Crop);
                     break;
                 case SceneItemType.Animal:
-                   node = await this.createAnimalNode(item);
+                   node = await this.createAnimalNode(fence,item);
                    component = node?.getComponent(Animal);
                     break;
                 case SceneItemType.Building:
-                   node = await this.createBuildingNode(item);
+                   node = await this.createBuildingNode(buildingContainer,item);
                    component = node?.getComponent(Building);
                     break;
             }
@@ -222,7 +253,7 @@ export class GameController extends Component {
         }
     }
 
-    private async createCropNode(item: SceneItem): Promise<Node | null> {
+    private async createCropNode(plotTile:PlotTile,item: SceneItem): Promise<Node | null> {
         console.log(`Creating crop node for item ${item.id}`);
         const cropData = CropDataManager.instance.findCropDataById(item.item_id);
         if (!cropData) {
@@ -245,7 +276,7 @@ export class GameController extends Component {
         }
 
         //find plot tile in plot tiles with item.parent_node_name
-        const plotTile = this.plotTiles?.find(tile => tile.node.name === item.parent_node_name);
+       // const plotTile = this.plotTiles?.find(tile => tile.node.name === item.parent_node_name);
         if(plotTile){
             console.log(`Planting crop for item ${item.id}`);
             plotTile.plant(crop);
@@ -258,7 +289,7 @@ export class GameController extends Component {
         return node;
     }
 
-    private async createAnimalNode(item: SceneItem): Promise<Node | null> {
+    private async createAnimalNode(fence:Fence,item: SceneItem): Promise<Node | null> {
         console.log(`Creating animal node for item ${item.id}`);
         const animalData = AnimalDataManager.instance.findAnimalDataById(item.item_id);
         if (!animalData) return null;
@@ -271,7 +302,7 @@ export class GameController extends Component {
         if (animal) {
             console.log(`Initializing animal for item ${item.id}`);
             animal.initializeWithSceneItem(item);
-            this.fence.addAnimal(animal);
+            fence.addAnimal(animal);
         }
         else{
             console.error(`Animal component not found for item ${item.id}`);
@@ -281,7 +312,7 @@ export class GameController extends Component {
         return node;
     }
 
-    private async createBuildingNode(item: SceneItem): Promise<Node | null> {
+    private async createBuildingNode(buildingContainer:Node,item: SceneItem): Promise<Node | null> {
         const buildData = BuildDataManager.instance.findBuildDataById(item.item_id);
         if (!buildData) return null;
 
@@ -289,7 +320,7 @@ export class GameController extends Component {
         if (!prefab) return null;
 
         const node = instantiate(prefab);
-        this.buildingContainer?.addChild(node);
+        buildingContainer?.addChild(node);
         //set position
         node.setWorldPosition(new Vec3(item.x, item.y, 0));
         const building = node.addComponent(Building);

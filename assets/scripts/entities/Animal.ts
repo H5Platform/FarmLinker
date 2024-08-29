@@ -11,9 +11,75 @@ import { GameController } from '../controllers/GameController';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
+import { FarmEntity } from './FarmEntity';
 
 const { ccclass, property } = _decorator;
 
+@ccclass('Animal')
+export class Animal extends FarmEntity {
+    @property
+    public animalType: string = '';
+
+    public initialize(id: string): void {
+        this.loadEntityData(id);
+        if (this.growthStages.length > 0) {
+            this.setupData(this.growthStages[0]);
+        } else {
+            console.error(`No growth stages found for animal with id: ${id}`);
+        }
+    }
+
+    public initializeWithSceneItem(sceneItem: SceneItem): void {
+        this.baseSpritePath = SharedDefines.ANIMALS_TEXTURES;
+        super.initializeWithSceneItem(sceneItem);
+        
+    }
+
+    protected loadEntityData(id: string): void {
+        const baseAnimalData = AnimalDataManager.instance.findAnimalDataById(id);
+        if (!baseAnimalData) {
+            console.error(`No animal data found for id: ${id}`);
+            return;
+        }
+    
+        const animalType = baseAnimalData.animal_type; 
+        this.growthStages = AnimalDataManager.instance.filterAnimalDataByAnimalType(animalType);
+    }
+
+    protected setupData(animalData: any): void {
+        this.id = animalData.id;
+        this.description = animalData.description;
+        this.growthTime = parseInt(animalData.time_min) * SharedDefines.TIME_MINUTE;
+        this.harvestItemId = animalData.harvest_item_id;
+        this.farmType = animalData.farm_type;
+        this.timeMin = parseInt(animalData.time_min);
+        this.levelNeed = parseInt(animalData.level_need);
+    }
+
+    public async harvest(): Promise<void> {
+        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
+            console.error(`Animal ${this.node.name} is not ready to harvest`);
+            return;
+        }
+
+        const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
+        if(result){
+            this.growState = GrowState.NONE;
+            this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
+            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+            this.stopDiseaseStatusUpdates();
+            this.node.destroy();
+            return;
+        }
+        else{
+            console.error(`Animal ${this.node.name} harvest failed`);
+            return;
+        }
+    }
+
+    // Any additional Animal-specific methods can be added here
+}
+/*
 @ccclass('Animal')
 export class Animal extends Component implements IDraggable {
     @property
@@ -491,4 +557,4 @@ export class Animal extends Component implements IDraggable {
         this.stopDiseaseStatusUpdates();
         // Any other cleanup code...
     }
-}
+}*/

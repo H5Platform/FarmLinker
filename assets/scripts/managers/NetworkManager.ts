@@ -157,11 +157,11 @@ export class NetworkManager extends Component {
         return false;
     }
 
-    public async requestSceneItemsByUserId(userId: string, session: string): Promise<void> {
+    public async requestSceneItemsByUserId(userId: string): Promise<void> {
         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_GET_USER_SCENE_ITEMS}`;
         console.log(url);
         const headers = {
-            'Authorization': session,
+            'Authorization': this.token,
         };
 
         const data = { userid: userId };

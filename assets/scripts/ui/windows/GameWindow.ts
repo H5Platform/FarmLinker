@@ -13,6 +13,7 @@ import { EDITOR } from 'cc/env';
 import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
+import { NetworkManager } from '../../managers/NetworkManager';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -38,6 +39,9 @@ export class GameWindow extends WindowBase {
     //button shop
     @property(Button)
     public btnShop: Button | null = null;
+
+    @property(Button)
+    public btnFriend: Button | null = null;
     
     private cropButtons: Node[] = [];
 
@@ -116,6 +120,10 @@ export class GameWindow extends WindowBase {
         //btnShop click event
         if (this.btnShop) {
             this.btnShop.node.on(Button.EventType.CLICK, this.onBtnShopClicked, this);
+        }
+        //btnFriend click event
+        if (this.btnFriend) {
+            this.btnFriend.node.on(Button.EventType.CLICK, this.onBtnFriendClicked, this);
         }
     }
 
@@ -253,6 +261,11 @@ export class GameWindow extends WindowBase {
     //btnshop clicked
     private onBtnShopClicked(): void {
         WindowManager.instance.show(SharedDefines.WINDOW_SHOP_NAME);
+    }
+
+    private async onBtnFriendClicked(): Promise<void> {
+        console.log('onBtnFriendClicked');
+        await NetworkManager.instance.requestSceneItemsByUserId("456");
     }
 }
 
