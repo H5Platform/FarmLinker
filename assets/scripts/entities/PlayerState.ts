@@ -29,7 +29,8 @@ export class PlayerState {
 
     
 
-    constructor(initialLevel: number = 1, initialExperience: number = 0, initialGold: number = 0, initialDiamond: number = 0) {
+    constructor(id: string,initialLevel: number = 1, initialExperience: number = 0, initialGold: number = 0, initialDiamond: number = 0) {
+        this._id = id;
         this._level = initialLevel;
         this._experience = initialExperience;
         this._gold = initialGold;

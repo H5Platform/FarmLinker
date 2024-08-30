@@ -30,6 +30,7 @@ export class Crop extends FarmEntity {
         } else {
             console.error(`No growth stages found for crop with id: ${id}`);
         }
+       // this.updateSprite(`${SharedDefines.WINDOW_GAME_TEXTURES}${this.cropDatas[0].icon}`);
     }
 
     public initializeWithSceneItem(sceneItem: SceneItem): void 
@@ -55,12 +56,19 @@ export class Crop extends FarmEntity {
         this.levelNeed = cropData.level_need;
     }
 
+    public canHarvest(): boolean {
+        //log states
+        console.log(`Crop ${this.node.name} growState = ${this.growState}, sceneItem.state = ${this.sceneItem.state}, harvestItemId = ${this.harvestItemId}`);
+        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "";
+    }
+
     public async harvest(): Promise<void> {
-        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
-            console.error(`Crop ${this.node.name} is not ready to harvest`);
+        console.log(`Crop ${this.node.name} harvest`);
+        if(!this.canHarvest()){
+            console.error(`Crop ${this.node.name} harvest failed`);
             return;
         }
-
+        
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
         if(result){
             this.growState = GrowState.NONE;

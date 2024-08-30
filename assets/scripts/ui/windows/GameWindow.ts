@@ -265,7 +265,7 @@ export class GameWindow extends WindowBase {
 
     private async onBtnFriendClicked(): Promise<void> {
         console.log('onBtnFriendClicked');
-        await NetworkManager.instance.requestSceneItemsByUserId("456");
+        this.gameController?.visitFriend("123");
     }
 }
 

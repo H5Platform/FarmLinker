@@ -39,6 +39,7 @@ export class PlotTile extends Component implements IDropZone {
 
     private currentDraggable: IDraggable | null = null;
     private dragDropComponent: DragDropComponent | null = null;
+    private playerController: PlayerController | null = null;
 
     public eventTarget: EventTarget = new EventTarget();
 
@@ -54,6 +55,14 @@ export class PlotTile extends Component implements IDropZone {
             console.error('PlotTile: GameController not found!');
         }
         this.cooldownComponent = this.addComponent(CooldownComponent);
+
+    }
+
+    protected start(): void {
+        this.playerController = Director.instance.getScene().getComponentInChildren(PlayerController);
+        if (!this.playerController) {
+            console.error('PlotTile: PlayerController not found!');
+        }
     }
 
     //ondestroy
@@ -68,11 +77,14 @@ export class PlotTile extends Component implements IDropZone {
 
     public occupy(crop : Crop): void {
         if(!crop || this.isOccupied) return;
+        console.log(`occupy crop , name = ${crop.node.name}`);
         this.occupiedCrop = crop;
         this.node.addChild(crop.node);
         this.isOccupied = true;
+        console.log(`occupy crop 3, name = ${crop.node.name}`);
         this.eventTarget.emit(SharedDefines.EVENT_PLOT_OCCUPIED,this);
         crop.eventTarget.on(SharedDefines.EVENT_CROP_HARVEST, this.onCropHarvest, this);
+        console.log(`occupy crop 4, name = ${crop.node.name}`);
     }
 
     public clear(): void {
@@ -108,11 +120,16 @@ export class PlotTile extends Component implements IDropZone {
         if (this.cooldownComponent.isOnCooldown('select')) {
             return; // if cooldown is on, ignore this select
         }
-
+        console.log(`select plot tile , name = ${this.node.name} , occupied = ${this.isOccupied}`);
         if (this.isOccupied) {
-            //TODO: 当被占用时再选中应该显示浇花、割草等操作
-            WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
-            console.log('select plot command , name = ' + this.node.name);
+            // if(this.occupiedCrop.canHarvest()){
+            //     this.occupiedCrop.harvest();
+            //     return;
+            // }
+            // else{
+                WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+                console.log('select plot command , name = ' + this.node.name);
+           // }
         }
         else{
             this.dragDropComponent = dragComponent;
@@ -127,7 +144,13 @@ export class PlotTile extends Component implements IDropZone {
             const sceneItem = this.occupiedCrop.SceneItem;
             if (sceneItem) {
                 if (data == CommandType.Care) {
-                    const careResult = await NetworkManager.instance.care(sceneItem.id);
+                    let careResult = null;
+                    if(this.playerController.visitMode){
+                        careResult = await NetworkManager.instance.careFriend(sceneItem.id,this.playerController.friendState.id);
+                    }
+                    else{
+                        careResult = await NetworkManager.instance.care(sceneItem.id);
+                    }
                     if (careResult.success) {
                         
                         this.careCount = careResult.data.care_count;
@@ -267,7 +290,9 @@ export class PlotTile extends Component implements IDropZone {
         }
         this.node.addChild(crop.node);
         crop.node.position = Vec3.ZERO;
+        console.log(`plant crop 1, name = ${crop.node.name}`);
         this.occupy(crop);
+        console.log(`plant crop 2, name = ${crop.node.name}`);
         crop.startGrowing();
         //this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
         NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_PLANT, this.plant);

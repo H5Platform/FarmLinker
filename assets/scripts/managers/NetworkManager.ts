@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkTreatResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -24,9 +24,11 @@ export class NetworkManager extends Component {
     public static readonly API_BUY_ITEM: string = "/game/buyItem";
     public static readonly API_SELL_ITEM: string = "/game/sellItem";
     public static readonly API_CARE: string = "/game/care";
+    public static readonly API_CARE_FRIEND: string = "/game/careFriend";
     public static readonly API_TREAT: string = "/game/treat";
     public static readonly API_CLEANSE: string = "/game/cleanse";
     public static readonly API_UPDATE_DISEASE_STATUS: string = '/game/updateDiseaseStatus';
+    public static readonly API_VISIT: string = '/game/visit';
 
     
 
@@ -38,6 +40,7 @@ export class NetworkManager extends Component {
     public static readonly EVENT_BUY_ITEM = 'buy-item';
     public static readonly EVENT_SELL_ITEM = 'sell-item';
     public static readonly EVENT_CARE = 'care';
+    public static readonly EVENT_CARE_FRIEND = 'care-friend';
     public static readonly EVENT_TREAT = 'treat';
     public static readonly EVENT_CLEANSE = 'cleanse';
     public static readonly EVENT_UPDATE_DISEASE_STATUS: string = 'update-disease-status';
@@ -405,6 +408,35 @@ export class NetworkManager extends Component {
         }
     }
 
+    public async careFriend(sceneId: string,friendId: string): Promise<NetworkCareResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CARE_FRIEND}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId,
+            friendId: friendId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkCareResult;
+            this.eventTarget.emit(NetworkManager.EVENT_CARE_FRIEND, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
     public async treat(sceneId: string): Promise<NetworkTreatResult> {
         if (this.simulateNetwork) {
             return null;
@@ -488,6 +520,34 @@ export class NetworkManager extends Component {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response) as NetworkDiseaseStatusResult;
             this.eventTarget.emit(NetworkManager.EVENT_UPDATE_DISEASE_STATUS, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    public async visit(userId:string): Promise<NetworkVisitResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_VISIT}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: userId, //The friend's userid
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkVisitResult;
+            console.log(`visit result: ${JSON.stringify(result)}`);
+            //this.eventTarget.emit(NetworkManager.EVENT_VISIT, result);
             return result;
         } catch (error) {
             this.handleError(error);

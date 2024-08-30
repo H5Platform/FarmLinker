@@ -113,6 +113,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
     public abstract initialize(id: string): void;
 
     public initializeWithSceneItem(sceneItem: SceneItem): void {
+        console.log(`initializeWithSceneItem , id = ${sceneItem.id}`);
         this.sceneItem = sceneItem;
         this.growState = GrowState.NONE;
         this.loadEntityData(sceneItem.item_id);
@@ -123,7 +124,9 @@ export abstract class FarmEntity extends Component implements IDraggable {
             console.error(`No growth stages found for entity with id: ${sceneItem.item_id}`);
             return;
         }
-
+        //log current growth stage index
+        console.log(`current growth stage index: ${this.currentGrowthStageIndex}`);
+        this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
         this.scheduleDiseaseStatusUpdate();
     }
 
@@ -142,6 +145,8 @@ export abstract class FarmEntity extends Component implements IDraggable {
         this.currentGrowthStageIndex = this.calculateCurrentStage(remainingTime);
         this.setupData(this.growthStages[this.currentGrowthStageIndex]);
         this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
+        //log growth time
+        console.log(`growth time: ${this.growthTime}`);
     }
 
     protected updateTotalGrowthTime(): void {
@@ -185,6 +190,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
     }
 
     public startGrowing(): void {
+        console.log(`start growing `);
         if (this.sceneItem) {
             if (this.sceneItem.state === SceneItemState.Complete) {
                 this.onGrowthComplete();
@@ -218,6 +224,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
     }
 
     protected async requestNextGrowth(): Promise<void> {
+        console.log(`request next growth `);
         try {
             const latestDuration = await this.getLatestCommandDuration();
             if (latestDuration !== null) {
@@ -226,6 +233,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
 
             this.updateTotalGrowthTime();
             const remainingTime = this.calculateRemainingTime();
+            console.log(`remainingTime = ${remainingTime}`);
             if (remainingTime <= 0 && this.isGrowEnd()) {
                 this.onGrowthComplete();
             } else {
@@ -257,21 +265,23 @@ export abstract class FarmEntity extends Component implements IDraggable {
 
         this.setupData(this.growthStages[this.currentGrowthStageIndex]);
         
-        const newSpritePath = `${SharedDefines.WINDOW_SHOP_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`;
+        const newSpritePath = `${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`;
         this.updateSprite(newSpritePath);
     }
 
     protected grow(): void {
         this.currentGrowthStageIndex++;
         this.setupData(this.growthStages[this.currentGrowthStageIndex]);
-        this.updateSprite(`${SharedDefines.WINDOW_SHOP_TEXTURES}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
         this.requestNextGrowth();
     }
 
     protected onGrowthComplete(): void {
+        console.log(`growth complete , current growth stage index: ${this.currentGrowthStageIndex}`);
         this.growState = GrowState.HARVESTING;
         this.eventTarget.emit(FarmEntity.growthCompleteEvent, this);
         this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
+        console.log(`growth complete , growState = ${this.growState}`);
     }
 
     protected async getLatestCommandDuration(): Promise<number | null> {
@@ -313,11 +323,15 @@ export abstract class FarmEntity extends Component implements IDraggable {
     }
 
     public stopGrowth(): void {
+        console.log(`stop growth , growState = ${this.growState}`);
         this.CooldownComponent?.removeCooldown('growth');
         this.growState = GrowState.NONE;
     }
 
+    //abstract canHarvest
+    public abstract canHarvest(): boolean;
     public abstract harvest(): Promise<void>;
+    
 
     protected isGrowEnd(): boolean {
         return this.growthTime == 0;

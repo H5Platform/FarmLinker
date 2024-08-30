@@ -56,8 +56,12 @@ export class Animal extends FarmEntity {
         this.levelNeed = parseInt(animalData.level_need);
     }
 
+    public canHarvest(): boolean {
+        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "";
+    }
+
     public async harvest(): Promise<void> {
-        if ((this.growState != GrowState.HARVESTING && this.sceneItem.state != SceneItemState.Dead) || this.harvestItemId == "") {
+        if (!this.canHarvest()) {
             console.error(`Animal ${this.node.name} is not ready to harvest`);
             return;
         }

@@ -32,7 +32,18 @@ export class PlayerController extends Component {
         return this._inputComponent;
     }
     
-    private _playerState: PlayerState;
+    //getter visitmode
+    public get visitMode(): boolean {
+        return this._visitMode;
+    }
+
+    //setter visitmode
+    public set visitMode(value: boolean) {
+        this._visitMode = value;
+    }
+    private _visitMode: boolean = false;
+    
+    
     private _inputComponent: InputComponent | null = null;
     private _inventoryComponent: InventoryComponent;
     private _camera : Camera;
@@ -44,6 +55,17 @@ export class PlayerController extends Component {
     public get playerState(): PlayerState {
         return this._playerState;
     }
+    private _playerState: PlayerState;
+
+    //getter friendstate
+    public get friendState(): PlayerState {
+        return this._friendState;
+    }
+    //setter friendstate
+    public set friendState(value: PlayerState) {
+        this._friendState = value;
+    }
+    private _friendState: PlayerState;
 
     //getter inventorycomponent
     public get inventoryComponent(): InventoryComponent {

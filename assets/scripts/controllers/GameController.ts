@@ -14,6 +14,7 @@ import { Crop } from '../entities/Crop';
 import { Building } from '../entities/Building';
 import { DateHelper } from '../helpers/DateHelper';
 import { InventoryItem } from '../components/InventoryComponent';
+import { PlayerState } from '../entities/PlayerState';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -103,8 +104,8 @@ export class GameController extends Component {
         
         //instantiate playerControllerprefab
         
-        const plotNum = SharedDefines.INIT_PLOT_NUM + this.playerController.playerState.level - 1;
-        this.initializePlotTiles(plotNum);
+
+        
     }
 
     private setupEventListeners(): void {
@@ -127,10 +128,11 @@ export class GameController extends Component {
         }
     }
 
-    private initializePlotTiles(availablePlotTileNum : number): void {
-        if (this.plotTiles) {
-            for (let i = 0; i < this.plotTiles.length; i++) {
-                const plotTile = this.plotTiles[i];
+    private initializePlotTiles(availablePlotTileNum : number,plotTiles:PlotTile[]): void {
+        console.log(`initializePlotTiles:${availablePlotTileNum}`);
+        if (plotTiles) {
+            for (let i = 0; i < plotTiles.length; i++) {
+                const plotTile = plotTiles[i];
                 if (!plotTile) continue;
                 //if i < availablePlotTileNum set plottile visible
                 //else set plottile invisible
@@ -168,7 +170,9 @@ export class GameController extends Component {
             console.error('crop is not set in GameController');
             return;
         }
-        inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
+        //console.log(`onPlotOccupied crop , name = ${crop.node.name} , id = ${crop.SourceInventoryItem.id}`);
+        //inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
+        console.log(`onPlotOccupied crop 2, name = ${crop.node.name}`);
     }
 
     private onFenceAnimalAdded(animal: Animal): void {
@@ -188,7 +192,7 @@ export class GameController extends Component {
             return;
         }
         //TODO replace userid with real user id
-        const userid = "123";
+        const userid = SharedDefines.CURRENT_USER_ID;
         await NetworkManager.instance.login(userid);
 
         await NetworkManager.instance.requestSceneItemsByUserId(userid);
@@ -209,15 +213,15 @@ export class GameController extends Component {
         }
         const sceneItems = data.data as SceneItem[];
         if(data.userid == this.playerController?.playerState.id){
-            this.initializeSceneItems(this.gameplayContainer,sceneItems);
+            this.initializeSceneItems(this.gameplayContainer,sceneItems,this.playerController.playerState.level);
         }
         else{
             //visit friends's scene
-            this.initializeSceneItems(this.friendGameplayContainer,sceneItems);
+            this.initializeSceneItems(this.friendGameplayContainer,sceneItems,1);
         }
     }
 
-    public async initializeSceneItems(gameplayContainer:Node,sceneItems:SceneItem[]){
+    public async initializeSceneItems(gameplayContainer:Node,sceneItems:SceneItem[],level:number){
         if(!gameplayContainer){
             console.error(`initializeGameplayContainer`);
             return;
@@ -225,6 +229,12 @@ export class GameController extends Component {
         const buildingContainer = gameplayContainer.getChildByName("Buildings");
         const fence = gameplayContainer.getComponentInChildren(Fence);
         const plotTiles = gameplayContainer.getComponentsInChildren(PlotTile);
+        //sort plotTiles by name
+        plotTiles.sort((a, b) => a.node.name.localeCompare(b.node.name));
+
+        const plotNum = SharedDefines.INIT_PLOT_NUM + level - 1;
+        console.log(`plotNum:${plotNum}`);
+        this.initializePlotTiles(plotNum,plotTiles);
 
         for (const item of sceneItems) {
             let node: Node | null = null;
@@ -248,7 +258,8 @@ export class GameController extends Component {
             }
 
             if (node && component) {
-                this.setupSceneItem(node, component, item);
+                //this.setupSceneItem(node, component, item);
+                node.setWorldPosition(new Vec3(item.x, item.y, 0));
             }
         }
     }
@@ -331,61 +342,6 @@ export class GameController extends Component {
         return node;
     }
 
-    private setupSceneItem(node: Node, component: Component, item: SceneItem): void {
-        // 设置位置
-        node.setWorldPosition(new Vec3(item.x, item.y, 0));
-
-        // // 设置父节点
-        // const parentNode = this.node.getChildByName(item.parent_node_name);
-        // if (parentNode) {
-        //     node.parent = parentNode;
-        // } else {
-        //     console.warn(`Parent node ${item.parent_node_name} not found for item ${item.id}`);
-        //     this.gameplayContainer?.addChild(node);
-        // }
-
-        // 设置状态
-        // if (component instanceof Crop || component instanceof Animal || component instanceof Building) {
-        //     switch (item.state) {
-        //         case SceneItemState.InProgress:
-        //             component.startGrowing();
-        //             break;
-        //         case SceneItemState.Complete:
-        //             component.completeGrowth();
-        //             break;
-        //     }
-        // }
-
-        // 处理命令
-        // if (item.command) {
-        //     this.handleCommand(component, item.command);
-        // }
-    }
-
-    private handleCommand(component: Component, command: SceneItem['command']): void {
-        if (!command) return;
-
-        const currentTime = Date.now();
-        const startTime = DateHelper.stringToDate(command.start_time);
-        const elapsedTime = currentTime - startTime.getTime();
-
-        switch (command.type) {
-            case CommandType.Craft:
-                // 处理制作命令
-                break;
-            case CommandType.Upgrade:
-                // if (component instanceof Building) {
-                //     // 处理升级命令
-                //     if (command.state === CommandState.InProgress) {
-                //         component.continueUpgrade(elapsedTime);
-                //     } else if (command.state === CommandState.Complete) {
-                //         component.completeUpgrade();
-                //     }
-                // }
-                break;
-        }
-    }
-
     private onHarvest(result: any): void {
         console.log('harvest result', result);
         const networkHarvestResult = result as NetworkHarvestResult;
@@ -399,6 +355,27 @@ export class GameController extends Component {
                 const inventoryItem = new InventoryItem(itemData,1);
                 this.playerController.inventoryComponent.addItem(inventoryItem);
             }
+        }
+    }
+
+    public async visitFriend(userId:string): Promise<void> {
+        
+        const result = await NetworkManager.instance.visit(userId);
+        if(result && result.success){
+            console.log('visit result', result);
+            this.playerController.visitMode = true;
+            const playerState = new PlayerState(result.data.userId,result.data.level,result.data.exp,0,0);
+            this.playerController.friendState = playerState;
+            //show friendGameplayContainer
+            this.setFriendGameViewVisibility(true);
+            //initialize friend's scene items
+            this.initializeSceneItems(this.friendGameplayContainer,result.data.sceneItems,result.data.level);
+        }else{
+            console.error('visit friend failed');
+            //hide friendGameplayContainer
+            this.setFriendGameViewVisibility(false);
+            this.playerController.visitMode = false;
+            this.playerController.friendState = null;
         }
     }
 
