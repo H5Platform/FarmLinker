@@ -75,7 +75,7 @@ export class PlayerController extends Component {
     public eventTarget: EventTarget = new EventTarget();
 
     protected onLoad(): void {
-        this._playerState = new PlayerState();
+        this._playerState = new PlayerState(`0`,1,0,this.initialMoney,0);
         this._inventoryComponent = this.node.getComponent(InventoryComponent);
 
         if (!this._camera) {
@@ -134,8 +134,10 @@ export class PlayerController extends Component {
                 if (collider.node.layer & fenceLayer) {
                     const fenceComponent = collider.node.getComponent(Fence);
                     if (fenceComponent) {
-                        const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
-                        fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
+                        if((!this.visitMode && fenceComponent.IsPlayerOwner) || (this.visitMode && !fenceComponent.IsPlayerOwner)){
+                            const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
+                            fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
+                        }
                     }
                     else{
                         console.error('Fence node does not have Fence component');
@@ -146,9 +148,10 @@ export class PlayerController extends Component {
                 else if(collider.node.layer & plotLayer){
                     const plotTile = collider.node.getComponent(PlotTile);
                     if (plotTile) {
-                        
-                        this.dragDropComponent.registerDropZone(plotTile);
-                        plotTile.select(this.dragDropComponent);
+                        if((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner)){
+                            this.dragDropComponent.registerDropZone(plotTile);
+                            plotTile.select(this.dragDropComponent);
+                        }
                     }else{
                         console.error('PlotTile node does not have PlotTile component');
                         return;

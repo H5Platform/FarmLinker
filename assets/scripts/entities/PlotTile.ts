@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
-import { CommandType, FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { WindowManager } from '../ui/WindowManager';
 import { PlayerController } from '../controllers/PlayerController';
@@ -9,10 +9,11 @@ import { InventoryItem } from '../components/InventoryComponent';
 import { CooldownComponent } from '../components/CooldownComponent';
 import { NetworkManager } from '../managers/NetworkManager';
 import { GameController } from '../controllers/GameController';
+import { SceneEntity } from './SceneEntity';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
-export class PlotTile extends Component implements IDropZone {
+export class PlotTile extends SceneEntity implements IDropZone {
     //define max care count
     public static readonly MAX_CARE_COUNT: number = 5;
     public static readonly CARE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
@@ -34,7 +35,6 @@ export class PlotTile extends Component implements IDropZone {
     }
     private occupiedCrop: Crop | null = null;
 
-    public careCount: number = 0;
     private careCooldown: number = 0;
 
     private currentDraggable: IDraggable | null = null;
@@ -63,6 +63,11 @@ export class PlotTile extends Component implements IDropZone {
         if (!this.playerController) {
             console.error('PlotTile: PlayerController not found!');
         }
+    }
+
+    public initialize(isPlayerOwner: boolean): void {
+        //console.log(`initialize , name = ${this.node.name} , isPlayerOwner = ${isPlayerOwner}`);
+        this.init(this.node.name,isPlayerOwner);
     }
 
     //ondestroy
@@ -99,7 +104,7 @@ export class PlotTile extends Component implements IDropZone {
     }
 
     public canCare(): boolean {
-        return this.careCount >= 0 && this.careCount < PlotTile.MAX_CARE_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_CARE);
+        return this.occupiedCrop && this.occupiedCrop.CareCount >= 0 && this.occupiedCrop.CareCount < PlotTile.MAX_CARE_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_CARE);
     }
 
     public getNode(): Node 
@@ -136,6 +141,7 @@ export class PlotTile extends Component implements IDropZone {
             WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
             console.log('select plot , name = ' + this.node.name);
         }
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
     }
 
     private async onSelectionWindowItemClicked(data: any): Promise<void> {
@@ -144,7 +150,7 @@ export class PlotTile extends Component implements IDropZone {
             const sceneItem = this.occupiedCrop.SceneItem;
             if (sceneItem) {
                 if (data == CommandType.Care) {
-                    let careResult = null;
+                    let careResult:NetworkCareResult|null = null;
                     if(this.playerController.visitMode){
                         careResult = await NetworkManager.instance.careFriend(sceneItem.id,this.playerController.friendState.id);
                     }
@@ -152,29 +158,54 @@ export class PlotTile extends Component implements IDropZone {
                         careResult = await NetworkManager.instance.care(sceneItem.id);
                     }
                     if (careResult.success) {
-                        
-                        this.careCount = careResult.data.care_count;
-                        this.occupiedCrop.CareCount = this.careCount;
+                        this.occupiedCrop.CareCount = careResult.data.care_count;
+                        if(careResult.data.friend_id){
+                            console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
+                            this.playerController.playerState.addDiamond(careResult.data.diamond_added);
+                            this.playerController.friendState.addDiamond(careResult.data.diamond_added);
+                        }
                     }
                     else {
                         console.log("Care failed");
                     }
                 }
                 else if (data == CommandType.Treat) {
-                    const treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                    let treatResult:NetworkTreatResult|null = null;
+                    if(this.playerController.visitMode){
+                        treatResult = await NetworkManager.instance.treatFriend(sceneItem.id, this.playerController.friendState.id);
+                    }
+                    else{
+                        treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                    }
                     if (treatResult.success) {
                         this.occupiedCrop.TreatCount = treatResult.data.treat_count;
+                        if(treatResult.data.friend_id){
+                            console.log(`treat friend , name = ${treatResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${treatResult.data.diamond_added}`);
+                            this.playerController.playerState.addDiamond(treatResult.data.diamond_added);
+                            this.playerController.friendState.addDiamond(treatResult.data.diamond_added);
+                        }
                     }
                     else {
                         console.log("Treat failed");
                     }
                 }
                 else if(data == CommandType.Cleanse){
-                    const cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                    let cleanseResult:NetworkCleanseResult|null = null;
+                    if(this.playerController.visitMode){
+                        cleanseResult = await NetworkManager.instance.cleanseFriend(sceneItem.id,this.playerController.friendState.id);
+                    }
+                    else{
+                        cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                    }
                     if (cleanseResult.success) {
                        // this.occupiedCrop.CleanseCount = cleanseResult.data.cleanse_count;
                        const immunityDuration = cleanseResult.data.cleanse_count; // Default to 24 hours if not provided
                         this.occupiedCrop.cleanse(immunityDuration);
+                        if(cleanseResult.data.friend_id){
+                            console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
+                            this.playerController.playerState.addDiamond(cleanseResult.data.diamond_added);
+                            this.playerController.friendState.addDiamond(cleanseResult.data.diamond_added);
+                        }
                     }
                     else {
                         console.log("Cleanse failed");
@@ -267,7 +298,7 @@ export class PlotTile extends Component implements IDropZone {
                     return;
                 }
                 const crop = this.currentDraggable as Crop;
-                crop.initializeWithSceneItem(result.data as SceneItem);
+                crop.initializeWithSceneItem(result.data as SceneItem,this.isPlayerOwner);
                 this.plant(crop);
                 this.currentDraggable = null;
             });
@@ -303,6 +334,15 @@ export class PlotTile extends Component implements IDropZone {
     {
         console.log('crop harvest , name = ' + this.node.name);
         this.clear();
+    }
+
+    //#endregion
+
+    //#region care
+
+    public onCare(careCount: number): void {
+        console.log(`onCare , name = ${this.node.name} , careCount = ${careCount} , isPlayer = ${this.isPlayerOwner}`);
+        this.occupiedCrop.CareCount = careCount;
     }
 
     //#endregion

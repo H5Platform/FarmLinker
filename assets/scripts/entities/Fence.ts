@@ -3,16 +3,18 @@
 import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
-import { CommandType, FarmSelectionType, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { IDropZone, IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { WindowManager } from '../ui/WindowManager';
 import { InventoryItem } from '../components/InventoryComponent';
 import { CooldownComponent } from '../components/CooldownComponent';
 import { NetworkManager } from '../managers/NetworkManager';
+import { SceneEntity } from './SceneEntity';
+import { PlayerController } from '../controllers/PlayerController';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
-export class Fence extends Component implements IDropZone{
+export class Fence extends SceneEntity implements IDropZone{
     @property
     public capacity: number = 0;
 
@@ -20,11 +22,22 @@ export class Fence extends Component implements IDropZone{
     private animals: Animal[] = [];
     private dragDropComponent: DragDropComponent | null = null;
     private cooldownComponent: CooldownComponent | null = null;
-
+    private playerController: PlayerController | null = null;
     public eventTarget: EventTarget = new EventTarget();
 
     protected onLoad(): void {
         this.cooldownComponent = this.addComponent(CooldownComponent);
+    }
+
+    protected start(): void {
+        this.playerController = Director.instance.getScene().getComponentInChildren(PlayerController);
+        if (!this.playerController) {
+            console.error('Fence: PlayerController not found!');
+        }
+    }
+
+    public initialize(isPlayerOwner: boolean): void {
+        this.init('fence',isPlayerOwner);
     }
 
     public getAvailableSpace(): number {
@@ -59,6 +72,15 @@ export class Fence extends Component implements IDropZone{
             return true;
         }
         return false;
+    }
+
+    public findAnimalBySceneId(sceneId:string): Animal | null {
+        for (const animal of this.animals) {
+            if (animal.SceneItem && animal.SceneItem.id == sceneId) {
+                return animal;
+            }
+        }
+        return null;
     }
 
     public removeAnimal(animal: Animal): void {
@@ -135,27 +157,61 @@ export class Fence extends Component implements IDropZone{
         const sceneItem = animal.SceneItem;
         if (sceneItem) {
             if (command == CommandType.Care) {
-                const careResult = await NetworkManager.instance.care(sceneItem.id);
+                let careResult:NetworkCareResult|null = null;
+                if(this.playerController.visitMode){
+                    careResult = await NetworkManager.instance.careFriend(sceneItem.id,this.playerController.friendState.id);
+                }
+                else{
+                    careResult = await NetworkManager.instance.care(sceneItem.id);
+                }
                 if (careResult.success) {
                     animal.CareCount = careResult.data.care_count;
+                    if(careResult.data.friend_id){
+                        console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
+                        this.playerController.playerState.addDiamond(careResult.data.diamond_added);
+                        this.playerController.friendState.addDiamond(careResult.data.diamond_added);
+                    }
                 }
                 else {
                     console.log("Care failed");
                 }
             }
             else if (command == CommandType.Treat) {
-                const treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                let treatResult:NetworkTreatResult|null = null;
+                if(this.playerController.visitMode){
+                    treatResult = await NetworkManager.instance.treatFriend(sceneItem.id, this.playerController.friendState.id);
+                }
+                else{
+                    treatResult = await NetworkManager.instance.treat(sceneItem.id);
+                }
                 if (treatResult.success) {
                     animal.TreatCount = treatResult.data.treat_count;
+                    if(treatResult.data.friend_id){
+                        console.log(`treat friend , name = ${treatResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${treatResult.data.diamond_added}`);
+                        this.playerController.playerState.addDiamond(treatResult.data.diamond_added);
+                        this.playerController.friendState.addDiamond(treatResult.data.diamond_added);
+                    }
                 }
                 else {
                     console.log("Treat failed");
                 }
+                
             }
             else if (command == CommandType.Cleanse) {
-                const cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                let cleanseResult:NetworkCleanseResult|null = null;
+                if(this.playerController.visitMode){
+                    cleanseResult = await NetworkManager.instance.cleanseFriend(sceneItem.id,this.playerController.friendState.id);
+                }
+                else{
+                    cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
+                }
                 if (cleanseResult.success) {
-                    animal.CleanseCount = cleanseResult.data.cleanse_count;
+                    animal.cleanse(cleanseResult.data.cleanse_count);
+                    if(cleanseResult.data.friend_id){
+                        console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
+                        this.playerController.playerState.addDiamond(cleanseResult.data.diamond_added);
+                        this.playerController.friendState.addDiamond(cleanseResult.data.diamond_added);
+                    }
                 }
                 else {
                     console.log("Cleanse failed");
@@ -203,7 +259,7 @@ export class Fence extends Component implements IDropZone{
                     return;
                 }
                 
-                animal.initializeWithSceneItem(result.data as SceneItem);
+                animal.initializeWithSceneItem(result.data as SceneItem,true);
                 if(this.addAnimal(animal)){
                     animal.node.setWorldPosition(worldPos);
                     this.eventTarget.emit(SharedDefines.EVENT_FENCE_ANIMAL_ADDED,animal);

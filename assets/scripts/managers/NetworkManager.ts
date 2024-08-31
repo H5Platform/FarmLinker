@@ -26,7 +26,10 @@ export class NetworkManager extends Component {
     public static readonly API_CARE: string = "/game/care";
     public static readonly API_CARE_FRIEND: string = "/game/careFriend";
     public static readonly API_TREAT: string = "/game/treat";
+    public static readonly API_TREAT_FRIEND: string = "/game/treatFriend";
     public static readonly API_CLEANSE: string = "/game/cleanse";
+    public static readonly API_CLEANSE_FRIEND: string = "/game/cleanseFriend";
+    public static readonly API_QUERY_DISEASE_STATUS: string = "/game/queryDiseaseStatus";
     public static readonly API_UPDATE_DISEASE_STATUS: string = '/game/updateDiseaseStatus';
     public static readonly API_VISIT: string = '/game/visit';
 
@@ -42,9 +45,10 @@ export class NetworkManager extends Component {
     public static readonly EVENT_CARE = 'care';
     public static readonly EVENT_CARE_FRIEND = 'care-friend';
     public static readonly EVENT_TREAT = 'treat';
+    public static readonly EVENT_TREAT_FRIEND = 'treat-friend';
     public static readonly EVENT_CLEANSE = 'cleanse';
     public static readonly EVENT_UPDATE_DISEASE_STATUS: string = 'update-disease-status';
-
+    public static readonly EVENT_QUERY_DISEASE_STATUS: string = 'query-disease-status';
     private static _instance: NetworkManager | null = null;
 
     @property
@@ -178,7 +182,7 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async getLatestCommandDuration(sceneItemId: string): Promise<any> {
+    public async getLatestCommandDuration(sceneItemId: string,userid:string = null): Promise<any> {
         if(this.simulateNetwork){
             return {success:true,duration:0};
         }
@@ -188,7 +192,7 @@ export class NetworkManager extends Component {
             ...this.defaultHeaders
         };
     
-        const data = { userid: this.userId,sceneItemId };
+        const data = { userid: userid || this.userId,sceneItemId };
     
         try {
             const response = await HttpHelper.post(url, data, headers);
@@ -465,6 +469,35 @@ export class NetworkManager extends Component {
         }
     }
 
+    public async treatFriend(sceneId: string, friendId: string): Promise<NetworkTreatResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+    
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_TREAT_FRIEND}`;
+    
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+    
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId,
+            friendId: friendId
+        };
+    
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkTreatResult;
+            this.eventTarget.emit(NetworkManager.EVENT_TREAT_FRIEND, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
     //cleanse
     public async cleanse(sceneId: string): Promise<NetworkCleanseResult> {
         if (this.simulateNetwork) {
@@ -494,10 +527,65 @@ export class NetworkManager extends Component {
         }
     }
 
-    // Disease status update
-    
-    
+    //cleanse friend
+    public async cleanseFriend(sceneId: string, friendId: string): Promise<NetworkCleanseResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
 
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CLEANSE_FRIEND}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            sceneid: sceneId,
+            friendId: friendId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkCleanseResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    //implement query disease status
+//     public async queryDiseaseStatus(sceneId: string): Promise<NetworkDiseaseStatusResult> {
+//         if (this.simulateNetwork) {
+//             return null;
+//         }
+
+//         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_QUERY_DISEASE_STATUS}`;
+
+//         const headers = {
+//             'Authorization': this.token,
+//             ...this.defaultHeaders
+//         };
+
+//         const data = {
+//             userid: this.userId,
+//             sceneid: sceneId
+//         };
+
+//         try {
+//             const response = await HttpHelper.post(url, data, headers);
+//             const result = JSON.parse(response) as NetworkDiseaseStatusResult;
+//             this.eventTarget.emit(NetworkManager.EVENT_QUERY_DISEASE_STATUS, result);
+//             return result;
+//         } catch (error) {
+//             this.handleError(error);
+//             return null;
+//     }
+// }
+
+    // Disease status update
     public async updateDiseaseStatus(sceneId: string,updateDiseaseTimes:number): Promise<NetworkDiseaseStatusResult> {
         if (this.simulateNetwork) {
             return null;

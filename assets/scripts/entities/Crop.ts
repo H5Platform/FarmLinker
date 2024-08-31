@@ -10,11 +10,11 @@ import { IDraggable } from '../components/DragDropComponent';
 import { ResourceManager } from '../managers/ResourceManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
-import { FarmEntity } from './FarmEntity';
+import { GrowthableEntity } from './GrowthableEntity';
 const { ccclass, property } = _decorator;
 
 @ccclass('Crop')
-export class Crop extends FarmEntity {
+export class Crop extends GrowthableEntity {
     @property({
         type: Enum(CropType)
     })
@@ -33,10 +33,10 @@ export class Crop extends FarmEntity {
        // this.updateSprite(`${SharedDefines.WINDOW_GAME_TEXTURES}${this.cropDatas[0].icon}`);
     }
 
-    public initializeWithSceneItem(sceneItem: SceneItem): void 
+    public initializeWithSceneItem(sceneItem: SceneItem,isPlayerOwner:boolean): void 
     {
         this.baseSpritePath = SharedDefines.CROPS_TEXTURES;
-        super.initializeWithSceneItem(sceneItem);
+        super.initializeWithSceneItem(sceneItem,isPlayerOwner);
     }
 
     protected loadEntityData(id: string): void {
@@ -59,7 +59,7 @@ export class Crop extends FarmEntity {
     public canHarvest(): boolean {
         //log states
         console.log(`Crop ${this.node.name} growState = ${this.growState}, sceneItem.state = ${this.sceneItem.state}, harvestItemId = ${this.harvestItemId}`);
-        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "";
+        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
     }
 
     public async harvest(): Promise<void> {

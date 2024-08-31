@@ -6,11 +6,12 @@ import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
+import { SceneEntity } from './SceneEntity';
 
 const { ccclass, property } = _decorator;
 
-@ccclass('FarmEntity')
-export abstract class FarmEntity extends Component implements IDraggable {
+@ccclass('GrowthableEntity')
+export abstract class GrowthableEntity extends SceneEntity implements IDraggable {
     @property
     public id: string = '';
 
@@ -48,6 +49,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
     protected totalGrowthTime: number = 0;
     protected growthStartTime: number = 0;
     protected isSick: boolean = false;
+    
 
     @property
     protected careCount: number = 0;
@@ -107,15 +109,18 @@ export abstract class FarmEntity extends Component implements IDraggable {
 
     public initializeWithInventoryItem(inventoryItem: InventoryItem): void {
         this.sourceInventoryItem = inventoryItem;
+        this.init(inventoryItem.detailId,true);
         this.initialize(inventoryItem.detailId);
     }
 
     public abstract initialize(id: string): void;
 
-    public initializeWithSceneItem(sceneItem: SceneItem): void {
+    public initializeWithSceneItem(sceneItem: SceneItem,isPlayerOwner:boolean): void {
         console.log(`initializeWithSceneItem , id = ${sceneItem.id}`);
+        this.init(sceneItem.id,isPlayerOwner);
         this.sceneItem = sceneItem;
         this.growState = GrowState.NONE;
+        this.isPlayerOwner = isPlayerOwner;
         this.loadEntityData(sceneItem.item_id);
         
         if (this.growthStages.length > 0) {
@@ -127,7 +132,22 @@ export abstract class FarmEntity extends Component implements IDraggable {
         //log current growth stage index
         console.log(`current growth stage index: ${this.currentGrowthStageIndex}`);
         this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
-        this.scheduleDiseaseStatusUpdate();
+        if(this.isPlayerOwner){
+            //only player owner can update disease status
+            this.scheduleDiseaseStatusUpdate();
+        }
+        else{
+            //The friends can only see the disease status
+           //check sceneItem.commands to see if there is any disease command
+            const diseaseCommand = sceneItem.commands.find(command => command.type === CommandType.Disease);
+            if (diseaseCommand) {
+                this.isSick = diseaseCommand.state === CommandState.InProgress && diseaseCommand.count > 0;
+                console.log(`Entity ${this.id} has become sick`);
+            }
+            else {
+                this.isSick = false;
+            }
+        }
     }
 
     protected abstract loadEntityData(id: string): void;
@@ -139,6 +159,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
         this.careCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Care)?.count || 0;
         this.treatCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Treat)?.count || 0;
         this.cleanseCount = sceneItem.commands && sceneItem.commands.find(command => command.type === CommandType.Cleanse)?.count || 0;
+        console.log(`careCount = ${this.careCount} , treatCount = ${this.treatCount} , cleanseCount = ${this.cleanseCount}`);
         this.updateTotalGrowthTime();
         this.growthStartTime = DateHelper.stringToDate(sceneItem.last_updated_time).getTime() / 1000;
         const remainingTime = this.calculateRemainingTime();
@@ -279,8 +300,10 @@ export abstract class FarmEntity extends Component implements IDraggable {
     protected onGrowthComplete(): void {
         console.log(`growth complete , current growth stage index: ${this.currentGrowthStageIndex}`);
         this.growState = GrowState.HARVESTING;
-        this.eventTarget.emit(FarmEntity.growthCompleteEvent, this);
-        this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
+        this.eventTarget.emit(GrowthableEntity.growthCompleteEvent, this);
+        if(this.isPlayerOwner){
+            this.node.on(Node.EventType.TOUCH_END, this.harvest, this);
+        }
         console.log(`growth complete , growState = ${this.growState}`);
     }
 
@@ -291,7 +314,7 @@ export abstract class FarmEntity extends Component implements IDraggable {
         }
 
         try {
-            const response = await NetworkManager.instance.getLatestCommandDuration(this.sceneItem.id);
+            const response = await NetworkManager.instance.getLatestCommandDuration(this.sceneItem.id,!this.isPlayerOwner ? this.sceneItem.userid : null);
             if (response.success) {
                 return response.duration;
             } else {
@@ -407,6 +430,8 @@ export abstract class FarmEntity extends Component implements IDraggable {
     protected onDestroy(): void {
         this.stopDiseaseStatusUpdates();
         this.stopGrowth();
-        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+        if(this.isPlayerOwner){
+            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+        }
     }
 }

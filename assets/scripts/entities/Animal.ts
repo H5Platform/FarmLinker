@@ -11,12 +11,12 @@ import { GameController } from '../controllers/GameController';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
-import { FarmEntity } from './FarmEntity';
+import { GrowthableEntity } from './GrowthableEntity';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
-export class Animal extends FarmEntity {
+export class Animal extends GrowthableEntity {
     @property
     public animalType: string = '';
 
@@ -29,9 +29,9 @@ export class Animal extends FarmEntity {
         }
     }
 
-    public initializeWithSceneItem(sceneItem: SceneItem): void {
+    public initializeWithSceneItem(sceneItem: SceneItem,isPlayerOwner:boolean): void {
         this.baseSpritePath = SharedDefines.ANIMALS_TEXTURES;
-        super.initializeWithSceneItem(sceneItem);
+        super.initializeWithSceneItem(sceneItem,isPlayerOwner);
         
     }
 
@@ -57,7 +57,7 @@ export class Animal extends FarmEntity {
     }
 
     public canHarvest(): boolean {
-        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "";
+        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
     }
 
     public async harvest(): Promise<void> {

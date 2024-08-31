@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3 } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { CommandState, CommandType, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -15,6 +15,7 @@ import { Building } from '../entities/Building';
 import { DateHelper } from '../helpers/DateHelper';
 import { InventoryItem } from '../components/InventoryComponent';
 import { PlayerState } from '../entities/PlayerState';
+import { GrowthableEntity } from '../entities/GrowthableEntity';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -30,11 +31,11 @@ export class GameController extends Component {
     @property(Node)
     private buildingContainer: Node| null = null;
 
-    @property(Fence)
-    private fence: Fence| null = null;
+    private playerFence: Fence| null = null;
+    private friendFence: Fence| null = null;
 
-    @property(PlotTile)
-    private plotTiles: PlotTile[] = [];
+    private playerPlotTiles: PlotTile[] = [];
+    private friendPlotTiles: PlotTile[] = [];
     private playerController: PlayerController| null = null;
 
     public eventTarget: EventTarget = new EventTarget();
@@ -46,6 +47,7 @@ export class GameController extends Component {
     }
 
     async start() {
+        console.log(`start start ...`);
         await this.preloadJsonDatas();
         this.initializePlayerController();
         this.setupEventListeners();
@@ -57,7 +59,6 @@ export class GameController extends Component {
     }
 
     protected onDestroy(): void {
-        this.resetPlotTiles();
         this.eventTarget.removeAll(this);
         NetworkManager.instance.eventTarget.removeAll(this);
     }
@@ -109,15 +110,26 @@ export class GameController extends Component {
     }
 
     private setupEventListeners(): void {
-        this.fence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
+        console.log(`setupEventListeners start ...`);
+        //this.playerFence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
 
         const networkManager = NetworkManager.instance;
         networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
         networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
         networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
+       
+        //#region care and treat (DEPRECATED)
+        // networkManager.eventTarget.on(NetworkManager.EVENT_CARE, this.onCared.bind(this));
+        // //care firend
+        // networkManager.eventTarget.on(NetworkManager.EVENT_CARE_FRIEND, this.onCared.bind(this));
+        // networkManager.eventTarget.on(NetworkManager.EVENT_TREAT, this.onTreated.bind(this));
+        // networkManager.eventTarget.on(NetworkManager.EVENT_TREAT_FRIEND, this.onTreated.bind(this));
+        //#endregion
+        console.log(`setupEventListeners end ...`);
     }
 
     private initializePlayerController(): void {
+        console.log(`initializePlayerController start ...`);
         if (this.playerControllerPrefab) {
             const playerControllerNode = instantiate(this.playerControllerPrefab);
             this.node.addChild(playerControllerNode);
@@ -128,12 +140,14 @@ export class GameController extends Component {
         }
     }
 
-    private initializePlotTiles(availablePlotTileNum : number,plotTiles:PlotTile[]): void {
+    private initializePlotTiles(availablePlotTileNum : number,plotTiles:PlotTile[],isPlayerOwner:boolean): void {
         console.log(`initializePlotTiles:${availablePlotTileNum}`);
         if (plotTiles) {
             for (let i = 0; i < plotTiles.length; i++) {
                 const plotTile = plotTiles[i];
                 if (!plotTile) continue;
+                plotTile.initialize(isPlayerOwner);
+                
                 //if i < availablePlotTileNum set plottile visible
                 //else set plottile invisible
                 plotTile.node.active = i < availablePlotTileNum;
@@ -149,9 +163,9 @@ export class GameController extends Component {
     }
 
     private resetPlotTiles(): void {
-        if (this.plotTiles) {
-            for (let i = 0; i < this.plotTiles.length; i++) {
-                const plotTile = this.plotTiles[i];
+        if (this.friendPlotTiles) {
+            for (let i = 0; i < this.friendPlotTiles.length; i++) {
+                const plotTile = this.friendPlotTiles[i];
                 if (!plotTile) continue;
                 plotTile.clear();
                 plotTile.eventTarget.off(SharedDefines.EVENT_PLOT_OCCUPIED,this.onPlotOccupied);
@@ -175,14 +189,25 @@ export class GameController extends Component {
         console.log(`onPlotOccupied crop 2, name = ${crop.node.name}`);
     }
 
-    private onFenceAnimalAdded(animal: Animal): void {
-        const inventoryComponent = this.playerController?.inventoryComponent;
-        if (!inventoryComponent) {
-            console.error('inventoryComponent is not set in GameController');
-            return;
-        }
+    // private onFenceAnimalAdded(animal: Animal): void {
+    //     const inventoryComponent = this.playerController?.inventoryComponent;
+    //     if (!inventoryComponent) {
+    //         console.error('inventoryComponent is not set in GameController');
+    //         return;
+    //     }
         
-        //inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
+    //     //inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
+    // }
+
+    //implement findPlotTileBySceneId,take plotTiles as parameter and sceneId as parameter
+    private findPlotTileBySceneId(plotTiles:PlotTile[],sceneId:string): PlotTile | null {
+        for (let i = 0; i < plotTiles.length; i++) {
+            const plotTile = plotTiles[i];
+            if (plotTile.OcuippedCrop && plotTile.OcuippedCrop.SceneItem && plotTile.OcuippedCrop.SceneItem.id === sceneId) {
+                return plotTile;
+            }
+        }
+        return null;
     }
 
     //#region network relates
@@ -191,6 +216,8 @@ export class GameController extends Component {
         if(NetworkManager.instance.SimulateNetwork){
             return;
         }
+
+        console.log(`login start ...`);
         //TODO replace userid with real user id
         const userid = SharedDefines.CURRENT_USER_ID;
         await NetworkManager.instance.login(userid);
@@ -213,28 +240,56 @@ export class GameController extends Component {
         }
         const sceneItems = data.data as SceneItem[];
         if(data.userid == this.playerController?.playerState.id){
-            this.initializeSceneItems(this.gameplayContainer,sceneItems,this.playerController.playerState.level);
+            this.initializeSceneItems(this.gameplayContainer,sceneItems,this.playerController.playerState.level,true);
         }
         else{
             //visit friends's scene
-            this.initializeSceneItems(this.friendGameplayContainer,sceneItems,1);
+            this.initializeSceneItems(this.friendGameplayContainer,sceneItems,1,false);
         }
     }
 
-    public async initializeSceneItems(gameplayContainer:Node,sceneItems:SceneItem[],level:number){
+    public async initializeSceneItems(gameplayContainer:Node,sceneItems:SceneItem[],level:number,isPlayerOwner:boolean){
         if(!gameplayContainer){
             console.error(`initializeGameplayContainer`);
             return;
         }
         const buildingContainer = gameplayContainer.getChildByName("Buildings");
-        const fence = gameplayContainer.getComponentInChildren(Fence);
-        const plotTiles = gameplayContainer.getComponentsInChildren(PlotTile);
+        let fence = isPlayerOwner ? this.playerFence : this.friendFence;
+        if(!fence){
+            fence = gameplayContainer.getComponentInChildren(Fence);
+            if(!fence){
+                console.error(`fence is not set in GameController`);
+                return;
+            }
+            if(isPlayerOwner){
+                this.playerFence = fence;
+            }
+            else{
+                this.friendFence = fence;
+            }
+        }
+
+        fence.initialize(isPlayerOwner);
+        let plotTiles = isPlayerOwner ? this.playerPlotTiles : this.friendPlotTiles;
+        if(!plotTiles || plotTiles.length == 0){
+            plotTiles = gameplayContainer.getComponentsInChildren(PlotTile);
+            if(!plotTiles){
+                console.error(`plotTiles is not set in GameController`);
+                return;
+            }
+            if(isPlayerOwner){
+                this.playerPlotTiles = plotTiles;
+            }
+            else{
+                this.friendPlotTiles = plotTiles;
+            }
+        }
         //sort plotTiles by name
         plotTiles.sort((a, b) => a.node.name.localeCompare(b.node.name));
 
         const plotNum = SharedDefines.INIT_PLOT_NUM + level - 1;
         console.log(`plotNum:${plotNum}`);
-        this.initializePlotTiles(plotNum,plotTiles);
+        this.initializePlotTiles(plotNum,plotTiles,isPlayerOwner);
 
         for (const item of sceneItems) {
             let node: Node | null = null;
@@ -244,11 +299,11 @@ export class GameController extends Component {
                 case SceneItemType.Crop:
                     const plotTile = plotTiles?.find(tile => tile.node.name === item.parent_node_name);
                     if(!plotTile) continue;
-                    node = await this.createCropNode(plotTile,item);
+                    node = await this.createCropNode(plotTile,item,isPlayerOwner);
                     component = node?.getComponent(Crop);
                     break;
                 case SceneItemType.Animal:
-                   node = await this.createAnimalNode(fence,item);
+                   node = await this.createAnimalNode(fence,item,isPlayerOwner);
                    component = node?.getComponent(Animal);
                     break;
                 case SceneItemType.Building:
@@ -264,7 +319,7 @@ export class GameController extends Component {
         }
     }
 
-    private async createCropNode(plotTile:PlotTile,item: SceneItem): Promise<Node | null> {
+    private async createCropNode(plotTile:PlotTile,item: SceneItem,isPlayerOwner:boolean): Promise<Node | null> {
         console.log(`Creating crop node for item ${item.id}`);
         const cropData = CropDataManager.instance.findCropDataById(item.item_id);
         if (!cropData) {
@@ -283,7 +338,7 @@ export class GameController extends Component {
         const crop = node.getComponent(Crop);
         if (crop) {
             console.log(`Initializing crop for item ${item.id}`);
-            crop.initializeWithSceneItem(item);
+            crop.initializeWithSceneItem(item,isPlayerOwner);
         }
 
         //find plot tile in plot tiles with item.parent_node_name
@@ -300,7 +355,7 @@ export class GameController extends Component {
         return node;
     }
 
-    private async createAnimalNode(fence:Fence,item: SceneItem): Promise<Node | null> {
+    private async createAnimalNode(fence:Fence,item: SceneItem,isPlayerOwner:boolean): Promise<Node | null> {
         console.log(`Creating animal node for item ${item.id}`);
         const animalData = AnimalDataManager.instance.findAnimalDataById(item.item_id);
         if (!animalData) return null;
@@ -312,7 +367,7 @@ export class GameController extends Component {
         const animal = node.getComponent(Animal);
         if (animal) {
             console.log(`Initializing animal for item ${item.id}`);
-            animal.initializeWithSceneItem(item);
+            animal.initializeWithSceneItem(item,isPlayerOwner);
             fence.addAnimal(animal);
         }
         else{
@@ -358,6 +413,107 @@ export class GameController extends Component {
         }
     }
 
+    //#region care and treat (DEPRECATED)
+
+    // private onCared(result: NetworkCareResult): void {
+    //     console.log('cared result', result);
+    //     if(result.success){
+    //         const networkCareResultData = result.data;
+    //         console.log('networkCareResultData',networkCareResultData);
+    //         //if scene_item_type is crop, call handleOnCropCared
+    //         if(networkCareResultData.scene_item_type == SceneItemType.Crop){
+    //             this.handleOnCropCared(networkCareResultData);
+    //         }
+    //         else if(networkCareResultData.scene_item_type == SceneItemType.Animal){
+    //             this.handleOnAnimalCared(networkCareResultData);
+    //         }
+    //     }
+    // }
+
+    // private handleOnCropCared(networkCareResultData:NetworkCareResultData): void {
+    //     const plotTile = this.findPlotTileBySceneId(this.playerPlotTiles,networkCareResultData.sceneid);
+    //     if(plotTile){
+    //         plotTile.onCare(networkCareResultData.care_count);
+    //     }
+
+    //     if(networkCareResultData.friend_id){
+    //         const friendPlotTile = this.findPlotTileBySceneId(this.friendPlotTiles,networkCareResultData.sceneid);
+    //         if(friendPlotTile){
+    //             friendPlotTile.onCare(networkCareResultData.care_count);
+    //         }
+    //         this.playerController.friendState.addDiamond(networkCareResultData.diamond_added);
+    //         this.playerController.playerState.addDiamond(networkCareResultData.diamond_added);
+    //     }
+    // }
+
+    // private handleOnAnimalCared(networkCareResultData:NetworkCareResultData): void {
+    //     console.log(`handleOnAnimalCared start ... , networkCareResultData:${networkCareResultData}`);
+    //     const animal = this.playerFence.findAnimalBySceneId(networkCareResultData.sceneid);
+    //     if(animal){
+    //         animal.CareCount = networkCareResultData.care_count;
+    //         console.log(`handleOnAnimalCared end ... , animal:${animal.node.name} , careCount:${animal.CareCount}`);
+    //     }
+
+    //     if(networkCareResultData.friend_id){
+    //         const friendAnimal = this.friendFence.findAnimalBySceneId(networkCareResultData.sceneid);
+    //         if(friendAnimal){
+    //             friendAnimal.CareCount = networkCareResultData.care_count;
+    //         }
+    //         this.playerController.friendState.addDiamond(networkCareResultData.diamond_added);
+    //         this.playerController.playerState.addDiamond(networkCareResultData.diamond_added);
+    //     }
+    // }
+
+    // private onTreated(result: NetworkTreatResult): void {
+    //     console.log('treated result', result);
+    //     if(result.success){
+    //         const networkTreatResultData = result.data;
+    //         console.log('networkTreatResultData', networkTreatResultData);
+    //         if(networkTreatResultData.scene_item_type == SceneItemType.Crop){
+    //             this.handleOnCropTreated(networkTreatResultData);
+    //         }
+    //         else if(networkTreatResultData.scene_item_type == SceneItemType.Animal){
+    //             this.handleOnAnimalTreated(networkTreatResultData);
+    //         }
+    //     }
+    // }
+    
+    // private handleOnCropTreated(networkTreatResultData: NetworkTreatResultData): void {
+    //     const plotTile = this.findPlotTileBySceneId(this.playerPlotTiles, networkTreatResultData.sceneid);
+    //     if(plotTile){
+    //         plotTile.onTreat(networkTreatResultData.treat_count);
+    //     }
+    
+    //     if(networkTreatResultData.friend_id){
+    //         const friendPlotTile = this.findPlotTileBySceneId(this.friendPlotTiles, networkTreatResultData.sceneid);
+    //         if(friendPlotTile){
+    //             friendPlotTile.onTreat(networkTreatResultData.treat_count);
+    //         }
+    //         this.playerController.friendState.addDiamond(networkTreatResultData.diamond_added);
+    //         this.playerController.playerState.addDiamond(networkTreatResultData.diamond_added);
+    //     }
+    // }
+    
+    // private handleOnAnimalTreated(networkTreatResultData: NetworkTreatResultData): void {
+    //     console.log(`handleOnAnimalTreated start ... , networkTreatResultData:${networkTreatResultData}`);
+    //     const animal = this.playerFence.findAnimalBySceneId(networkTreatResultData.sceneid);
+    //     if(animal){
+    //         animal.TreatCount = networkTreatResultData.treat_count;
+    //         console.log(`handleOnAnimalTreated end ... , animal:${animal.node.name} , treatCount:${animal.TreatCount}`);
+    //     }
+    
+    //     if(networkTreatResultData.friend_id){
+    //         const friendAnimal = this.friendFence.findAnimalBySceneId(networkTreatResultData.sceneid);
+    //         if(friendAnimal){
+    //             friendAnimal.TreatCount = networkTreatResultData.treat_count;
+    //         }
+    //         this.playerController.friendState.addDiamond(networkTreatResultData.diamond_added);
+    //         this.playerController.playerState.addDiamond(networkTreatResultData.diamond_added);
+    //     }
+    // }
+
+    //#endregion
+
     public async visitFriend(userId:string): Promise<void> {
         
         const result = await NetworkManager.instance.visit(userId);
@@ -368,12 +524,14 @@ export class GameController extends Component {
             this.playerController.friendState = playerState;
             //show friendGameplayContainer
             this.setFriendGameViewVisibility(true);
+            this.setGameViewVisibility(false);
             //initialize friend's scene items
-            this.initializeSceneItems(this.friendGameplayContainer,result.data.sceneItems,result.data.level);
+            this.initializeSceneItems(this.friendGameplayContainer,result.data.sceneItems,result.data.level,false);
         }else{
             console.error('visit friend failed');
             //hide friendGameplayContainer
             this.setFriendGameViewVisibility(false);
+            this.setGameViewVisibility(true);
             this.playerController.visitMode = false;
             this.playerController.friendState = null;
         }

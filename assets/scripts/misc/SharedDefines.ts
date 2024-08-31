@@ -127,8 +127,11 @@ export class NetworkSellItemResult{
 
 export class NetworkCareResultData{
     sceneid: string;
+    scene_item_type: SceneItemType;
     command_id: string;
     care_count: number;
+    friend_id: string;
+    diamond_added: number;
 }
 
 export class NetworkCareResult{
@@ -141,6 +144,8 @@ export class NetworkTreatResultData{
     sceneid: string;
     command_id: string;
     treat_count: number;
+    friend_id: string;
+    diamond_added: number;
 }
 
 export class NetworkTreatResult{
@@ -153,6 +158,8 @@ export class NetworkCleanseResultData{
     sceneid: string;
     command_id: string;
     cleanse_count: number;
+    friend_id: string;
+    diamond_added: number;
 }
 
 export class NetworkCleanseResult{
