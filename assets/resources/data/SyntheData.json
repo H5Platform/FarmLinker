@@ -6,7 +6,7 @@
       "description": "小麦粉_合成",
       "build": "100101",
       "time_min": "10",
-      "png": "Item_500101",
+      "synthe_item_id": "500101",
       "formula_1": [
         "100101",
         "100102"
@@ -22,7 +22,7 @@
       "description": "面包_合成",
       "build": "100101",
       "time_min": "30",
-      "png": "Item_500102",
+      "synthe_item_id": "500102",
       "formula_1": [
         "500101"
       ],
@@ -36,7 +36,7 @@
       "description": "草莓果酱_合成",
       "build": "100102",
       "time_min": "60",
-      "png": "Item_500103",
+      "synthe_item_id": "500103",
       "formula_1": [
         "100107"
       ],
@@ -50,7 +50,7 @@
       "description": "葡萄果酱_合成",
       "build": "100102",
       "time_min": "90",
-      "png": "Item_500104",
+      "synthe_item_id": "500104",
       "formula_1": [
         "100109"
       ],

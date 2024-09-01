@@ -10,6 +10,8 @@ import { Fence } from '../entities/Fence';
 import { PlotTile } from '../entities/PlotTile';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
+import { WindowManager } from '../ui/WindowManager';
+import { Building } from '../entities/Building';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -127,6 +129,7 @@ export class PlayerController extends Component {
             const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
             //plot layer
             const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
+            const buildingLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_BUILDING_NAME);
             for (const collider of colliders) {
 
                 //get layer of collider
@@ -155,6 +158,12 @@ export class PlayerController extends Component {
                     }else{
                         console.error('PlotTile node does not have PlotTile component');
                         return;
+                    }
+                }
+                else if(collider.node.layer & buildingLayer){
+                    const building = collider.node.getComponent(Building);
+                    if(building){
+                        WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME,building.id);
                     }
                 }
             }

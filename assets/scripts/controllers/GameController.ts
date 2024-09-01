@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3 } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, BoxCollider2D } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -16,6 +16,7 @@ import { DateHelper } from '../helpers/DateHelper';
 import { InventoryItem } from '../components/InventoryComponent';
 import { PlayerState } from '../entities/PlayerState';
 import { GrowthableEntity } from '../entities/GrowthableEntity';
+import { SyntheDataManager } from '../managers/SyntheDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -70,6 +71,7 @@ export class GameController extends Component {
         await ItemDataManager.instance.loadItemData();
         await BuildDataManager.instance.loadBuildData();
         await AnimalDataManager.instance.loadAnimalData();
+        await SyntheDataManager.instance.loadSyntheData();
     }
 
     //create getplayerController() method
@@ -229,6 +231,7 @@ export class GameController extends Component {
         console.log('login success');
         this.playerController.playerState.initialize(userData,token);
         const networkInventoryItems = userData.inventory_items as NetworkInventoryItem[];
+        console.log(`onLoginSuccess: networkInventoryItems:`,networkInventoryItems);
         this.playerController.inventoryComponent.initialize(networkInventoryItems);
     }
 
@@ -389,6 +392,8 @@ export class GameController extends Component {
         buildingContainer?.addChild(node);
         //set position
         node.setWorldPosition(new Vec3(item.x, item.y, 0));
+        //set layer building
+        node.layer = Layers.nameToLayer(SharedDefines.LAYER_BUILDING_NAME) + 1;
         const building = node.addComponent(Building);
         if (building) {
             building.initializeFromSceneItem(item);

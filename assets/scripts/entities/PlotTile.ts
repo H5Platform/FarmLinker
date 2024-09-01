@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
+import { _decorator, Component,  PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
 import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -28,6 +28,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
 
     private cooldownComponent: CooldownComponent | null = null;
     private gameController: GameController | null = null;
+    node: any;
 
     //getter ocuippedCrop
     public get OcuippedCrop(): Crop | null {

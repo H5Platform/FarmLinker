@@ -245,7 +245,7 @@ export class SharedDefines {
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
 
-    public static readonly CURRENT_USER_ID: string = '456';
+    public static readonly CURRENT_USER_ID: string = '123';
 
     public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
     public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
@@ -283,6 +283,7 @@ export class SharedDefines {
     public static readonly WINDOW_CRAFT_NAME: string = 'CraftWindow';
     public static readonly WINDOW_SHOP_NAME: string = 'ShopWindow';
     public static readonly WINDOW_SELECTION_NAME: string = 'FarmSelectionWindow';
+    public static readonly WINDOW_FARM_FACTORY_NAME: string = 'FarmFactoryWindow';
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
@@ -303,6 +304,7 @@ export class SharedDefines {
     public static readonly JSON_ITEM_DATA: string = 'data/ItemData';
     public static readonly JSON_BUILD_DATA: string = 'data/BuildData';
     public static readonly JSON_ANIMAL_DATA: string = 'data/AnimalData';
+    public static readonly JSON_SYNTHE_DATA: string = 'data/SyntheData';
 
     public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
