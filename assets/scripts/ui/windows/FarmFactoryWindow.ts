@@ -4,9 +4,11 @@ import { BuildingManager } from '../../managers/BuildingManager';
 import { SyntheDataManager } from '../../managers/SyntheDataManager';
 import { InventoryComponent } from '../../components/InventoryComponent';
 import { ResourceManager } from '../../managers/ResourceManager';
-import { SharedDefines } from '../../misc/SharedDefines';
+import { NetworkSyntheResultData, SharedDefines } from '../../misc/SharedDefines';
 import { WindowManager } from '../WindowManager';
 import { ItemDataManager } from '../../managers/ItemDataManager';
+import { NetworkManager } from '../../managers/NetworkManager';
+import { Building } from '../../entities/Building';
 const { ccclass, property } = _decorator;
 
 @ccclass('FarmFactoryWindow')
@@ -26,6 +28,7 @@ export class FarmFactoryWindow extends WindowBase {
     @property(ScrollView)
     private scrollView: ScrollView = null;
 
+    private currentBuilding: Building = null;
     private syntheDatas: any[] = [];
     private inventoryComponent: InventoryComponent = null;
 
@@ -42,14 +45,28 @@ export class FarmFactoryWindow extends WindowBase {
     //override
     public show(...args: any[]): void {
         super.show(...args);
-        const buildingId = args[0];
-        console.log(`FarmFactoryWindow show buildingId: ${buildingId}`);
-        this.syntheDatas = SyntheDataManager.instance.filterSyntheDataByBuild(buildingId);
-        this.updateScrollView();
+        this.currentBuilding = args[0] as Building;
+        console.log(`FarmFactoryWindow show buildingId: ${this.currentBuilding.id}`);
+        
+        this.getSceneSyntheDataListFromServer(this.currentBuilding.SceneItem.id, this.currentBuilding.id);
     }
 
-    private updateScrollView(): void {
-        //
+    private async getSceneSyntheDataListFromServer(sceneId:string,buildingId:string): Promise<void>{
+        const result = await NetworkManager.instance.querySceneSyntheList(sceneId);
+        if(result && result.success){
+            const sceneSyntheDataList = result.data;
+            const syntheDatas = SyntheDataManager.instance.filterSyntheDataByBuild(buildingId);
+            this.updateScrollView(sceneSyntheDataList,syntheDatas);
+        }
+    }
+
+    private updateScrollView(sceneSyntheDataList: NetworkSyntheResultData[],syntheDatas: any[]): void {
+        this.clearScrollViewContent();
+        this.populateInProgressItems(sceneSyntheDataList);
+        this.populateAvailableItems(syntheDatas,sceneSyntheDataList);
+    }
+
+    private clearScrollViewContent(): void {
         const content = this.scrollView.content;
         if (content) {
             content.children.forEach(child => {
@@ -58,66 +75,118 @@ export class FarmFactoryWindow extends WindowBase {
                 }
             });
         }
-        console.log(`syntheDatas: ${this.syntheDatas.length}`);
-        this.syntheDatas.forEach(data => {
-            const itemNode = instantiate(this.itemTemplate);
-            itemNode.active = true;
+    }
 
-            const sprTarget = itemNode.getChildByName('sprTarget').getComponent(Sprite);
-            const txtTargetName = itemNode.getChildByName('txtTargetName').getComponent(Label);
-            //txtRemainingTime
-            const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
-            const source1 = itemNode.getChildByName('source');
-            const source2 = itemNode.getChildByName('source2');
-            const source3 = itemNode.getChildByName('source3');
-            const sprPlus = itemNode.getChildByName('sprPlus').getComponent(Sprite);
-            const sprPlus2 = itemNode.getChildByName('sprPlus2').getComponent(Sprite);
-
-            const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
-
-            const targetItem = ItemDataManager.instance.getItemById(data.synthe_item_id);
-
-            //inactive txtRemainingTime
-            txtRemainingTime.node.active = false;
-            // Set target sprite and name
-            ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${targetItem.png}/spriteFrame`, SpriteFrame)
-                .then(spriteFrame => {
-                    if (spriteFrame) {
-                        sprTarget.spriteFrame = spriteFrame;
-                    }
-                });
-            txtTargetName.string = data.description;
-            // Set source sprites and names
-            const formulas = data.formula_1;
-            console.log(`formulas: ${formulas}`);
-            const qualities = data.quality;
-            console.log(`qualities: ${qualities}`);
-            this.setSourceData(source1, formulas[0], qualities[0]);
-            if (formulas.length > 1) {
-                this.setSourceData(source2, formulas[1], qualities[1]);
-                //active sprPlus
-                sprPlus.node.active = true;
-            }
-            else{
-                sprPlus.node.active = false;
-                source2.active = false;
-            }
-            if (formulas.length > 2) {
-                this.setSourceData(source3, formulas[2], qualities[2]);
-                //active sprPlus2
-                sprPlus2.node.active = true;
-            }
-            else{
-                sprPlus2.node.active = false;
-                source3.active = false;
-            }
-            // Check inventory and set button state
-            const canCraft = this.checkInventory(data);
-            btnStart.node.active = canCraft;
-            btnStart.node.on(Button.EventType.CLICK, this.onBtnStartClick.bind(this, btnStart, data));
-            console.log(`itemNode: ${itemNode.name}`);
+    private populateInProgressItems(sceneSyntheDataList: NetworkSyntheResultData[]): void {
+        sceneSyntheDataList.forEach(item => {
+            const itemNode = this.createInProgressItemNode(item);
             this.scrollView.content.addChild(itemNode);
         });
+    }
+
+    private createInProgressItemNode(item: NetworkSyntheResultData): Node {
+        const itemNode = instantiate(this.itemTemplate);
+        itemNode.active = true;
+
+        const syntheData = SyntheDataManager.instance.findSyntheDataById(item.synthe_id);
+        if (!syntheData) {
+            console.error(`Synthe data not found for id: ${item.synthe_id}`);
+            return itemNode;
+        }
+
+        this.setupTargetItem(itemNode, syntheData);
+        this.setupInProgressStatus(itemNode, item);
+
+        return itemNode;
+    }
+
+    private setupInProgressStatus(itemNode: Node, item: NetworkSyntheResultData): void {
+        const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
+        const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+
+        txtRemainingTime.node.active = true;
+        btnStart.node.active = false;
+
+        const endTime = new Date(item.end_time);
+        const remainingTime = Math.max(0, (endTime.getTime() - Date.now()) / 1000);
+        this.updateRemainingTime(txtRemainingTime, remainingTime);
+    }
+
+    private populateAvailableItems(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): void {
+        const availableSyntheDatas = this.filterAvailableSyntheDatas(syntheDatas,sceneSyntheDataList);
+        availableSyntheDatas.forEach(data => {
+            const itemNode = this.createAvailableItemNode(data);
+            this.scrollView.content.addChild(itemNode);
+        });
+    }
+
+    private filterAvailableSyntheDatas(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): any[] {
+        const inProgressIds = new Set(sceneSyntheDataList.map(item => item.synthe_id));
+        return syntheDatas.filter(data => !inProgressIds.has(data.id));
+    }
+
+    private createAvailableItemNode(data: any): Node {
+        const itemNode = instantiate(this.itemTemplate);
+        itemNode.active = true;
+
+        this.setupTargetItem(itemNode, data);
+        this.setupSourceItems(itemNode, data);
+        this.setupStartButton(itemNode, data);
+
+        return itemNode;
+    }
+
+    private setupTargetItem(itemNode: Node, data: any): void {
+        const sprTarget = itemNode.getChildByName('sprTarget').getComponent(Sprite);
+        const txtTargetName = itemNode.getChildByName('txtTargetName').getComponent(Label);
+        const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
+
+        const targetItem = ItemDataManager.instance.getItemById(data.synthe_item_id);
+
+        txtRemainingTime.node.active = false;
+        this.loadTargetSprite(sprTarget, targetItem);
+        txtTargetName.string = data.description;
+    }
+
+    private loadTargetSprite(sprTarget: Sprite, targetItem: any): void {
+        ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${targetItem.png}/spriteFrame`, SpriteFrame)
+            .then(spriteFrame => {
+                if (spriteFrame) {
+                    sprTarget.spriteFrame = spriteFrame;
+                }
+            });
+    }
+
+    private setupSourceItems(itemNode: Node, data: any): void {
+        const formulas = data.formula_1;
+        const qualities = data.quality;
+        const sources = [
+            itemNode.getChildByName('source'),
+            itemNode.getChildByName('source2'),
+            itemNode.getChildByName('source3')
+        ];
+        const plusSprites = [
+            itemNode.getChildByName('sprPlus').getComponent(Sprite),
+            itemNode.getChildByName('sprPlus2').getComponent(Sprite)
+        ];
+
+        formulas.forEach((formula, index) => {
+            if (index < sources.length) {
+                this.setSourceData(sources[index], formula, qualities[index]);
+                sources[index].active = true;
+                if (index > 0 && index - 1 < plusSprites.length) {
+                    plusSprites[index - 1].node.active = true;
+                }
+            }
+        });
+
+        // Hide unused sources and plus sprites
+        for (let i = formulas.length; i < sources.length; i++) {
+            sources[i].active = false;
+            if (i > 0 && i - 1 < plusSprites.length) {
+                plusSprites[i - 1].node.active = false;
+            }
+        }
     }
 
     private setSourceData(sourceNode: Node, sourceItemId: any, quality: any): void {
@@ -131,6 +200,13 @@ export class FarmFactoryWindow extends WindowBase {
                     sourceSprite.spriteFrame = spriteFrame;
                 }
             });
+    }
+
+    private setupStartButton(itemNode: Node, data: any): void {
+        const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+        const canCraft = this.checkInventory(data);
+        btnStart.node.active = canCraft;
+        btnStart.node.on(Button.EventType.CLICK, this.onBtnStartClick.bind(this, btnStart, data));
     }
 
     private checkInventory(data: any): boolean {
@@ -185,6 +261,26 @@ export class FarmFactoryWindow extends WindowBase {
 
     private onBtnCloseClick(event: Event): void {
         WindowManager.instance.hide(SharedDefines.WINDOW_FARM_FACTORY_NAME);
+    }
+
+    private updateRemainingTime(label: Label, remainingSeconds: number): void {
+        const minutes = Math.floor(remainingSeconds / 60);
+        label.string = `剩余${minutes}分钟`;
+
+        if (remainingSeconds > 0) {
+            this.scheduleOnce(() => {
+                this.updateRemainingTime(label, remainingSeconds - 60);
+            }, 60);
+        } else {
+            label.node.active = false;
+            // 可能需要刷新数据或更新UI
+            this.refreshData();
+        }
+    }
+
+    private refreshData(): void {
+        // 重新获取数据并更新UI
+        this.getSceneSyntheDataListFromServer(this.currentBuilding.SceneItem.id, this.currentBuilding.id);
     }
 }
 

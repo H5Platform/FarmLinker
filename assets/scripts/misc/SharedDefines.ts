@@ -175,6 +175,27 @@ export class NetworkDiseaseStatusResult{
     count:  number;
 }
 
+export class NetworkSyntheListResult{
+    success: boolean;
+    message: string;
+    data: NetworkSyntheResultData[];
+}
+
+export class NetworkSyntheResultData{
+    id: string;
+    sceneid: string;
+    synthe_id: string;
+    start_time: string;
+    end_time: string;
+    count: number;
+}
+
+export class NetworkSyntheResult{
+    success: boolean;
+    message: string;
+    data: NetworkSyntheResultData;
+}
+
 export class NetworkVisitResultData{
     userId: string;
     level: number;

@@ -163,7 +163,7 @@ export class PlayerController extends Component {
                 else if(collider.node.layer & buildingLayer){
                     const building = collider.node.getComponent(Building);
                     if(building){
-                        WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME,building.id);
+                        WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME,building);
                     }
                 }
             }

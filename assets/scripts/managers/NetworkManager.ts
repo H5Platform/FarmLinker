@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -31,6 +31,8 @@ export class NetworkManager extends Component {
     public static readonly API_CLEANSE_FRIEND: string = "/game/cleanseFriend";
     public static readonly API_QUERY_DISEASE_STATUS: string = "/game/queryDiseaseStatus";
     public static readonly API_UPDATE_DISEASE_STATUS: string = '/game/updateDiseaseStatus';
+    public static readonly API_QUERY_SYNTHE_LIST: string = '/game/getSyntheList';
+    public static readonly API_START_SYNTHE: string = '/game/startSynthe';
     public static readonly API_VISIT: string = '/game/visit';
 
     
@@ -556,35 +558,6 @@ export class NetworkManager extends Component {
         }
     }
 
-    //implement query disease status
-//     public async queryDiseaseStatus(sceneId: string): Promise<NetworkDiseaseStatusResult> {
-//         if (this.simulateNetwork) {
-//             return null;
-//         }
-
-//         const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_QUERY_DISEASE_STATUS}`;
-
-//         const headers = {
-//             'Authorization': this.token,
-//             ...this.defaultHeaders
-//         };
-
-//         const data = {
-//             userid: this.userId,
-//             sceneid: sceneId
-//         };
-
-//         try {
-//             const response = await HttpHelper.post(url, data, headers);
-//             const result = JSON.parse(response) as NetworkDiseaseStatusResult;
-//             this.eventTarget.emit(NetworkManager.EVENT_QUERY_DISEASE_STATUS, result);
-//             return result;
-//         } catch (error) {
-//             this.handleError(error);
-//             return null;
-//     }
-// }
-
     // Disease status update
     public async updateDiseaseStatus(sceneId: string,updateDiseaseTimes:number): Promise<NetworkDiseaseStatusResult> {
         if (this.simulateNetwork) {
@@ -608,6 +581,60 @@ export class NetworkManager extends Component {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response) as NetworkDiseaseStatusResult;
             this.eventTarget.emit(NetworkManager.EVENT_UPDATE_DISEASE_STATUS, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    public async querySceneSyntheList(sceneId:string): Promise<NetworkSyntheListResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_QUERY_SYNTHE_LIST}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            sceneid: sceneId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkSyntheListResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    //implement start synthe
+    public async startSynthe(syntheId:string,sceneId:string): Promise<NetworkSyntheResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_START_SYNTHE}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            sceneId: sceneId,
+            syntheId: syntheId,
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkSyntheResult;
             return result;
         } catch (error) {
             this.handleError(error);

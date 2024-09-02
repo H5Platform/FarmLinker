@@ -26,6 +26,10 @@ export class Building extends Component {
 
     private buildingData: any;
     private sceneItem: SceneItem | null = null;
+    //getter
+    public get SceneItem(): SceneItem | null {
+        return this.sceneItem;
+    }
 
     private state: BuildingState = BuildingState.NONE;
     private arrowContainer: Node | null = null;
