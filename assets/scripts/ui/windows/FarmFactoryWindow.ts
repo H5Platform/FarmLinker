@@ -2,7 +2,7 @@ import { _decorator, Button, Component, Node, ScrollView, instantiate, Label, Sp
 import { WindowBase } from '../base/WindowBase';
 import { BuildingManager } from '../../managers/BuildingManager';
 import { SyntheDataManager } from '../../managers/SyntheDataManager';
-import { InventoryComponent } from '../../components/InventoryComponent';
+import { InventoryComponent, InventoryItem } from '../../components/InventoryComponent';
 import { ResourceManager } from '../../managers/ResourceManager';
 import { NetworkSyntheResultData, SharedDefines } from '../../misc/SharedDefines';
 import { WindowManager } from '../WindowManager';
@@ -29,7 +29,6 @@ export class FarmFactoryWindow extends WindowBase {
     private scrollView: ScrollView = null;
 
     private currentBuilding: Building = null;
-    private syntheDatas: any[] = [];
     private inventoryComponent: InventoryComponent = null;
 
     //override
@@ -101,15 +100,16 @@ export class FarmFactoryWindow extends WindowBase {
     }
 
     private setupInProgressStatus(itemNode: Node, item: NetworkSyntheResultData): void {
+        itemNode.name = item.id;
         const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+        const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
 
         txtRemainingTime.node.active = true;
         btnStart.node.active = false;
-
         const endTime = new Date(item.end_time);
         const remainingTime = Math.max(0, (endTime.getTime() - Date.now()) / 1000);
-        this.updateRemainingTime(txtRemainingTime, remainingTime);
+        this.updateRemainingTime(txtRemainingTime,btnSynthesisEnd, remainingTime);
     }
 
     private populateAvailableItems(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): void {
@@ -204,9 +204,12 @@ export class FarmFactoryWindow extends WindowBase {
 
     private setupStartButton(itemNode: Node, data: any): void {
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+        const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
         const canCraft = this.checkInventory(data);
         btnStart.node.active = canCraft;
-        btnStart.node.on(Button.EventType.CLICK, this.onBtnStartClick.bind(this, btnStart, data));
+        btnStart.node.on(Button.EventType.CLICK, this.onBtnStartClick.bind(this, itemNode, data));
+        btnSynthesisEnd.node.active = false;
+        btnSynthesisEnd.node.on(Button.EventType.CLICK, this.onBtnSynthesisEndClick.bind(this, itemNode, data));
     }
 
     private checkInventory(data: any): boolean {
@@ -222,7 +225,7 @@ export class FarmFactoryWindow extends WindowBase {
         });
     }
 
-    private startSynthesisTimer(totalTime: number, txtRemainingTime: Label, btnStart: Button, onComplete: () => void): void {
+    private startSynthesisTimer(totalTime: number, txtRemainingTime: Label, btnSynthesisEnd: Button, onComplete: () => void): void {
         let remainingTime = totalTime;
         
         const updateTimer = () => {
@@ -234,7 +237,7 @@ export class FarmFactoryWindow extends WindowBase {
                 this.unschedule(updateTimer);
                 onComplete();
                 txtRemainingTime.node.active = false;
-                btnStart.node.active = true;
+                btnSynthesisEnd.node.active = true;
             }
         };
 
@@ -243,16 +246,49 @@ export class FarmFactoryWindow extends WindowBase {
         this.schedule(updateTimer, 60);
     }
 
-    private onBtnStartClick(event: Event, data: any, btnStart: Button ): void {
+    private async onBtnStartClick(event: Event, data: any, itemNode: Node ): Promise<void> {
         // Handle button click event
         console.log(`Crafting ${data.name} with formula ${data.formula_1}`);
-        const txtRemainingTime = btnStart.node.parent.getChildByName('txtRemainingTime').getComponent(Label);
-        this.startSynthesisTimer(data.time_min * SharedDefines.TIME_MINUTE,txtRemainingTime,btnStart, () => {
-            console.log(`Synthesis completed after ${data.time_min} minutes`);
-        });
+        const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
+        const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
+        const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+        this.updateRemainingTime(data.time_min * SharedDefines.TIME_MINUTE,txtRemainingTime,btnStart);
         btnStart.node.active = false;
+        btnSynthesisEnd.node.active = false;
         txtRemainingTime.node.active = true;
         txtRemainingTime.string = `剩余${data.time_min}分钟`;
+
+        const result = await NetworkManager.instance.syntheStart(data.id,this.currentBuilding.SceneItem.id);
+        if(result && result.success){
+            console.log(`Synthesis start success`);
+            const sceneSyntheData = result.data;
+            btnStart.parent.name = sceneSyntheData.id;
+            data.formula_1.forEach((source, index) => {
+                const item = this.inventoryComponent.getItem(source);
+                if (item) {
+                    item.quantity -= data.quality[index];
+                    if (item.quantity <= 0) {
+                        this.inventoryComponent.removeItem(item.id);
+                    }
+                }
+            });
+
+        }else{
+            console.log(`Synthesis start failed`);
+        }
+    }
+
+    private async onBtnSynthesisEndClick(event: Event, data: any,itemNode:Node): Promise<void> {
+        console.log(`Synthesis completed after ${data.time_min} minutes`);
+        const result = await NetworkManager.instance.syntheEnd(this.currentBuilding.SceneItem.id,itemNode.name);
+        if(result && result.success){
+            console.log(`Synthesis end success`);
+            const syntheData = SyntheDataManager.instance.findSyntheDataById(result.data.synthe_id);
+            const syntheItem = ItemDataManager.instance.getItemById(syntheData.synthe_item_id);
+            const inventoryItem = new InventoryItem(syntheItem,1);
+            this.inventoryComponent.addItem(inventoryItem);
+            this.refreshData();
+        }
     }
 
     private onBtnUpgradeClick(event: Event): void {
@@ -263,18 +299,19 @@ export class FarmFactoryWindow extends WindowBase {
         WindowManager.instance.hide(SharedDefines.WINDOW_FARM_FACTORY_NAME);
     }
 
-    private updateRemainingTime(label: Label, remainingSeconds: number): void {
+    private updateRemainingTime(label: Label,btnSynthesisEnd:Button, remainingSeconds: number): void {
         const minutes = Math.floor(remainingSeconds / 60);
         label.string = `剩余${minutes}分钟`;
 
         if (remainingSeconds > 0) {
             this.scheduleOnce(() => {
-                this.updateRemainingTime(label, remainingSeconds - 60);
+                this.updateRemainingTime(label,btnSynthesisEnd, remainingSeconds - 60);
             }, 60);
         } else {
             label.node.active = false;
+            btnSynthesisEnd.node.active = true;
             // 可能需要刷新数据或更新UI
-            this.refreshData();
+            //this.refreshData();
         }
     }
 

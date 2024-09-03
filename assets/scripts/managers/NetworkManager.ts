@@ -33,6 +33,7 @@ export class NetworkManager extends Component {
     public static readonly API_UPDATE_DISEASE_STATUS: string = '/game/updateDiseaseStatus';
     public static readonly API_QUERY_SYNTHE_LIST: string = '/game/getSyntheList';
     public static readonly API_START_SYNTHE: string = '/game/startSynthe';
+    public static readonly API_SYNTHE_END: string = '/game/syntheEnd';
     public static readonly API_VISIT: string = '/game/visit';
 
     
@@ -615,7 +616,7 @@ export class NetworkManager extends Component {
     }
 
     //implement start synthe
-    public async startSynthe(syntheId:string,sceneId:string): Promise<NetworkSyntheResult>{
+    public async syntheStart(syntheId:string,sceneId:string): Promise<NetworkSyntheResult>{
         if (this.simulateNetwork) {
             return null;
         }
@@ -628,6 +629,34 @@ export class NetworkManager extends Component {
         };
 
         const data = {
+            sceneId: sceneId,
+            syntheId: syntheId,
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkSyntheResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    public async syntheEnd(sceneId:string,syntheId:string): Promise<NetworkSyntheResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_SYNTHE_END}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userId: this.userId,
             sceneId: sceneId,
             syntheId: syntheId,
         };

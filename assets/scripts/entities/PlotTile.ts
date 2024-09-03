@@ -347,4 +347,54 @@ export class PlotTile extends SceneEntity implements IDropZone {
     }
 
     //#endregion
+
+    // Add these methods to the PlotTile class
+
+    public canPerformOperation(operation: CommandType): boolean {
+        if (!this.occupiedCrop) return false;
+        switch (operation) {
+            case CommandType.Care:
+                return this.canCare();
+            case CommandType.Treat:
+                return this.occupiedCrop.canTreat();
+            case CommandType.Cleanse:
+                return this.occupiedCrop.canCleanse();
+            default:
+                return false;
+        }
+    }
+
+    public async performOperation(operation: CommandType): Promise<void> {
+        if (!this.occupiedCrop) return;
+        const sceneItem = this.occupiedCrop.SceneItem;
+        if (!sceneItem) return;
+
+        let result: NetworkCareResult | NetworkTreatResult | NetworkCleanseResult | null = null;
+        switch (operation) {
+            case CommandType.Care:
+                result = await NetworkManager.instance.care(sceneItem.id);
+                if (result && result.success) {
+                    this.occupiedCrop.CareCount = result.data.care_count;
+                }
+                break;
+            case CommandType.Treat:
+                result = await NetworkManager.instance.treat(sceneItem.id);
+                if (result && result.success) {
+                    this.occupiedCrop.TreatCount = result.data.treat_count;
+                }
+                break;
+            case CommandType.Cleanse:
+                result = await NetworkManager.instance.cleanse(sceneItem.id);
+                if (result && result.success) {
+                    this.occupiedCrop.cleanse(result.data.cleanse_count);
+                }
+                break;
+        }
+
+        if (result && result.success && result.data.friend_id) {
+            console.log(`Operation ${operation} on friend's crop, friend_id = ${result.data.friend_id}, diamond_added = ${result.data.diamond_added}`);
+            this.playerController.playerState.addDiamond(result.data.diamond_added);
+            this.playerController.friendState.addDiamond(result.data.diamond_added);
+        }
+    }
 }

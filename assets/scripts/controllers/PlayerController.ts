@@ -4,7 +4,7 @@ import { InventoryComponent, InventoryItem } from '../components/InventoryCompon
 import { InputComponent } from '../components/InputComonent';
 import { BuildingManager } from '../managers/BuildingManager';
 import { BuildingPlacementComponent } from '../components/BuildingPlacementComponent';
-import { FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
 import { DragDropComponent } from '../components/DragDropComponent';
 import { Fence } from '../entities/Fence';
 import { PlotTile } from '../entities/PlotTile';
@@ -51,6 +51,7 @@ export class PlayerController extends Component {
     private _camera : Camera;
     private currentBuildingPlacement: BuildingPlacementComponent | null = null;
     private dragDropComponent: DragDropComponent | null = null;
+    private currentOperation: CommandType | null = null;
     
 
     //getter playerstate
@@ -88,6 +89,7 @@ export class PlayerController extends Component {
         if (inputNode) {
             this._inputComponent = inputNode.getComponent(InputComponent);
             this._inputComponent.onClick = this.handleClick.bind(this);
+            this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
         }
         else{
             console.error('No InputNode found');
@@ -167,6 +169,52 @@ export class PlayerController extends Component {
                     }
                 }
             }
+        }
+
+        // Reset current operation when clicking
+        this.currentOperation = null;
+    }
+
+    private handleTouchMove(event: EventTouch): void {
+        if (this.currentOperation) {
+            const colliders = this.getCollidersByClickPosition(event.getLocation());
+            if (colliders) {
+                this.performOperationOnColliders(colliders, this.currentOperation);
+            }
+        }
+    }
+
+    
+
+    private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType): void {
+        const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
+        const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
+
+        for (const collider of colliders) {
+            if (collider.node.layer & plotLayer) {
+                const plotTile = collider.node.getComponent(PlotTile);
+                if (plotTile && ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner))) {
+                    this.performOperationOnPlotTile(plotTile, operation);
+                }
+            } else if (collider.node.layer & fenceLayer) {
+                const fence = collider.node.getComponent(Fence);
+                if (fence && ((!this.visitMode && fence.IsPlayerOwner) || (this.visitMode && !fence.IsPlayerOwner))) {
+                    this.performOperationOnFence(fence, operation, event.getLocation());
+                }
+            }
+        }
+    }
+
+    private performOperationOnPlotTile(plotTile: PlotTile, operation: CommandType): void {
+        if (plotTile.canPerformOperation(operation)) {
+            plotTile.performOperation(operation);
+        }
+    }
+
+    private performOperationOnFence(fence: Fence, operation: CommandType, touchPos: Vec2): void {
+        const animal = fence.getAnimalAtPosition(touchPos);
+        if (animal && animal.canPerformOperation(operation)) {
+            animal.performOperation(operation);
         }
     }
 

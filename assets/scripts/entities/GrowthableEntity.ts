@@ -32,6 +32,10 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
 
     @property(Sprite)
     public sprite: Sprite | null = null;
+    @property(Sprite)
+    public sickSprite: Sprite | null = null;
+    @property(SpriteFrame)
+    public deadSpriteFrame: SpriteFrame | null = null;
 
     protected growthStages: any[] = [];
     protected currentGrowthStageIndex: number = 0;
@@ -168,6 +172,12 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
         //log growth time
         console.log(`growth time: ${this.growthTime}`);
+
+        if (sceneItem.state === SceneItemState.Dead) {
+            this.setDeadState();
+        } else {
+            this.updateSickState();
+        }
     }
 
     protected updateTotalGrowthTime(): void {
@@ -202,12 +212,13 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
 
     protected async updateSprite(pngPath: string): Promise<void> {
         if (this.sprite) {
-            ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
+            return ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
                 if (texture) {
                     this.sprite.spriteFrame = texture as SpriteFrame;
                 }
             });
         }
+        return Promise.resolve();
     }
 
     public startGrowing(): void {
@@ -371,6 +382,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             if (result && result.success) {
                 if (result.is_sick) {
                     this.isSick = true;
+                    this.updateSickState();
                     console.log(`Entity ${this.id} has become sick`);
                 }
             }
@@ -392,10 +404,12 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         const diseaseCommand = this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease);
         if(diseaseCommand && diseaseCommand.state === CommandState.InProgress){
             this.isSick = true;
+            this.updateSickState();
             console.log(`Entity ${this.id} has become sick`);
         }
         else{
             this.isSick = false;
+            this.updateSickState();
         }
         const lastUpdateTime = diseaseCommand 
             ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
@@ -421,10 +435,36 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
 
     public cleanse(immunityDuration: number): void {
         this.isSick = false;
+        this.updateSickState();
         this.unschedule(this.updateDiseaseStatus);
         this.scheduleOnce(() => {
             this.scheduleDiseaseStatusUpdate();
         }, immunityDuration * 3600);
+    }
+
+    protected updateSickState(): void {
+        if (this.sickSprite) {
+            this.sickSprite.node.active = this.isSick;
+        }
+    }
+
+    protected setDeadState(): void {
+        if (this.sprite && this.deadSpriteFrame) {
+            this.sprite.spriteFrame = this.deadSpriteFrame;
+        }
+        this.growState = GrowState.NONE;
+        this.stopGrowth();
+        this.stopDiseaseStatusUpdates();
+    }
+
+    public updateEntityState(): void {
+        if (this.sceneItem) {
+            if (this.sceneItem.state === SceneItemState.Dead) {
+                this.setDeadState();
+            } else {
+                this.updateSickState();
+            }
+        }
     }
 
     protected onDestroy(): void {

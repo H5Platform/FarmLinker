@@ -49,6 +49,23 @@ export class Fence extends SceneEntity implements IDropZone{
         return true;//this.getAvailableSpace() >= requiredSpace;
     }
 
+    // Add this method to the Fence class
+
+    public getAnimalAtPosition(touchPos: Vec2): Animal | null {
+        for (const animal of this.animals) {
+            const animalNode = animal.node;
+            const animalUITransform = animalNode.getComponent(UITransform);
+            if (animalUITransform) {
+                const worldPos = this.node.getComponent(UITransform).convertToWorldSpaceAR(animalNode.position);
+                const localPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(touchPos.x, touchPos.y, 0));
+                if (animalUITransform.getBoundingBox().contains(new Vec2(localPos.x, localPos.y))) {
+                    return animal;
+                }
+            }
+        }
+        return null;
+    }
+
     public async tryAddAnimal(animalId:string,worldPos:Vec3 = Vec3.ZERO): Promise<boolean> {
         const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
         const animalNode = instantiate(animalPrefab);
