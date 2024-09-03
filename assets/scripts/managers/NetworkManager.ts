@@ -602,7 +602,7 @@ export class NetworkManager extends Component {
         };
 
         const data = {
-            sceneid: sceneId
+            sceneId: sceneId
         };
 
         try {
@@ -629,6 +629,7 @@ export class NetworkManager extends Component {
         };
 
         const data = {
+            userId: this.userId,
             sceneId: sceneId,
             syntheId: syntheId,
         };

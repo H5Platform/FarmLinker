@@ -67,6 +67,12 @@ export enum DiseaseState{
     Disease = 1
 }
 
+export enum SyntheState{
+    None = 0,
+    InProgress = 1,
+    Complete = 2
+}
+
 export class NetworkUser{
     id: string;
     nickname: string;
@@ -184,10 +190,11 @@ export class NetworkSyntheListResult{
 export class NetworkSyntheResultData{
     id: string;
     sceneid: string;
-    synthe_id: string;
-    start_time: string;
-    end_time: string;
+    syntheid: string;
+    startTime: string;
+    endTime: string;
     count: number;
+    state: SyntheState;
 }
 
 export class NetworkSyntheResult{

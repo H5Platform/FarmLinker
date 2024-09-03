@@ -4,7 +4,7 @@ import { BuildingManager } from '../../managers/BuildingManager';
 import { SyntheDataManager } from '../../managers/SyntheDataManager';
 import { InventoryComponent, InventoryItem } from '../../components/InventoryComponent';
 import { ResourceManager } from '../../managers/ResourceManager';
-import { NetworkSyntheResultData, SharedDefines } from '../../misc/SharedDefines';
+import { NetworkSyntheResultData, SharedDefines, SyntheState } from '../../misc/SharedDefines';
 import { WindowManager } from '../WindowManager';
 import { ItemDataManager } from '../../managers/ItemDataManager';
 import { NetworkManager } from '../../managers/NetworkManager';
@@ -62,6 +62,9 @@ export class FarmFactoryWindow extends WindowBase {
     private updateScrollView(sceneSyntheDataList: NetworkSyntheResultData[],syntheDatas: any[]): void {
         this.clearScrollViewContent();
         this.populateInProgressItems(sceneSyntheDataList);
+        //log all syntheDatas & sceneSyntheDataList
+        console.log(`syntheDatas:`,syntheDatas);
+        console.log(`sceneSyntheDataList:`,sceneSyntheDataList);
         this.populateAvailableItems(syntheDatas,sceneSyntheDataList);
     }
 
@@ -87,33 +90,35 @@ export class FarmFactoryWindow extends WindowBase {
         const itemNode = instantiate(this.itemTemplate);
         itemNode.active = true;
 
-        const syntheData = SyntheDataManager.instance.findSyntheDataById(item.synthe_id);
+        const syntheData = SyntheDataManager.instance.findSyntheDataById(item.syntheid);
         if (!syntheData) {
-            console.error(`Synthe data not found for id: ${item.synthe_id}`);
+            console.error(`Synthe data not found for id: ${item.syntheid}`);
             return itemNode;
         }
 
         this.setupTargetItem(itemNode, syntheData);
+        this.setupSourceItems(itemNode, syntheData);
         this.setupInProgressStatus(itemNode, item);
-
+        this.setupItemButtons(itemNode, syntheData,item.state);
         return itemNode;
     }
 
     private setupInProgressStatus(itemNode: Node, item: NetworkSyntheResultData): void {
         itemNode.name = item.id;
         const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
-        const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
 
         txtRemainingTime.node.active = true;
-        btnStart.node.active = false;
-        const endTime = new Date(item.end_time);
+        const endTime = new Date(item.endTime);
         const remainingTime = Math.max(0, (endTime.getTime() - Date.now()) / 1000);
+        console.log(`setupInProgressStatus:remainingTime:${remainingTime}`);
         this.updateRemainingTime(txtRemainingTime,btnSynthesisEnd, remainingTime);
     }
 
     private populateAvailableItems(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): void {
         const availableSyntheDatas = this.filterAvailableSyntheDatas(syntheDatas,sceneSyntheDataList);
+        //log all availableSyntheDatas
+        console.log(`availableSyntheDatas:`,availableSyntheDatas);
         availableSyntheDatas.forEach(data => {
             const itemNode = this.createAvailableItemNode(data);
             this.scrollView.content.addChild(itemNode);
@@ -121,7 +126,7 @@ export class FarmFactoryWindow extends WindowBase {
     }
 
     private filterAvailableSyntheDatas(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): any[] {
-        const inProgressIds = new Set(sceneSyntheDataList.map(item => item.synthe_id));
+        const inProgressIds = new Set(sceneSyntheDataList.map(item => item.syntheid));
         return syntheDatas.filter(data => !inProgressIds.has(data.id));
     }
 
@@ -131,7 +136,7 @@ export class FarmFactoryWindow extends WindowBase {
 
         this.setupTargetItem(itemNode, data);
         this.setupSourceItems(itemNode, data);
-        this.setupStartButton(itemNode, data);
+        this.setupItemButtons(itemNode, data);
 
         return itemNode;
     }
@@ -202,14 +207,15 @@ export class FarmFactoryWindow extends WindowBase {
             });
     }
 
-    private setupStartButton(itemNode: Node, data: any): void {
+    private setupItemButtons(itemNode: Node, data: any,state:SyntheState = SyntheState.None): void {
+        
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
-        const canCraft = this.checkInventory(data);
-        btnStart.node.active = canCraft;
-        btnStart.node.on(Button.EventType.CLICK, this.onBtnStartClick.bind(this, itemNode, data));
-        btnSynthesisEnd.node.active = false;
-        btnSynthesisEnd.node.on(Button.EventType.CLICK, this.onBtnSynthesisEndClick.bind(this, itemNode, data));
+        const hasEnoughItems = this.checkInventory(data);
+        btnStart.node.active = hasEnoughItems && state != SyntheState.Complete;
+        btnStart.node.on(Button.EventType.CLICK, ()=>{this.onBtnStartClick(data, itemNode)} );
+        btnSynthesisEnd.node.active = state == SyntheState.InProgress;
+        btnSynthesisEnd.node.on(Button.EventType.CLICK, ()=>{this.onBtnSynthesisEndClick(data,itemNode)} );
     }
 
     private checkInventory(data: any): boolean {
@@ -246,13 +252,14 @@ export class FarmFactoryWindow extends WindowBase {
         this.schedule(updateTimer, 60);
     }
 
-    private async onBtnStartClick(event: Event, data: any, itemNode: Node ): Promise<void> {
+    private async onBtnStartClick( data: any, itemNode: Node ): Promise<void> {
         // Handle button click event
-        console.log(`Crafting ${data.name} with formula ${data.formula_1}`);
+        console.log(`Crafting ${data.name} with formula ${data.formula_1} , itemNode name: ${itemNode.name}`);
         const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
-        this.updateRemainingTime(data.time_min * SharedDefines.TIME_MINUTE,txtRemainingTime,btnStart);
+        console.log(`data.time_min:`,data.time_min);
+        this.updateRemainingTime(txtRemainingTime,btnStart,data.time_min * SharedDefines.TIME_MINUTE);
         btnStart.node.active = false;
         btnSynthesisEnd.node.active = false;
         txtRemainingTime.node.active = true;
@@ -262,14 +269,12 @@ export class FarmFactoryWindow extends WindowBase {
         if(result && result.success){
             console.log(`Synthesis start success`);
             const sceneSyntheData = result.data;
-            btnStart.parent.name = sceneSyntheData.id;
+            itemNode.name = sceneSyntheData.id;
             data.formula_1.forEach((source, index) => {
+                
                 const item = this.inventoryComponent.getItem(source);
                 if (item) {
-                    item.quantity -= data.quality[index];
-                    if (item.quantity <= 0) {
-                        this.inventoryComponent.removeItem(item.id);
-                    }
+                    this.inventoryComponent.removeItem(item.id);
                 }
             });
 
@@ -278,16 +283,19 @@ export class FarmFactoryWindow extends WindowBase {
         }
     }
 
-    private async onBtnSynthesisEndClick(event: Event, data: any,itemNode:Node): Promise<void> {
+    private async onBtnSynthesisEndClick( data: any,itemNode:Node): Promise<void> {
         console.log(`Synthesis completed after ${data.time_min} minutes`);
         const result = await NetworkManager.instance.syntheEnd(this.currentBuilding.SceneItem.id,itemNode.name);
         if(result && result.success){
             console.log(`Synthesis end success`);
-            const syntheData = SyntheDataManager.instance.findSyntheDataById(result.data.synthe_id);
+            const syntheData = SyntheDataManager.instance.findSyntheDataById(result.data.syntheid);
             const syntheItem = ItemDataManager.instance.getItemById(syntheData.synthe_item_id);
             const inventoryItem = new InventoryItem(syntheItem,1);
             this.inventoryComponent.addItem(inventoryItem);
             this.refreshData();
+        }
+        else{
+            console.log(`Synthesis end failed`);
         }
     }
 
