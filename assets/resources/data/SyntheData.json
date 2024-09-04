@@ -8,12 +8,10 @@
       "time_min": "10",
       "synthe_item_id": "500101",
       "formula_1": [
-        "100101",
-        "100102"
+        "100101"
       ],
       "quality": [
-        "2",
-        "1"
+        "2"
       ]
     },
     {
@@ -32,30 +30,406 @@
     },
     {
       "id": "100103",
-      "name": "Synthe_StrawberryJam",
-      "description": "草莓果酱_合成",
-      "build": "100102",
+      "name": "Synthe_Frenchloaf",
+      "description": "法式长棍",
+      "build": "100101",
       "time_min": "60",
       "synthe_item_id": "500103",
       "formula_1": [
-        "100107"
+        "500101",
+        "600101"
+      ],
+      "quality": [
+        "2",
+        "5"
+      ]
+    },
+    {
+      "id": "100104",
+      "name": "Synthe_Frenchloaf",
+      "description": "法式长棍",
+      "build": "100101",
+      "time_min": "60",
+      "synthe_item_id": "500103",
+      "formula_1": [
+        "500101",
+        "600102"
+      ],
+      "quality": [
+        "2",
+        "5"
+      ]
+    },
+    {
+      "id": "100105",
+      "name": "Synthe_MilkBread",
+      "description": "牛奶面包",
+      "build": "100101",
+      "time_min": "120",
+      "synthe_item_id": "500104",
+      "formula_1": [
+        "500101",
+        "600101",
+        "600106"
+      ],
+      "quality": [
+        "2",
+        "5",
+        "1"
+      ]
+    },
+    {
+      "id": "100106",
+      "name": "Synthe_MilkBread",
+      "description": "牛奶面包",
+      "build": "100101",
+      "time_min": "120",
+      "synthe_item_id": "500104",
+      "formula_1": [
+        "500101",
+        "600102",
+        "600106"
+      ],
+      "quality": [
+        "2",
+        "5",
+        "1"
+      ]
+    },
+    {
+      "id": "100107",
+      "name": "Synthe_Cake",
+      "description": "蛋糕",
+      "build": "100101",
+      "time_min": "240",
+      "synthe_item_id": "500105",
+      "formula_1": [
+        "500101",
+        "600101",
+        "600106"
+      ],
+      "quality": [
+        "5",
+        "8",
+        "2"
+      ]
+    },
+    {
+      "id": "100108",
+      "name": "Synthe_Cake",
+      "description": "蛋糕",
+      "build": "100101",
+      "time_min": "240",
+      "synthe_item_id": "500105",
+      "formula_1": [
+        "500101",
+        "600102",
+        "600106"
+      ],
+      "quality": [
+        "5",
+        "8",
+        "2"
+      ]
+    },
+    {
+      "id": "100111",
+      "name": "Synthe_Woolen",
+      "description": "毛线球",
+      "build": "100102",
+      "time_min": "30",
+      "synthe_item_id": "500111",
+      "formula_1": [
+        "600103"
+      ],
+      "quality": [
+        "2"
+      ]
+    },
+    {
+      "id": "100112",
+      "name": "Synthe_Sweater",
+      "description": "毛衣",
+      "build": "100102",
+      "time_min": "60",
+      "synthe_item_id": "500112",
+      "formula_1": [
+        "500111"
+      ],
+      "quality": [
+        "2"
+      ]
+    },
+    {
+      "id": "100113",
+      "name": "Synthe_Blanket",
+      "description": "羊毛毯",
+      "build": "100102",
+      "time_min": "180",
+      "synthe_item_id": "500113",
+      "formula_1": [
+        "500111"
       ],
       "quality": [
         "5"
       ]
     },
     {
-      "id": "100104",
+      "id": "100121",
+      "name": "Synthe_CarrotCook",
+      "description": "清蒸胡萝卜",
+      "build": "100103",
+      "time_min": "30",
+      "synthe_item_id": "500121",
+      "formula_1": [
+        "100103"
+      ],
+      "quality": [
+        "2"
+      ]
+    },
+    {
+      "id": "100122",
+      "name": "Synthe_CornCook",
+      "description": "玉米饼",
+      "build": "100103",
+      "time_min": "60",
+      "synthe_item_id": "500122",
+      "formula_1": [
+        "100105"
+      ],
+      "quality": [
+        "3"
+      ]
+    },
+    {
+      "id": "100123",
+      "name": "Synthe_TomatoEgg",
+      "description": "番茄炒蛋",
+      "build": "100103",
+      "time_min": "90",
+      "synthe_item_id": "500123",
+      "formula_1": [
+        "100104",
+        "600101"
+      ],
+      "quality": [
+        "4",
+        "4"
+      ]
+    },
+    {
+      "id": "100124",
+      "name": "Synthe_TomatoEgg",
+      "description": "番茄炒蛋",
+      "build": "100103",
+      "time_min": "90",
+      "synthe_item_id": "500123",
+      "formula_1": [
+        "100104",
+        "600102"
+      ],
+      "quality": [
+        "4",
+        "4"
+      ]
+    },
+    {
+      "id": "100125",
+      "name": "Synthe_CarrotPotato",
+      "description": "胡萝卜土豆泥",
+      "build": "100103",
+      "time_min": "150",
+      "synthe_item_id": "500124",
+      "formula_1": [
+        "100103",
+        "100106"
+      ],
+      "quality": [
+        "3",
+        "3"
+      ]
+    },
+    {
+      "id": "100126",
+      "name": "Synthe_VegetablePizza",
+      "description": "蔬菜披萨",
+      "build": "100103",
+      "time_min": "300",
+      "synthe_item_id": "500125",
+      "formula_1": [
+        "100103",
+        "100104",
+        "100105",
+        "100106",
+        "500101"
+      ],
+      "quality": [
+        "2",
+        "2",
+        "2",
+        "2",
+        "5"
+      ]
+    },
+    {
+      "id": "100131",
+      "name": "Synthe_BeefBurger",
+      "description": "牛肉汉堡",
+      "build": "100104",
+      "time_min": "90",
+      "synthe_item_id": "500131",
+      "formula_1": [
+        "600105",
+        "500102",
+        "100102"
+      ],
+      "quality": [
+        "2",
+        "2",
+        "2"
+      ]
+    },
+    {
+      "id": "100132",
+      "name": "Synthe_GrilledPorkRibs",
+      "description": "烤猪肋排",
+      "build": "100104",
+      "time_min": "180",
+      "synthe_item_id": "500132",
+      "formula_1": [
+        "600104",
+        "100102"
+      ],
+      "quality": [
+        "7",
+        "4"
+      ]
+    },
+    {
+      "id": "100133",
+      "name": "Synthe_MeatHotPot",
+      "description": "双肉火锅",
+      "build": "100104",
+      "time_min": "300",
+      "synthe_item_id": "500133",
+      "formula_1": [
+        "600104",
+        "600105",
+        "100102",
+        "100103",
+        "100106"
+      ],
+      "quality": [
+        "5",
+        "5",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "100141",
+      "name": "Synthe_Pudding",
+      "description": "布丁",
+      "build": "100105",
+      "time_min": "60",
+      "synthe_item_id": "500141",
+      "formula_1": [
+        "600106",
+        "600101"
+      ],
+      "quality": [
+        "2",
+        "2"
+      ]
+    },
+    {
+      "id": "100142",
+      "name": "Synthe_Pudding",
+      "description": "布丁",
+      "build": "100105",
+      "time_min": "60",
+      "synthe_item_id": "500141",
+      "formula_1": [
+        "600106",
+        "600102"
+      ],
+      "quality": [
+        "2",
+        "2"
+      ]
+    },
+    {
+      "id": "100143",
+      "name": "Synthe_Yogurt",
+      "description": "酸奶",
+      "build": "100105",
+      "time_min": "120",
+      "synthe_item_id": "500142",
+      "formula_1": [
+        "600106"
+      ],
+      "quality": [
+        "5"
+      ]
+    },
+    {
+      "id": "100144",
+      "name": "Synthe_Cheese",
+      "description": "奶酪",
+      "build": "100105",
+      "time_min": "300",
+      "synthe_item_id": "500143",
+      "formula_1": [
+        "600106"
+      ],
+      "quality": [
+        "4"
+      ]
+    },
+    {
+      "id": "100145",
+      "name": "Synthe_StrawberryMilk",
+      "description": "草莓奶昔",
+      "build": "100105",
+      "time_min": "240",
+      "synthe_item_id": "500144",
+      "formula_1": [
+        "600106",
+        "100107"
+      ],
+      "quality": [
+        "4",
+        "3"
+      ]
+    },
+    {
+      "id": "100151",
+      "name": "Synthe_StrawberryJam",
+      "description": "草莓果酱_合成",
+      "build": "100106",
+      "time_min": "360",
+      "synthe_item_id": "500151",
+      "formula_1": [
+        "100107"
+      ],
+      "quality": [
+        "10"
+      ]
+    },
+    {
+      "id": "100152",
       "name": "Synthe_GrapeJelly",
       "description": "葡萄果酱_合成",
-      "build": "100102",
-      "time_min": "90",
-      "synthe_item_id": "500104",
+      "build": "100106",
+      "time_min": "420",
+      "synthe_item_id": "500152",
       "formula_1": [
         "100109"
       ],
       "quality": [
-        "5"
+        "10"
       ]
     }
   ]

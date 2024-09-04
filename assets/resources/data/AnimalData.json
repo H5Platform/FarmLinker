@@ -9,7 +9,7 @@
       "time_min": "60",
       "harvest_item_id": "",
       "level_need": "1",
-      "grid_capacity": "10",
+      "grid_capacity": "5",
       "png": "AnimalChicken_01"
     },
     {
@@ -21,32 +21,32 @@
       "time_min": "0",
       "harvest_item_id": "300101",
       "level_need": "1",
-      "grid_capacity": "10",
+      "grid_capacity": "5",
       "png": "AnimalChicken_02"
     },
     {
       "id": "2021",
-      "name": "AnimalGoose_01",
-      "description": "鹅_幼年",
+      "name": "AnimalDuck_01",
+      "description": "鸭_幼年",
       "farm_type": "2",
       "animal_type": "2",
       "time_min": "120",
       "harvest_item_id": "",
       "level_need": "1",
-      "grid_capacity": "12",
-      "png": "AnimalGoose_01"
+      "grid_capacity": "5",
+      "png": "AnimalDuck_01"
     },
     {
       "id": "2022",
-      "name": "AnimalGoose_02",
-      "description": "鹅_成年",
+      "name": "AnimalDuck_02",
+      "description": "鸭_成年",
       "farm_type": "2",
       "animal_type": "2",
       "time_min": "0",
       "harvest_item_id": "300102",
       "level_need": "1",
-      "grid_capacity": "12",
-      "png": "AnimalGoose_02"
+      "grid_capacity": "5",
+      "png": "AnimalDuck_02"
     },
     {
       "id": "2031",
@@ -57,7 +57,7 @@
       "time_min": "180",
       "harvest_item_id": "",
       "level_need": "2",
-      "grid_capacity": "8",
+      "grid_capacity": "3",
       "png": "AnimalSheep_01"
     },
     {
@@ -69,79 +69,103 @@
       "time_min": "0",
       "harvest_item_id": "300103",
       "level_need": "2",
-      "grid_capacity": "8",
+      "grid_capacity": "3",
       "png": "AnimalSheep_02"
     },
     {
       "id": "2041",
-      "name": "AnimalCattle_01",
-      "description": "牛_幼年",
+      "name": "AnimalPig_01",
+      "description": "猪_幼年",
       "farm_type": "2",
       "animal_type": "4",
       "time_min": "240",
       "harvest_item_id": "",
       "level_need": "3",
-      "grid_capacity": "5",
-      "png": "AnimalCattle_01"
+      "grid_capacity": "2",
+      "png": "AnimalPig_01"
     },
     {
       "id": "2042",
-      "name": "AnimalCattle_02",
-      "description": "牛_成年",
+      "name": "AnimalPig_02",
+      "description": "猪_成年",
       "farm_type": "2",
       "animal_type": "4",
       "time_min": "0",
       "harvest_item_id": "300104",
       "level_need": "3",
-      "grid_capacity": "5",
-      "png": "AnimalCattle_02"
+      "grid_capacity": "2",
+      "png": "AnimalPig_02"
     },
     {
       "id": "2051",
-      "name": "AnimalPig_01",
-      "description": "猪_幼年",
+      "name": "AnimalCattle_01",
+      "description": "牛_幼年",
       "farm_type": "2",
       "animal_type": "5",
       "time_min": "300",
       "harvest_item_id": "",
       "level_need": "3",
-      "grid_capacity": "6",
-      "png": "AnimalPig_01"
+      "grid_capacity": "1",
+      "png": "AnimalCattle_01"
     },
     {
       "id": "2052",
-      "name": "AnimalPig_02",
-      "description": "猪_成年",
+      "name": "AnimalCattle_02",
+      "description": "牛_成年",
       "farm_type": "2",
       "animal_type": "5",
       "time_min": "0",
       "harvest_item_id": "300105",
       "level_need": "3",
-      "grid_capacity": "6",
-      "png": "AnimalPig_02"
+      "grid_capacity": "1",
+      "png": "AnimalCattle_02"
     },
     {
       "id": "2061",
-      "name": "AnimalHorse_01",
-      "description": "马_幼年",
+      "name": "AnimalCow_01",
+      "description": "奶牛_幼年",
       "farm_type": "2",
       "animal_type": "6",
-      "time_min": "480",
+      "time_min": "360",
       "harvest_item_id": "",
       "level_need": "4",
-      "grid_capacity": "3",
-      "png": "AnimalHorse_01"
+      "grid_capacity": "1",
+      "png": "AnimalCow_01"
     },
     {
       "id": "2062",
-      "name": "AnimalHorse_02",
-      "description": "马_成年",
+      "name": "AnimalCow_02",
+      "description": "奶牛_成年",
       "farm_type": "2",
       "animal_type": "6",
       "time_min": "0",
       "harvest_item_id": "300106",
       "level_need": "4",
-      "grid_capacity": "3",
+      "grid_capacity": "1",
+      "png": "AnimalCow_02"
+    },
+    {
+      "id": "2071",
+      "name": "AnimalHorse_01",
+      "description": "马_幼年",
+      "farm_type": "2",
+      "animal_type": "7",
+      "time_min": "480",
+      "harvest_item_id": "",
+      "level_need": "5",
+      "grid_capacity": "1",
+      "png": "AnimalHorse_01"
+    },
+    {
+      "id": "2072",
+      "name": "AnimalHorse_02",
+      "description": "马_成年",
+      "farm_type": "2",
+      "animal_type": "7",
+      "time_min": "0",
+      "harvest_item_id": "300107",
+      "level_need": "5",
+      "grid_capacity": "1",
       "png": "AnimalHorse_02"
     }
   ]

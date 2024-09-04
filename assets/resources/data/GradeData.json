@@ -58,7 +58,7 @@
       "id": "010",
       "name": "LV10",
       "description": "等级10",
-      "exp_need": ""
+      "exp_need": "1000"
     }
   ]
 }
