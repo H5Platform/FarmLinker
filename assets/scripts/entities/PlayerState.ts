@@ -13,6 +13,7 @@ export class PlayerState {
     private _experience: number;
     private _gold: number;
     private _diamond: number;
+    private _prosperity: number;
 
     // Getters
     public get id(): string { return this._id; }
@@ -24,7 +25,7 @@ export class PlayerState {
     public get experience(): number { return this._experience; }
     public get gold(): number { return this._gold; }
     public get diamond(): number { return this._diamond; }
-
+    public get prosperity(): number { return this._prosperity; }
     public eventTarget: EventTarget;
 
     
@@ -89,6 +90,14 @@ export class PlayerState {
         }
     }
 
+    public set prosperity(value: number) {
+        if (this._prosperity !== value) {
+            const oldProsperity = this._prosperity;
+            this._prosperity = value;
+            this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PROSPERITY_CHANGE, { oldProsperity, newProsperity: value });
+        }
+    }
+
     // Methods to modify player attributes
     public addExperience(amount: number): void {
         this.experience += amount;
@@ -100,6 +109,10 @@ export class PlayerState {
 
     public addDiamond(amount: number): void {
         this.diamond += amount;
+    }
+
+    public addProsperity(amount: number): void {
+        this.prosperity += amount;
     }
 
     public spendGold(amount: number): boolean {

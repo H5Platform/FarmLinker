@@ -276,9 +276,17 @@ export class PlayerController extends Component {
             return false;
         }
         if (this.currentBuildingPlacement.canPlaceBuilding()) {
-            this.currentBuildingPlacement.placeBuilding();
-            this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, true);
-            this.endBuildingPlacement();
+            this.currentBuildingPlacement.placeBuilding((result) => {
+                if(result.success){
+                    //add gold and diamond
+                    this._playerState.gold = result.data.coin;
+                    this._playerState.diamond = result.data.diamond;
+                    this._playerState.prosperity = result.data.prosperity;
+                }
+                this.endBuildingPlacement();
+                this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, true);
+            });
+            
             return true;
         }
         return false;

@@ -6,8 +6,11 @@ interface BuildData {
     name: string;
     description: string;
     level_need: string;
-    icon: string;
     texture: string;
+    item_type:number;
+    cost_coin:number;
+    cost_diamond:number;
+    prosperity:number;
 }
 
 export class BuildDataManager {

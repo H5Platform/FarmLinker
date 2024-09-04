@@ -2,7 +2,7 @@
 
 import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform,  Rect, Sprite, SpriteFrame } from 'cc';
 import { BuildingManager } from '../managers/BuildingManager';
-import { SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
 import { Building } from '../entities/Building';
 import { NetworkManager } from '../managers/NetworkManager';
@@ -54,7 +54,7 @@ export class BuildingPlacementComponent extends Component {
 
     private updateBuildingAppearance(): void {
         const buildingSprite = this.getComponent(Sprite);
-        ResourceManager.instance.loadAsset(`${SharedDefines.WINDOW_CRAFT_TEXTURES}${this.buildData.texture}/spriteFrame`, SpriteFrame).then((spriteFrame) => {
+        ResourceManager.instance.loadAsset(`${SharedDefines.WINDOW_BUILDING_TEXTURES}${this.buildData.texture}/spriteFrame`, SpriteFrame).then((spriteFrame) => {
             buildingSprite.spriteFrame = spriteFrame as SpriteFrame;
         });
     }
@@ -82,7 +82,7 @@ export class BuildingPlacementComponent extends Component {
         return true;
     }
 
-    public placeBuilding(): void {
+    public async placeBuilding(callback: (result: NetworkAddBuildingResult) => void): Promise<void> {
         console.log("Place building");
 
 
@@ -97,22 +97,33 @@ export class BuildingPlacementComponent extends Component {
             return;
         }
 
-        NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
-            if(!result.success){
-                console.log('plant building failed');
-                return;
-            }
-            buildingComponent.initializeFromSceneItem(result.data as SceneItem);
+        // NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
+        //     if(!result.success){
+        //         console.log('plant building failed');
+        //         return;
+        //     }
+        //     buildingComponent.initializeFromSceneItem(result.data as SceneItem);
+        //     // 完成建造
+        //     buildingComponent.completeConstruction();
+
+        //     this.buildingManager!.addBuilding(this.buildData.id, this.node);
+        //     this.isPlacing = false;
+        //     this.destroy();
+        // });
+       // NetworkManager.instance.plant(this.buildData.id,SceneItemType.Building,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
+       const result  = await NetworkManager.instance.addBuilding(this.buildData.id,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
+       console.log("add building result",result);
+       if(result.success){
+
+            buildingComponent.initializeFromSceneItem(result.data.sceneItem);
             // 完成建造
             buildingComponent.completeConstruction();
-
+            console.log("add building success");
             this.buildingManager!.addBuilding(this.buildData.id, this.node);
             this.isPlacing = false;
+            callback(result);
             this.destroy();
-        });
-        NetworkManager.instance.plant(this.buildData.id,SceneItemType.Building,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
-
-        //buildingComponent.initialize(this.buildData);
+       }
 
     }
 

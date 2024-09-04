@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -35,7 +35,7 @@ export class NetworkManager extends Component {
     public static readonly API_START_SYNTHE: string = '/game/startSynthe';
     public static readonly API_SYNTHE_END: string = '/game/syntheEnd';
     public static readonly API_VISIT: string = '/game/visit';
-
+    public static readonly API_ADD_BUILDING: string = '/scene/addBuilding';
     
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
@@ -582,6 +582,36 @@ export class NetworkManager extends Component {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response) as NetworkDiseaseStatusResult;
             this.eventTarget.emit(NetworkManager.EVENT_UPDATE_DISEASE_STATUS, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    public async addBuilding(itemId: string,x: number, y: number,parent_node_name: string): Promise<NetworkAddBuildingResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_ADD_BUILDING}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: this.userId,
+            buildingId: itemId,
+            x: x,
+            y: y,
+            parent_node_name: parent_node_name
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkAddBuildingResult;
             return result;
         } catch (error) {
             this.handleError(error);

@@ -106,7 +106,7 @@ export class CraftWindow extends WindowBase {
             }
 
             if (sprite) {
-                const spriteFrame = await this.loadSpriteFrame(buildData.icon);
+                const spriteFrame = await this.loadSpriteFrame(buildData.texture);
                 if (spriteFrame) {
                     sprite.spriteFrame = spriteFrame;
                 }
@@ -126,7 +126,7 @@ export class CraftWindow extends WindowBase {
 
     private async loadSpriteFrame(iconName: string): Promise<SpriteFrame | null> {
         return new Promise((resolve) => {
-            resources.load(`${SharedDefines.WINDOW_CRAFT_TEXTURES}${iconName}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            resources.load(`${SharedDefines.WINDOW_BUILDING_TEXTURES}${iconName}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
                 if (err) {
                     console.error(`Failed to load sprite frame for ${iconName}:`, err);
                     resolve(null);
@@ -183,14 +183,22 @@ export class CraftWindow extends WindowBase {
 
     private onBuildItemClicked(buildData: any): void {
         console.log(`Build item clicked: ${buildData.name}`);
+
         const buildingManager = BuildingManager.instance;
         if (buildingManager.hasBuildingOfType(buildData.id)) {
             // 跳转到已有建筑
             buildingManager.focusOnBuilding(buildData.id);
         } else {
-            // 开始新建筑放置
-            this.switchView(ViewType.PLACEMENT);
-            this.startBuildingPlacement(buildData);
+            //check if player has enough coins
+            if(this.playerController.playerState.gold >= buildData.cost_coin){
+                // 开始新建筑放置
+                this.switchView(ViewType.PLACEMENT);
+                this.startBuildingPlacement(buildData);
+            }
+            else{
+                //TODO 弹出对话框提示玩家没有足够的硬币
+                console.log("Not enough coins");
+            }
         }
 
     }

@@ -1218,8 +1218,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.7,
+      "y": 0.7,
       "z": 1
     },
     "_mobility": 0,
@@ -1299,7 +1299,7 @@
     "_isTrimmedMode": true,
     "_useGrayscale": false,
     "_atlas": {
-      "__uuid__": "d3d1e83c-26e4-449a-ab3d-5e11cd00fd09",
+      "__uuid__": "73f3a24a-e3e6-4c61-919b-bb8566af87d4",
       "__expectedType__": "cc.SpriteAtlas"
     },
     "_id": ""

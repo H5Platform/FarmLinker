@@ -60,6 +60,7 @@ export class Building extends Component {
             return;
         }
         this.initialize(this.buildingData);
+        console.log("sceneItem",sceneItem);
         //update state
         if(sceneItem.state === SceneItemState.Complete){
             this.setState(BuildingState.COMPLETED); 
@@ -74,7 +75,7 @@ export class Building extends Component {
             let spriteFrame = this.spriteCache.get(this.buildingData.texture);
             if (!spriteFrame) {
                 spriteFrame = await ResourceManager.instance.loadAsset<SpriteFrame>(
-                    `${SharedDefines.WINDOW_CRAFT_TEXTURES}${this.buildingData.texture}/spriteFrame`,
+                    `${SharedDefines.WINDOW_BUILDING_TEXTURES}${this.buildingData.texture}/spriteFrame`,
                     SpriteFrame
                 );
                 if (spriteFrame) {
@@ -105,10 +106,8 @@ export class Building extends Component {
     }
 
     public async completeConstruction(): Promise<void> {
-        const success = await NetworkManager.instance.harvest(this.sceneItem.command_id,this.id,SceneItemType.Building);
-        if(success){
-            this.setState(BuildingState.COMPLETED);
-        }
+
+        this.setState(BuildingState.COMPLETED);
         
     }
 

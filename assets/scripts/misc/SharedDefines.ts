@@ -227,6 +227,18 @@ export class NetworkCommand{
     count: number;
 }
 
+export class NetworkAddBuildingResult{
+    success: boolean;
+    message: string;
+    data: NetworkAddBuildingResultData;
+}
+
+export class NetworkAddBuildingResultData{
+    sceneItem: SceneItem;
+    coin: number;
+    diamond: number;
+    prosperity: number;
+}
 export class SceneItem{
     id: string;
     item_id: string;
@@ -301,6 +313,7 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_EXP_CHANGE: string = 'player-exp-change';
     public static readonly EVENT_PLAYER_GOLD_CHANGE: string = 'player-gold-change';
     public static readonly EVENT_PLAYER_DIAMOND_CHANGE: string = 'player-diamond-change';
+    public static readonly EVENT_PLAYER_PROSPERITY_CHANGE: string = 'player-prosperity-change';
     public static readonly EVENT_PLAYER_PLACEMENT_BUILDING: string = 'player-placement-building';
     public static readonly EVENT_PLAYER_STATE_INIT: string = 'player-state-init';
 
@@ -314,6 +327,7 @@ export class SharedDefines {
     public static readonly WINDOW_FARM_FACTORY_NAME: string = 'FarmFactoryWindow';
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
+    public static readonly WINDOW_BUILDING_TEXTURES: string = 'textures/buildings/';
     public static readonly WINDOW_GAME_TEXTURES: string = 'textures/gameWindow/';
     public static readonly WINDOW_SHOP_TEXTURES: string = 'textures/shopWindow/';
     public static readonly CROPS_TEXTURES: string = 'textures/crops/';
