@@ -177,6 +177,7 @@ export class NetworkManager extends Component {
         const data = { userid: userId };
         try {
             const response = await HttpHelper.post(url, data, headers);
+            console.log(response);
             const result = JSON.parse(response);
             this.eventTarget.emit(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, result);
             

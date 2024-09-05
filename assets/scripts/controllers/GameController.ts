@@ -233,6 +233,7 @@ export class GameController extends Component {
         const networkInventoryItems = userData.inventory_items as NetworkInventoryItem[];
         console.log(`onLoginSuccess: networkInventoryItems:`,networkInventoryItems);
         this.playerController.inventoryComponent.initialize(networkInventoryItems);
+        console.log(`onLoginSuccess end ... `);
     }
 
     private async onGetUserSceneItems(data:any): Promise<void> {
