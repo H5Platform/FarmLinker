@@ -6,6 +6,7 @@ import { NetworkAddBuildingResult, SceneItem, SceneItemType, SharedDefines } fro
 import { ResourceManager } from '../managers/ResourceManager';
 import { Building } from '../entities/Building';
 import { NetworkManager } from '../managers/NetworkManager';
+import { SpriteHelper } from '../helpers/SpriteHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('BuildingPlacementComponent')
@@ -14,6 +15,7 @@ export class BuildingPlacementComponent extends Component {
     private buildingManager: BuildingManager | null = null;
     private isPlacing: boolean = false;
     private camera: Camera | null = null;
+    private buildingSprite: Sprite | null = null;
 
     public initialize(buildData: any, buildingManager: BuildingManager): void {
         this.node.name = buildData.id;
@@ -27,6 +29,7 @@ export class BuildingPlacementComponent extends Component {
             console.error("Cannot find camera node");
             return;
         }
+        this.buildingSprite = this.node.getComponent(Sprite);
 
         this.updateBuildingAppearance();
     }
@@ -41,6 +44,12 @@ export class BuildingPlacementComponent extends Component {
         if (this.isPlacing) {
             const uiLocation = event.getLocation();
             this.updateBuildingPosition( new Vec3(uiLocation.x, uiLocation.y, 0));
+            if(this.canPlaceBuilding()){
+                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(1, 1, 1, 0.5));
+            }
+            else{
+                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(1, 0, 0, 0.5));
+            }
         }
     }
 
@@ -49,13 +58,14 @@ export class BuildingPlacementComponent extends Component {
         const worldPos = this.camera.screenToWorld(uiPos); //this.getWorldPositionFromUI(uiPos);
         if (worldPos) {
             this.node.setWorldPosition(worldPos);
+            if(this.canPlaceBuilding()){
         }
     }
 
     private updateBuildingAppearance(): void {
-        const buildingSprite = this.getComponent(Sprite);
+        
         ResourceManager.instance.loadAsset(`${SharedDefines.WINDOW_BUILDING_TEXTURES}${this.buildData.texture}/spriteFrame`, SpriteFrame).then((spriteFrame) => {
-            buildingSprite.spriteFrame = spriteFrame as SpriteFrame;
+            this.buildingSprite.spriteFrame = spriteFrame as SpriteFrame;
         });
     }
 
@@ -97,20 +107,7 @@ export class BuildingPlacementComponent extends Component {
             return;
         }
 
-        // NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
-        //     if(!result.success){
-        //         console.log('plant building failed');
-        //         return;
-        //     }
-        //     buildingComponent.initializeFromSceneItem(result.data as SceneItem);
-        //     // 完成建造
-        //     buildingComponent.completeConstruction();
-
-        //     this.buildingManager!.addBuilding(this.buildData.id, this.node);
-        //     this.isPlacing = false;
-        //     this.destroy();
-        // });
-       // NetworkManager.instance.plant(this.buildData.id,SceneItemType.Building,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
+        
        const result  = await NetworkManager.instance.addBuilding(this.buildData.id,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
        console.log("add building result",result);
        if(result.success){

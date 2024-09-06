@@ -57,6 +57,26 @@ export class SpriteHelper {
         sprite.color = new Color(color.r, color.g, color.b, opacity);
     }
 
+    //get sprite color
+    public static getSpriteColor(sprite: Sprite): Color {
+        if (!sprite) {
+            console.error('SpriteHelper: Sprite is null or undefined');
+            return new Color(0, 0, 0, 0);
+        }
+        return sprite.color;
+    }
+
+    //set sprite color
+    public static setSpriteColor(sprite: Sprite, color: Color): void {
+        if (!sprite) {
+            console.error('SpriteHelper: Sprite is null or undefined');
+            return;
+        }
+        sprite.color = color;
+    }
+
+
+
     /**
      * 从给定的Atlas中设置Sprite的SpriteFrame
      * @param sprite 要设置的Sprite组件

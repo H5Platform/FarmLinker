@@ -1,5 +1,6 @@
 import { _decorator, Component, director, Node } from 'cc';
 import { GameController } from '../../controllers/GameController';
+import { WindowManager } from '../WindowManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('WindowBase')
@@ -20,5 +21,6 @@ export class WindowBase extends Component {
 
     public hide(): void {
         this.node.active = false;
+        
     }
 }

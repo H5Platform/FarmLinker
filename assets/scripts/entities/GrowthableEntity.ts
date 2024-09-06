@@ -147,6 +147,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             if (diseaseCommand) {
                 this.isSick = diseaseCommand.state === CommandState.InProgress && diseaseCommand.count > 0;
                 console.log(`Entity ${this.id} has become sick`);
+                this.updateEntityState();
             }
             else {
                 this.isSick = false;

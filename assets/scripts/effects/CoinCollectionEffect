@@ -1,0 +1,84 @@
+import { _decorator, Component, Node, Sprite, Vec3, tween, instantiate } from 'cc';
+const { ccclass, property } = _decorator;
+
+@ccclass('CoinCollectionEffect')
+export class CoinCollectionEffect extends Component {
+    @property(Sprite)
+    public targetSprite: Sprite | null = null;
+
+    @property(Node)
+    public targetNode: Node | null = null;
+
+    @property
+    public coinCount: number = 10;
+
+    @property
+    public spreadRadius: number = 50;
+
+    @property
+    public moveDuration: number = 1;
+
+    @property
+    public delayBetweenCoins: number = 0.05;
+
+    private targetPosition: Vec3 = new Vec3();
+    private coinPrefab: Node | null = null;
+    private isPlaying: boolean = false;
+
+    onLoad() {
+        if (this.targetSprite) {
+            this.coinPrefab = instantiate(this.targetSprite.node);
+            this.coinPrefab.parent = this.node;
+            this.coinPrefab.active = false;
+        }
+    }
+
+    public setTargetPosition(position: Vec3) {
+        this.targetPosition = position;
+    }
+
+    public play(startPosition: Vec3) {
+        if (this.isPlaying || !this.coinPrefab) return;
+
+        this.isPlaying = true;
+        
+        if (this.targetNode) {
+            this.targetPosition = this.targetNode.worldPosition;
+        }
+
+        for (let i = 0; i < this.coinCount; i++) {
+            this.scheduleOnce(() => this.spawnCoin(startPosition), i * this.delayBetweenCoins);
+        }
+    }
+
+    public stop() {
+        this.isPlaying = false;
+        this.unscheduleAllCallbacks();
+        this.node.removeAllChildren();
+    }
+
+    private spawnCoin(startPosition: Vec3) {
+        const coin = instantiate(this.coinPrefab);
+        coin.active = true;
+        coin.parent = this.node;
+
+        const randomOffset = new Vec3(
+            (Math.random() - 0.5) * 2 * this.spreadRadius,
+            (Math.random() - 0.5) * 2 * this.spreadRadius,
+            0
+        );
+
+        coin.setWorldPosition(startPosition.add(randomOffset));
+
+        tween(coin)
+            .to(this.moveDuration, { worldPosition: this.targetPosition })
+            .call(() => {
+                coin.removeFromParent();
+                if (this.node.children.length === 1) {  // Only the coinPrefab is left
+                    this.isPlaying = false;
+                    this.node.emit('effectComplete');
+                }
+            })
+            .start();
+    }
+}
