@@ -359,7 +359,7 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async sellItem(itemId: string,num:number): Promise<boolean> {
+    public async sellItem(itemId: string,num:number): Promise<any|null> {
         if (this.simulateNetwork) {
             return true;
         }
@@ -381,10 +381,10 @@ export class NetworkManager extends Component {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response);
             this.eventTarget.emit(NetworkManager.EVENT_SELL_ITEM, result);
-            return result.success;
+            return result;
         } catch (error) {
             this.handleError(error);
-            return false;
+            return null;
         }
     }
 

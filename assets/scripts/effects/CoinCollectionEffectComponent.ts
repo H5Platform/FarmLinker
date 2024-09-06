@@ -1,13 +1,22 @@
-import { _decorator, Component, Node, Sprite, Vec3, tween, instantiate } from 'cc';
+import { _decorator, Component, Node, Sprite, Vec3, tween, instantiate, SpriteFrame, Prefab } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('CoinCollectionEffect')
-export class CoinCollectionEffect extends Component {
-    @property(Sprite)
-    public targetSprite: Sprite | null = null;
+export enum CoinType {
+    COIN,
+    DIAMOND
+}
 
-    @property(Node)
-    public targetNode: Node | null = null;
+@ccclass('CoinCollectionEffectComponent')
+export class CoinCollectionEffectComponent extends Component {
+
+
+
+    @property(Prefab)
+    public coinPrefab: Prefab | null = null;
+
+    @property(Prefab)
+    public diamondPrefab: Prefab | null = null;
+
 
     @property
     public coinCount: number = 10;
@@ -22,29 +31,31 @@ export class CoinCollectionEffect extends Component {
     public delayBetweenCoins: number = 0.05;
 
     private targetPosition: Vec3 = new Vec3();
-    private coinPrefab: Node | null = null;
     private isPlaying: boolean = false;
+    private targetPrefab: Prefab | null = null;
 
     onLoad() {
-        if (this.targetSprite) {
-            this.coinPrefab = instantiate(this.targetSprite.node);
-            this.coinPrefab.parent = this.node;
-            this.coinPrefab.active = false;
-        }
     }
 
     public setTargetPosition(position: Vec3) {
         this.targetPosition = position;
     }
 
-    public play(startPosition: Vec3) {
-        if (this.isPlaying || !this.coinPrefab) return;
+    public play(coinType: CoinType, startPosition: Vec3, endPosition: Vec3) {
+        if (this.isPlaying ) return;
+        if(coinType === CoinType.COIN){
+            this.targetPrefab = this.coinPrefab;
+        } else if(coinType === CoinType.DIAMOND){
+            this.targetPrefab = this.diamondPrefab;
+        }
 
+        if(!this.targetPrefab) {
+            console.error("No target prefab set");
+            return;
+        }
         this.isPlaying = true;
         
-        if (this.targetNode) {
-            this.targetPosition = this.targetNode.worldPosition;
-        }
+        this.targetPosition = endPosition;
 
         for (let i = 0; i < this.coinCount; i++) {
             this.scheduleOnce(() => this.spawnCoin(startPosition), i * this.delayBetweenCoins);
@@ -58,7 +69,7 @@ export class CoinCollectionEffect extends Component {
     }
 
     private spawnCoin(startPosition: Vec3) {
-        const coin = instantiate(this.coinPrefab);
+        const coin = instantiate(this.targetPrefab);
         coin.active = true;
         coin.parent = this.node;
 
@@ -77,6 +88,7 @@ export class CoinCollectionEffect extends Component {
                 if (this.node.children.length === 1) {  // Only the coinPrefab is left
                     this.isPlaying = false;
                     this.node.emit('effectComplete');
+                    this.node.destroy();
                 }
             })
             .start();

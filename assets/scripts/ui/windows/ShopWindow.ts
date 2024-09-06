@@ -9,6 +9,8 @@ import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { WindowManager } from '../WindowManager';
 import { NetworkManager } from '../../managers/NetworkManager';
+import { CoinType } from '../../effects/CoinCollectionEffectComponent';
+import { UIEffectHelper } from '../../helpers/UIEffectHelper';
 
 
 const { ccclass, property } = _decorator;
@@ -84,7 +86,6 @@ export class ShopWindow extends WindowBase {
     public hide(): void {
         super.hide();
         NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_BUY_ITEM, this.onBuyItemResult, this);
-        NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_SELL_ITEM, this.onSellItemResult, this);
     }
 
     private initializeComponents(): void {
@@ -109,7 +110,6 @@ export class ShopWindow extends WindowBase {
 
     private setupNetworkEventListeners(): void {
         NetworkManager.instance.eventTarget.on(NetworkManager.EVENT_BUY_ITEM, this.onBuyItemResult, this);
-        NetworkManager.instance.eventTarget.on(NetworkManager.EVENT_SELL_ITEM, this.onSellItemResult, this);
     }
 
     private onBuyItemResult(buyItemResult: NetworkBuyItemResult): void {
@@ -123,24 +123,6 @@ export class ShopWindow extends WindowBase {
                 console.log(`Bought item: ${item.name}`);
                 this.showBuyItems(); 
             }
-        }
-    }
-
-    private onSellItemResult(sellItemResult: NetworkSellItemResult): void {
-        console.log('onSellItemResult', sellItemResult);
-        const item = ItemDataManager.instance.getItemById(sellItemResult.data.item_id);
-        if (item) {
-            const price = parseInt(item.sell_price);
-            if (this.inventoryComponent?.removeItem(item.id)) {
-                this.playerController!.playerState.gold += price;
-                console.log(`Sold item: ${item.name} for ${price} gold`);
-                this.showSellItems(); 
-            } else {
-                console.log("Failed to sell item!");
-            }
-        }
-        else{
-            console.log("The item is not found!");
         }
     }
 
@@ -243,7 +225,7 @@ export class ShopWindow extends WindowBase {
             if (isBuyMode) {
                 this.buyItem(item);
             } else {
-                this.sellItem(item);
+                this.sellItem(button,item);
             }
         }, this);
 
@@ -260,8 +242,30 @@ export class ShopWindow extends WindowBase {
         }
     }
 
-    private sellItem(item: InventoryItem): void {
-        NetworkManager.instance.sellItem(item.id,1);
+    private async sellItem(button: Button,inventoryItem: InventoryItem): Promise<void> {
+        const sellItemResult = await NetworkManager.instance.sellItem(inventoryItem.id, 1);
+        const item = ItemDataManager.instance.getItemById(sellItemResult.data.item_id);
+        if (item) {
+            const price = parseInt(item.sell_price);
+            if (this.inventoryComponent?.removeItem(item.id)) {
+                console.log("sellItem success");
+                const coinEffect = await UIEffectHelper.playCoinCollectionEffect(CoinType.COIN, this.node, button.node.getWorldPosition(), this.coinDisplay!.node.getWorldPosition());
+                coinEffect.node.on('effectComplete', () => {
+                    this.playerController!.playerState.gold += price;
+                    console.log(`Sold item: ${item.name} for ${price} gold`);
+                    //this.showSellItems(); 
+                });
+               // this.playerController!.playerState.gold += price;
+                console.log(`Sold item: ${item.name} for ${price} gold`);
+                this.showSellItems();
+            } else {
+                console.log("Failed to sell item!");
+            }
+        }
+        else {
+            console.log("The item is not found!");
+        }
+
         
     }
 

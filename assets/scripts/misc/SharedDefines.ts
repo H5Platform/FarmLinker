@@ -353,6 +353,7 @@ export class SharedDefines {
     public static readonly PREFAB_CROP_GRAPE: string = 'entities/crops/Grape';
     public static readonly PREFAB_CROP_CABBAGE: string = 'entities/crops/Cabbage';
     public static readonly PREFAB_ANIMAL:string = 'entities/animal/Animal';
+    public static readonly PREFAB_COIN_COLLECTION_EFFECT:string = 'ui/effects/CoinCollectEffect';
 
     public static readonly PREFAB_PLACEMENT_BUILDING: string = 'entities/buildings/placementBuilding';
 

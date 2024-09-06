@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "217b0a94-aaba-4412-ba65-4221f5fe154e",
+  "uuid": "9f60e691-1ff7-490f-9394-36c53deae635",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Diamond"
+    "syncNodeName": "CoinCollectEffect"
   }
 }

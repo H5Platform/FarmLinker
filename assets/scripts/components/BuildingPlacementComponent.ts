@@ -1,6 +1,6 @@
 // BuildingPlacementComponent.ts
 
-import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform,  Rect, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform,  Rect, Sprite, SpriteFrame, Color } from 'cc';
 import { BuildingManager } from '../managers/BuildingManager';
 import { NetworkAddBuildingResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
@@ -44,11 +44,11 @@ export class BuildingPlacementComponent extends Component {
         if (this.isPlacing) {
             const uiLocation = event.getLocation();
             this.updateBuildingPosition( new Vec3(uiLocation.x, uiLocation.y, 0));
-            if(this.canPlaceBuilding()){
-                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(1, 1, 1, 0.5));
+            if (this.canPlaceBuilding()) {
+                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
             }
             else{
-                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(1, 0, 0, 0.5));
+                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 0, 0, 125));
             }
         }
     }
@@ -58,9 +58,9 @@ export class BuildingPlacementComponent extends Component {
         const worldPos = this.camera.screenToWorld(uiPos); //this.getWorldPositionFromUI(uiPos);
         if (worldPos) {
             this.node.setWorldPosition(worldPos);
-            if(this.canPlaceBuilding()){
         }
     }
+
 
     private updateBuildingAppearance(): void {
         

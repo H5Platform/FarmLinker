@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "217b0a94-aaba-4412-ba65-4221f5fe154e",
+  "uuid": "e000a9da-3161-4dba-8c4c-d0d90f7adfe0",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Diamond"
+    "syncNodeName": "DiamondBar"
   }
 }
