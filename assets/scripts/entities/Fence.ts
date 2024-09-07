@@ -11,6 +11,9 @@ import { CooldownComponent } from '../components/CooldownComponent';
 import { NetworkManager } from '../managers/NetworkManager';
 import { SceneEntity } from './SceneEntity';
 import { PlayerController } from '../controllers/PlayerController';
+import { UIEffectHelper } from '../helpers/UIEffectHelper';
+import { GameWindow } from '../ui/windows/GameWindow';
+import { CoinType } from '../effects/CoinCollectionEffectComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
@@ -185,8 +188,7 @@ export class Fence extends SceneEntity implements IDropZone{
                     animal.CareCount = careResult.data.care_count;
                     if(careResult.data.friend_id){
                         console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
-                        this.playerController.playerState.addDiamond(careResult.data.diamond_added);
-                        this.playerController.friendState.addDiamond(careResult.data.diamond_added);
+                        this.playDiamondCollectionEffect(careResult.data.diamond_added);
                     }
                 }
                 else {
@@ -205,8 +207,7 @@ export class Fence extends SceneEntity implements IDropZone{
                     animal.TreatCount = treatResult.data.treat_count;
                     if(treatResult.data.friend_id){
                         console.log(`treat friend , name = ${treatResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${treatResult.data.diamond_added}`);
-                        this.playerController.playerState.addDiamond(treatResult.data.diamond_added);
-                        this.playerController.friendState.addDiamond(treatResult.data.diamond_added);
+                        this.playDiamondCollectionEffect(treatResult.data.diamond_added);
                     }
                 }
                 else {
@@ -226,8 +227,7 @@ export class Fence extends SceneEntity implements IDropZone{
                     animal.cleanse(cleanseResult.data.cleanse_count);
                     if(cleanseResult.data.friend_id){
                         console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
-                        this.playerController.playerState.addDiamond(cleanseResult.data.diamond_added);
-                        this.playerController.friendState.addDiamond(cleanseResult.data.diamond_added);
+                        this.playDiamondCollectionEffect(cleanseResult.data.diamond_added);
                     }
                 }
                 else {
@@ -299,5 +299,20 @@ export class Fence extends SceneEntity implements IDropZone{
     private onAnimalHarvest(animal:Animal): void {
         console.log('onAnimalHarvest',animal);
         this.removeAnimal(animal);
+    }
+
+    private async playDiamondCollectionEffect(diamondAmount: number): Promise<void> {
+        const gameWindow = WindowManager.instance.getWindow(SharedDefines.WINDOW_GAME_NAME) as GameWindow;
+        const diamondDisplay = gameWindow.diamondDisplay;
+        if(!diamondDisplay){
+            console.error('diamondDisplay not found');
+            return;
+        }
+        const endPos = diamondDisplay.currencySpriteNode.getWorldPosition();
+        const coinEffect = await UIEffectHelper.playCoinCollectionEffect(CoinType.DIAMOND, this.node, this.node.getWorldPosition(), endPos);
+        coinEffect.node.on("effectComplete", () => {
+            this.playerController.playerState.addDiamond(diamondAmount);
+            this.playerController.friendState.addDiamond(diamondAmount);
+        }, coinEffect.node);
     }
 }

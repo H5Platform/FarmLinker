@@ -207,6 +207,8 @@ export class NetworkVisitResultData{
     userId: string;
     level: number;
     exp: number;
+    coin: number;
+    diamond: number;
     sceneItems: SceneItem[];
 }
 
@@ -317,6 +319,8 @@ export class SharedDefines {
     public static readonly EVENT_PLAYER_PLACEMENT_BUILDING: string = 'player-placement-building';
     public static readonly EVENT_PLAYER_STATE_INIT: string = 'player-state-init';
 
+    public static readonly EVENT_VISIT_MODE_CHANGE: string = 'visit-mode-change';
+    
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
     public static readonly EVENT_ANIMAL_HARVEST: string = 'animal-harvest';
 
@@ -325,6 +329,7 @@ export class SharedDefines {
     public static readonly WINDOW_SHOP_NAME: string = 'ShopWindow';
     public static readonly WINDOW_SELECTION_NAME: string = 'FarmSelectionWindow';
     public static readonly WINDOW_FARM_FACTORY_NAME: string = 'FarmFactoryWindow';
+    public static readonly WINDOW_GAME_NAME: string = 'GameWindow';
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_BUILDING_TEXTURES: string = 'textures/buildings/';

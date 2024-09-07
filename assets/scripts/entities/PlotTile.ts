@@ -1,4 +1,4 @@
-import { _decorator, Component,  PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director} from 'cc';
+import { _decorator, Component,  PolygonCollider2D, Vec2, Vec3 ,EventTarget, instantiate, Director, Node} from 'cc';
 import { IDropZone,IDraggable, DragDropComponent } from '../components/DragDropComponent';
 import { Crop } from './Crop';
 import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -12,6 +12,7 @@ import { GameController } from '../controllers/GameController';
 import { SceneEntity } from './SceneEntity';
 import { UIEffectHelper } from '../helpers/UIEffectHelper';
 import { CoinType } from '../effects/CoinCollectionEffectComponent';
+import { GameWindow } from '../ui/windows/GameWindow';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -164,13 +165,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
                         this.occupiedCrop.CareCount = careResult.data.care_count;
                         if(careResult.data.friend_id){
                             console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
-                            this.playerController.playerState.addDiamond(careResult.data.diamond_added);
-                            this.playerController.friendState.addDiamond(careResult.data.diamond_added);
-                            // const endPos = this.node.getWorldPosition();
-                            // const coinEffect = UIEffectHelper.playCoinCollectionEffect(CoinType.DIAMOND,this.node,this.node.getWorldPosition(),endPos);
-                            // coinEffect.node.on("effectComplete", () => {
-                            //     coinEffect.node.destroy();
-                            // }, coinEffect.node);
+                            await this.playDiamondCollectionEffect(careResult.data.diamond_added);
                         }
                     }
                     else {
@@ -189,8 +184,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
                         this.occupiedCrop.TreatCount = treatResult.data.treat_count;
                         if(treatResult.data.friend_id){
                             console.log(`treat friend , name = ${treatResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${treatResult.data.diamond_added}`);
-                            this.playerController.playerState.addDiamond(treatResult.data.diamond_added);
-                            this.playerController.friendState.addDiamond(treatResult.data.diamond_added);
+                            await this.playDiamondCollectionEffect(treatResult.data.diamond_added);
                         }
                     }
                     else {
@@ -211,8 +205,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
                         this.occupiedCrop.cleanse(immunityDuration);
                         if(cleanseResult.data.friend_id){
                             console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
-                            this.playerController.playerState.addDiamond(cleanseResult.data.diamond_added);
-                            this.playerController.friendState.addDiamond(cleanseResult.data.diamond_added);
+                            await this.playDiamondCollectionEffect(cleanseResult.data.diamond_added);
                         }
                     }
                     else {
@@ -403,5 +396,20 @@ export class PlotTile extends SceneEntity implements IDropZone {
             this.playerController.playerState.addDiamond(result.data.diamond_added);
             this.playerController.friendState.addDiamond(result.data.diamond_added);
         }
+    }
+
+    private async playDiamondCollectionEffect(diamondAmount: number): Promise<void> {
+        const gameWindow = WindowManager.instance.getWindow(SharedDefines.WINDOW_GAME_NAME) as GameWindow;
+        const diamondDisplay = gameWindow.diamondDisplay;
+        if(!diamondDisplay){
+            console.error('diamondDisplay not found');
+            return;
+        }
+        const endPos = diamondDisplay.currencySpriteNode.getWorldPosition();
+        const coinEffect = await UIEffectHelper.playCoinCollectionEffect(CoinType.DIAMOND, this.node, this.node.getWorldPosition(), endPos);
+        coinEffect.node.on("effectComplete", () => {
+            this.playerController.playerState.addDiamond(diamondAmount);
+            this.playerController.friendState.addDiamond(diamondAmount);
+        }, coinEffect.node);
     }
 }

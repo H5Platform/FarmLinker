@@ -1414,6 +1414,9 @@
     "__prefab": {
       "__id__": 55
     },
+    "currencySpriteNode": {
+      "__id__": 36
+    },
     "lblCurrency": {
       "__id__": 33
     },
@@ -2097,6 +2100,9 @@
     "__prefab": {
       "__id__": 83
     },
+    "currencySpriteNode": {
+      "__id__": 64
+    },
     "lblCurrency": {
       "__id__": 61
     },
@@ -2262,7 +2268,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -4535,6 +4541,7 @@
     "__prefab": {
       "__id__": 192
     },
+    "animationNode": null,
     "lblLevel": {
       "__id__": 21
     },

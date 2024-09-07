@@ -76,6 +76,17 @@ export class WindowManager extends Component {
          windowBase.node.setSiblingIndex(windowBase.node.parent!.children.length - 1);
     }
 
+    //get window by name
+    public getWindow(name: string): WindowBase | null {
+        //check if window is already loaded
+        let windowBase = this.windowMap.get(name);
+        if (!windowBase) {
+            console.warn(`Window not found: ${name}`);
+            return null;
+        }
+        return windowBase;
+    }
+
     public hide(name: string): void {
         const windowBase = this.windowMap.get(name);
         if (windowBase) {

@@ -41,7 +41,9 @@ export class PlayerController extends Component {
 
     //setter visitmode
     public set visitMode(value: boolean) {
+
         this._visitMode = value;
+        this.eventTarget.emit(SharedDefines.EVENT_VISIT_MODE_CHANGE, value);
     }
     private _visitMode: boolean = false;
     

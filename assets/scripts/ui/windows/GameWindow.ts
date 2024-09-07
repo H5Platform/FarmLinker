@@ -82,6 +82,7 @@ export class GameWindow extends WindowBase {
             this.diamondDisplay.refreshDisplay();
         }
         this.refreshBasePlayerStateInfo();
+        //this.updateButtonsVisibility();
     }
 
     public hide(): void 
@@ -96,6 +97,7 @@ export class GameWindow extends WindowBase {
     protected onDestroy(): void {
         super.onDestroy();
         if (this.playerController) {
+           // this.playerController.eventTarget.off(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
             const playerState = this.playerController.playerState;
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
@@ -109,6 +111,7 @@ export class GameWindow extends WindowBase {
     private setupEventLisnters(): void 
     {
         if (this.playerController) {
+            //this.playerController.eventTarget.on(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
             const playerState = this.playerController.playerState;
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
@@ -125,6 +128,15 @@ export class GameWindow extends WindowBase {
         if (this.btnFriend) {
             this.btnFriend.node.on(Button.EventType.CLICK, this.onBtnFriendClicked, this);
         }
+    }
+
+    private updateButtonsVisibility(): void {
+        //check if is visit mode
+        const visitMode = this.gameController?.getPlayerController().visitMode ?? false;
+        
+        this.btnFriend.node.active = !visitMode;
+        this.btnShop.node.active = !visitMode;
+        this.btnCraft.node.active = !visitMode;
     }
 
     private onPlayerLeveUp(): void 
@@ -211,38 +223,9 @@ export class GameWindow extends WindowBase {
         return Math.floor(100 * Math.pow(1.5, level - 1));
     }
 
-    private async plantCrop(cropType :CropType): Promise<void> {
-        if (!this.currentSelectedPlot || this.currentSelectedPlot.isOccupied) {
-            console.log('No valid plot selected or plot is already occupied');
-            return;
-        }
-
-        let prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_CROP_CORN);
-        if (!prefab) {
-            console.error(`Failed to load crop prefab: ${SharedDefines.PREFAB_CROP_CORN}`);
-            return;
-        }
-        
-        const cropNode = instantiate(prefab);
-        const crop = cropNode.getComponent(Crop);
-        if (!crop) {
-            console.error(`Failed to get Crop component from prefab: ${cropNode.name}`);
-            return;
-        }
-
-        this.currentSelectedPlot.node.addChild(cropNode);
-        cropNode.setPosition(Vec3.ZERO);
-        this.currentSelectedPlot.occupy(crop);
-        crop.initialize(cropType);
-        crop.startGrowing();
-
-        this.scrollViewCrops.node!.active = false;
-        this.currentSelectedPlot = null;
-    }
-
     private async onCropButtonClicked(cropType : CropType): Promise<void>  {
         console.log('onCropButtonClicked: ' + cropType);
-        this.plantCrop(cropType);
+        //this.plantCrop(cropType);
     }
 
     //create onPlotSelected func , when plot is selected, show crop container

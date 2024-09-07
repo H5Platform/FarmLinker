@@ -81,6 +81,7 @@ export class ShopWindow extends WindowBase {
         } else {
             this.showSellItems();
         }
+        
     }
 
     public hide(): void {
