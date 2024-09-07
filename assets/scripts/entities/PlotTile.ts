@@ -10,6 +10,8 @@ import { CooldownComponent } from '../components/CooldownComponent';
 import { NetworkManager } from '../managers/NetworkManager';
 import { GameController } from '../controllers/GameController';
 import { SceneEntity } from './SceneEntity';
+import { UIEffectHelper } from '../helpers/UIEffectHelper';
+import { CoinType } from '../effects/CoinCollectionEffectComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -164,6 +166,11 @@ export class PlotTile extends SceneEntity implements IDropZone {
                             console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
                             this.playerController.playerState.addDiamond(careResult.data.diamond_added);
                             this.playerController.friendState.addDiamond(careResult.data.diamond_added);
+                            // const endPos = this.node.getWorldPosition();
+                            // const coinEffect = UIEffectHelper.playCoinCollectionEffect(CoinType.DIAMOND,this.node,this.node.getWorldPosition(),endPos);
+                            // coinEffect.node.on("effectComplete", () => {
+                            //     coinEffect.node.destroy();
+                            // }, coinEffect.node);
                         }
                     }
                     else {
