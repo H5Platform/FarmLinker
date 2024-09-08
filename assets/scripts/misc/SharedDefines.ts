@@ -287,7 +287,7 @@ export class SharedDefines {
     // public static readonly BACKGROUND_MUSIC_VOLUME: number = 0.5;
     // public static readonly SFX_VOLUME: number = 1.0;
 
-    public static readonly CURRENT_USER_ID: string = '123';
+    public static readonly CURRENT_USER_ID: string = '456';
 
     public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
     public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
@@ -300,6 +300,14 @@ export class SharedDefines {
 
     public static readonly COOLDOWN_SELECTION_TIME: number = 0.5;
     public static readonly COOLDOWN_KEY_CARE: string = 'care';
+    public static readonly COOLDOWN_KEY_TREAT: string = 'treat';
+    public static readonly COOLDOWN_KEY_CLEANSE: string = 'cleanse';
+
+    public static readonly EVENT_TOUCH_START: string = 'touch-start';
+    public static readonly EVENT_TOUCH_MOVE: string = 'touch-move';
+    public static readonly EVENT_TOUCH_END: string = 'touch-end';
+    public static readonly EVENT_TOUCH_CANCEL: string = 'touch-cancel';
+    public static readonly EVENT_CLICK: string = 'click';
 
     public static readonly PATH_CAMERA: string = 'Canvas/Camera';
     public static readonly PATH_GAMEPLAY: string = 'Canvas/Gameplay';
@@ -330,6 +338,7 @@ export class SharedDefines {
     public static readonly WINDOW_SELECTION_NAME: string = 'FarmSelectionWindow';
     public static readonly WINDOW_FARM_FACTORY_NAME: string = 'FarmFactoryWindow';
     public static readonly WINDOW_GAME_NAME: string = 'GameWindow';
+    public static readonly WINDOW_TOAST_NAME: string = "ToastWindow";
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_BUILDING_TEXTURES: string = 'textures/buildings/';

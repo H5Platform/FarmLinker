@@ -18,8 +18,12 @@ const { ccclass, property } = _decorator;
 @ccclass('PlotTile')
 export class PlotTile extends SceneEntity implements IDropZone {
     //define max care count
-    public static readonly MAX_CARE_COUNT: number = 5;
+    public static readonly MAX_CARE_COUNT: number = 4;
+    public static readonly MAX_TREAT_COUNT: number = 4;
+    public static readonly MAX_CLEANSE_COUNT: number = 4;
     public static readonly CARE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+    public static readonly TREAT_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+    public static readonly CLEANSE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
 
 
     @property
@@ -109,6 +113,14 @@ export class PlotTile extends SceneEntity implements IDropZone {
 
     public canCare(): boolean {
         return this.occupiedCrop && this.occupiedCrop.CareCount >= 0 && this.occupiedCrop.CareCount < PlotTile.MAX_CARE_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_CARE);
+    }
+
+    public canTreat(): boolean {
+        return this.occupiedCrop && this.occupiedCrop.TreatCount >= 0 && this.occupiedCrop.TreatCount < PlotTile.MAX_TREAT_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_TREAT);
+    }
+
+    public canCleanse(): boolean {
+        return this.occupiedCrop && this.occupiedCrop.CleanseCount >= 0 && this.occupiedCrop.CleanseCount < PlotTile.MAX_CLEANSE_COUNT && !this.cooldownComponent.isOnCooldown(SharedDefines.COOLDOWN_KEY_CLEANSE);
     }
 
     public getNode(): Node 
@@ -356,9 +368,9 @@ export class PlotTile extends SceneEntity implements IDropZone {
             case CommandType.Care:
                 return this.canCare();
             case CommandType.Treat:
-                return this.occupiedCrop.canTreat();
+                return this.canTreat();
             case CommandType.Cleanse:
-                return this.occupiedCrop.canCleanse();
+                return this.canCleanse();
             default:
                 return false;
         }

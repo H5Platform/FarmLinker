@@ -107,7 +107,7 @@ export class Fence extends SceneEntity implements IDropZone{
         const index = this.animals.indexOf(animal);
         if (index !== -1) {
             this.animals.splice(index, 1);
-            this.occupiedSpace -= parseInt(animal.gridCapacity);
+            this.occupiedSpace -= 1;
         }
     }
 

@@ -35,6 +35,10 @@ export class GameController extends Component {
     private playerFence: Fence| null = null;
     private friendFence: Fence| null = null;
 
+    //getter for playerPlotTiles
+    public get PlayerPlotTiles(): PlotTile[] {
+        return this.playerPlotTiles;
+    }
     private playerPlotTiles: PlotTile[] = [];
     private friendPlotTiles: PlotTile[] = [];
     private playerController: PlayerController| null = null;
@@ -81,6 +85,16 @@ export class GameController extends Component {
         } else {
             console.warn('playerController is not set in GameController');
             return null;
+        }
+    }
+
+    public AddToGameplayContainer(node:Node): void {
+        //check if is visit mode
+        if(this.playerController.visitMode){
+            this.friendGameplayContainer.addChild(node);
+        }
+        else{
+            this.gameplayContainer.addChild(node);
         }
     }
 
@@ -541,6 +555,14 @@ export class GameController extends Component {
             this.playerController.visitMode = false;
             this.playerController.friendState = null;
         }
+    }
+
+    //implement backToHome() method
+    public backToHome(): void {
+        this.setFriendGameViewVisibility(false);
+        this.setGameViewVisibility(true);
+        this.playerController.visitMode = false;
+        this.playerController.friendState = null;
     }
 
     //#endregion

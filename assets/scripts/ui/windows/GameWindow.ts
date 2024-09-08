@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite, SpriteFrame, Color } from 'cc';
 const { ccclass, property } = _decorator;
 import { ResourceManager } from '../../managers/ResourceManager';
 import { CropType, SharedDefines } from '../../misc/SharedDefines';
@@ -42,6 +42,9 @@ export class GameWindow extends WindowBase {
 
     @property(Button)
     public btnFriend: Button | null = null;
+
+    @property(Button)
+    public btnBack: Button | null = null;
     
     private cropButtons: Node[] = [];
 
@@ -66,6 +69,7 @@ export class GameWindow extends WindowBase {
         this.gameController.eventTarget.on(SharedDefines.EVENT_PLOT_SELECTED, this.onPlotSelected, this);
         this.setupEventLisnters();
         this.initializeCropButtons();
+        
     }
 
     public show(...args: any[]): void 
@@ -82,7 +86,7 @@ export class GameWindow extends WindowBase {
             this.diamondDisplay.refreshDisplay();
         }
         this.refreshBasePlayerStateInfo();
-        //this.updateButtonsVisibility();
+        this.updateButtonsVisibility();
     }
 
     public hide(): void 
@@ -97,7 +101,7 @@ export class GameWindow extends WindowBase {
     protected onDestroy(): void {
         super.onDestroy();
         if (this.playerController) {
-           // this.playerController.eventTarget.off(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
+            this.playerController.eventTarget.off(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
             const playerState = this.playerController.playerState;
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
@@ -111,10 +115,11 @@ export class GameWindow extends WindowBase {
     private setupEventLisnters(): void 
     {
         if (this.playerController) {
-            //this.playerController.eventTarget.on(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
+            this.playerController.eventTarget.on(SharedDefines.EVENT_VISIT_MODE_CHANGE, this.updateButtonsVisibility, this);
             const playerState = this.playerController.playerState;
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
+            
         }
         //btnCraft click event
         if (this.btnCraft) {
@@ -128,15 +133,31 @@ export class GameWindow extends WindowBase {
         if (this.btnFriend) {
             this.btnFriend.node.on(Button.EventType.CLICK, this.onBtnFriendClicked, this);
         }
+
+        if (this.btnBack) {
+            this.btnBack.node.on(Button.EventType.CLICK, this.onBtnBackClicked, this);
+        }
     }
 
     private updateButtonsVisibility(): void {
+        
         //check if is visit mode
         const visitMode = this.gameController?.getPlayerController().visitMode ?? false;
-        
-        this.btnFriend.node.active = !visitMode;
-        this.btnShop.node.active = !visitMode;
-        this.btnCraft.node.active = !visitMode;
+        console.log(`updateButtonsVisibility ${visitMode}`);
+        this.btnFriend.enabled = !visitMode;
+        this.btnShop.enabled = !visitMode;
+        this.btnCraft.enabled = !visitMode;
+        this.btnBack.node.active = visitMode;
+
+        if(visitMode){
+            SpriteHelper.setSpriteColor(this.btnShop.getComponent(Sprite), Color.GRAY);
+            SpriteHelper.setSpriteColor(this.btnCraft.getComponent(Sprite), Color.GRAY);
+            SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.GRAY);
+        }else{
+            SpriteHelper.setSpriteColor(this.btnShop.getComponent(Sprite), Color.WHITE);
+            SpriteHelper.setSpriteColor(this.btnCraft.getComponent(Sprite), Color.WHITE);
+            SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.WHITE);
+        }
     }
 
     private onPlayerLeveUp(): void 
@@ -249,6 +270,10 @@ export class GameWindow extends WindowBase {
     private async onBtnFriendClicked(): Promise<void> {
         console.log('onBtnFriendClicked');
         this.gameController?.visitFriend("123");
+    }
+
+    private onBtnBackClicked(): void {
+        this.gameController?.backToHome();
     }
 }
 

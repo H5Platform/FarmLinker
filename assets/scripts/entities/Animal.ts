@@ -1,8 +1,8 @@
 // Animal.ts
 
-import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3, director } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3, director, Director } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType } from '../misc/SharedDefines';
+import { GrowState, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType, NetworkCleanseResult, NetworkTreatResult, NetworkCareResult } from '../misc/SharedDefines';
 import { AnimalDataManager } from '../managers/AnimalDataManager';
 import { ResourceManager } from '../managers/ResourceManager';
 import { IDraggable } from '../components/DragDropComponent';
@@ -12,13 +12,32 @@ import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
 import { GrowthableEntity } from './GrowthableEntity';
+import { PlayerController } from '../controllers/PlayerController';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('Animal')
 export class Animal extends GrowthableEntity {
+
+    //define max care count
+    public static readonly MAX_CARE_COUNT: number = 4;
+    public static readonly MAX_TREAT_COUNT: number = 4;
+    public static readonly MAX_CLEANSE_COUNT: number = 4;
+    public static readonly CARE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+    public static readonly TREAT_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+    public static readonly CLEANSE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
+
     @property
     public animalType: string = '';
+
+    private gameController: GameController;
+    private playerController: PlayerController;
+
+    protected onLoad(): void {
+        //find game controller by class
+        this.gameController = director.getScene().getComponentInChildren(GameController);
+        this.playerController = this.gameController.getPlayerController();
+    }
 
     public initialize(id: string): void {
         this.loadEntityData(id);
@@ -124,20 +143,21 @@ export class Animal extends GrowthableEntity {
 
         if (result && result.success && result.data.friend_id) {
             console.log(`Operation ${operation} on friend's animal, friend_id = ${result.data.friend_id}, diamond_added = ${result.data.diamond_added}`);
+            
             this.playerController.playerState.addDiamond(result.data.diamond_added);
             this.playerController.friendState.addDiamond(result.data.diamond_added);
         }
     }
 
     public canCare(): boolean {
-        return this.growState !== GrowState.NONE && this.CareCount < SharedDefines.MAX_CARE_COUNT;
+        return this.growState !== GrowState.NONE && this.CareCount < Animal.MAX_CARE_COUNT;
     }
 
     public canTreat(): boolean {
-        return this.isSick && this.TreatCount < SharedDefines.MAX_TREAT_COUNT;
+        return this.TreatCount < Animal.MAX_TREAT_COUNT;
     }
 
     public canCleanse(): boolean {
-        return this.isDirty && this.CleanseCount < SharedDefines.MAX_CLEANSE_COUNT;
+        return  this.CleanseCount < Animal.MAX_CLEANSE_COUNT;
     }
 }

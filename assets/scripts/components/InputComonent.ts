@@ -1,6 +1,7 @@
 // TouchNode.ts
 
-import { _decorator, Component, Node, EventTouch,Vec2  } from 'cc';
+import { _decorator, Component, Node, EventTouch,Vec2, EventTarget  } from 'cc';
+import { SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 @ccclass('InputComponent')
@@ -16,6 +17,8 @@ export class InputComponent extends Component {
     public onTouchCancel: ((event: EventTouch) => void) | null = null;
     public onClick: ((event: EventTouch) => void) | null = null;
 
+    public eventTarget: EventTarget = new EventTarget();
+
     onLoad() {
         this.node.on(Node.EventType.TOUCH_START, this.touchStartHandler, this);
         this.node.on(Node.EventType.TOUCH_MOVE, this.touchMoveHandler, this);
@@ -27,16 +30,19 @@ export class InputComponent extends Component {
         this.touchStartTime = Date.now();
         this.touchStartPosition = event.getLocation();
         if (this.onTouchStart) this.onTouchStart(event);
+        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_START, event);
     }
 
     private touchMoveHandler(event: EventTouch): void {
         if (this.onTouchMove) this.onTouchMove(event);
+        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_MOVE, event);
     }
 
     private touchEndHandler(event: EventTouch): void {
         const touchEndTime = Date.now();
         const touchEndPosition = event.getLocation();
         if (this.onTouchEnd) this.onTouchEnd(event);
+        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_END, event);
 
         // 判断是否为点击事件
         if (touchEndTime - this.touchStartTime <= InputComponent.CLICK_THRESHOLD * 1000 &&
@@ -44,11 +50,13 @@ export class InputComponent extends Component {
             if (this.onClick) {
                 this.onClick(event);
             }
+            this.eventTarget.emit(SharedDefines.EVENT_CLICK, event);
         }
     }
 
     private touchCancelHandler(event: EventTouch): void {
         if (this.onTouchCancel) this.onTouchCancel(event);
+        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_CANCEL, event);
     }
 
     onDestroy() {

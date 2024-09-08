@@ -164,7 +164,7 @@ export class PlayerController extends Component {
                         return;
                     }
                 }
-                else if(collider.node.layer & buildingLayer){
+                else if(collider.node.layer & buildingLayer && !this.visitMode){
                     const building = collider.node.getComponent(Building);
                     if(building){
                         WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME,building);
@@ -178,17 +178,16 @@ export class PlayerController extends Component {
     }
 
     private handleTouchMove(event: EventTouch): void {
+        console.log("playercontroller: handleTouchMove");
         if (this.currentOperation) {
             const colliders = this.getCollidersByClickPosition(event.getLocation());
             if (colliders) {
-                this.performOperationOnColliders(colliders, this.currentOperation);
+                this.performOperationOnColliders(colliders, this.currentOperation,event.getLocation());
             }
         }
     }
 
-    
-
-    private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType): void {
+    private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType, touchPos: Vec2): void {
         const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
         const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
 
@@ -201,7 +200,7 @@ export class PlayerController extends Component {
             } else if (collider.node.layer & fenceLayer) {
                 const fence = collider.node.getComponent(Fence);
                 if (fence && ((!this.visitMode && fence.IsPlayerOwner) || (this.visitMode && !fence.IsPlayerOwner))) {
-                    this.performOperationOnFence(fence, operation, event.getLocation());
+                    this.performOperationOnFence(fence, operation, touchPos);
                 }
             }
         }
