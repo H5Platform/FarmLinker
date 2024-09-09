@@ -91,7 +91,7 @@ export class PlayerController extends Component {
         if (inputNode) {
             this._inputComponent = inputNode.getComponent(InputComponent);
             this._inputComponent.onClick = this.handleClick.bind(this);
-            this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
+           // this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
         }
         else{
             console.error('No InputNode found');
@@ -177,47 +177,47 @@ export class PlayerController extends Component {
         this.currentOperation = null;
     }
 
-    private handleTouchMove(event: EventTouch): void {
-        console.log("playercontroller: handleTouchMove");
-        if (this.currentOperation) {
-            const colliders = this.getCollidersByClickPosition(event.getLocation());
-            if (colliders) {
-                this.performOperationOnColliders(colliders, this.currentOperation,event.getLocation());
-            }
-        }
-    }
+    // private handleTouchMove(event: EventTouch): void {
+    //     console.log("playercontroller: handleTouchMove");
+    //     if (this.currentOperation) {
+    //         const colliders = this.getCollidersByClickPosition(event.getLocation());
+    //         if (colliders) {
+    //             this.performOperationOnColliders(colliders, this.currentOperation,event.getLocation());
+    //         }
+    //     }
+    // }
 
-    private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType, touchPos: Vec2): void {
-        const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
-        const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
+    // private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType, touchPos: Vec2): void {
+    //     const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
+    //     const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
 
-        for (const collider of colliders) {
-            if (collider.node.layer & plotLayer) {
-                const plotTile = collider.node.getComponent(PlotTile);
-                if (plotTile && ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner))) {
-                    this.performOperationOnPlotTile(plotTile, operation);
-                }
-            } else if (collider.node.layer & fenceLayer) {
-                const fence = collider.node.getComponent(Fence);
-                if (fence && ((!this.visitMode && fence.IsPlayerOwner) || (this.visitMode && !fence.IsPlayerOwner))) {
-                    this.performOperationOnFence(fence, operation, touchPos);
-                }
-            }
-        }
-    }
+    //     for (const collider of colliders) {
+    //         if (collider.node.layer & plotLayer) {
+    //             const plotTile = collider.node.getComponent(PlotTile);
+    //             if (plotTile && ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner))) {
+    //                 this.performOperationOnPlotTile(plotTile, operation);
+    //             }
+    //         } else if (collider.node.layer & fenceLayer) {
+    //             const fence = collider.node.getComponent(Fence);
+    //             if (fence && ((!this.visitMode && fence.IsPlayerOwner) || (this.visitMode && !fence.IsPlayerOwner))) {
+    //                 this.performOperationOnFence(fence, operation, touchPos);
+    //             }
+    //         }
+    //     }
+    // }
 
-    private performOperationOnPlotTile(plotTile: PlotTile, operation: CommandType): void {
-        if (plotTile.canPerformOperation(operation)) {
-            plotTile.performOperation(operation);
-        }
-    }
+    // private performOperationOnPlotTile(plotTile: PlotTile, operation: CommandType): void {
+    //     if (plotTile.canPerformOperation(operation)) {
+    //         plotTile.performOperation(operation);
+    //     }
+    // }
 
-    private performOperationOnFence(fence: Fence, operation: CommandType, touchPos: Vec2): void {
-        const animal = fence.getAnimalAtPosition(touchPos);
-        if (animal && animal.canPerformOperation(operation)) {
-            animal.performOperation(operation);
-        }
-    }
+    // private performOperationOnFence(fence: Fence, operation: CommandType, touchPos: Vec2): void {
+    //     const animal = fence.getAnimalAtPosition(touchPos);
+    //     if (animal && animal.canPerformOperation(operation)) {
+    //         animal.performOperation(operation);
+    //     }
+    // }
 
     private getCollidersByClickPosition(position: Vec2):readonly Collider2D[] | null {
         if (!this._camera) {

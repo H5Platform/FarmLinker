@@ -49,6 +49,8 @@ class DragOperation{
 
 @ccclass('FarmSelectionWindow')
 export class FarmSelectionWindow extends WindowBase {
+    @property(Node)
+    private selectionNode: Node | null = null;
     @property(ScrollView)
     private scrollView: ScrollView | null = null;
     @property(Node)
@@ -117,6 +119,9 @@ export class FarmSelectionWindow extends WindowBase {
         this.callback = args[3] as (string)=>void;
         this.collectingDiamondRefCount = 0;
         this.canHide = true;
+        this.operationSprite.node.active = false;
+        //set selection node active true
+        this.selectionNode!.active = true;
         this.updateFarmSelectionViewVisibilityByType(this.currentSelectionType);
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
             
@@ -130,7 +135,7 @@ export class FarmSelectionWindow extends WindowBase {
             console.log(`animation count: ${animations.length}`);
             this.updateScrollView(animations);
         }
-        
+       
     }
 
     public hide(): void {
@@ -189,7 +194,11 @@ export class FarmSelectionWindow extends WindowBase {
         }
         else if(this.dragOperation && this.dragOperation.dragNode && this.dragOperation.operation !== CommandType.None){
             //update current drag target position
-            this.dragOperation.dragNode.setPosition(new Vec3(worldPosition.x, worldPosition.y, 0));
+            this.dragOperation.dragNode.setWorldPosition(new Vec3(worldPosition.x, worldPosition.y, 0));
+            //if selection node is active, set it to inactive
+            if(this.selectionNode!.active){
+                this.selectionNode!.active = false;
+            }
             if(this.dragOperation.targetType === OperationTargetType.Crop){
                 this.handleCropDragOperation();
             }
@@ -201,6 +210,8 @@ export class FarmSelectionWindow extends WindowBase {
 
     private onTouchEnd(event:EventTouch): void {
         console.log("FarmSelectionWindow: onTouchEnd");
+        this.canHide = true;
+        this.hide();
         this.dragOperation = null;
     }
 
@@ -279,37 +290,45 @@ export class FarmSelectionWindow extends WindowBase {
 
     
 //#region handle drag operation
-    private initializeDragOperation(worldPosition:Vec3): void {
+    private initializeDragOperation(worldPosition:Vec2): void {
 
-
-        if (UIHelper.isPointInUINode(worldPosition, this.btnCropCare.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Care,this.btnCropCare.node,null);
+        if (this.btnCropCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropCare.node)) {
+            console.log(`initializeDragOperation: Crop Care active = ${this.btnCropCare.node.activeInHierarchy}`);
+            this.operationSprite.spriteFrame = this.btnCropCare.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Care,null,null);
         }
-        else if (UIHelper.isPointInUINode(worldPosition, this.btnAnimalCare.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Care,this.btnAnimalCare.node,null);
+        else if (this.btnAnimalCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalCare.node)) {
+            this.operationSprite.spriteFrame = this.btnAnimalCare.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Care,null,null);
         }
-        else if (UIHelper.isPointInUINode(worldPosition, this.btnCropTreat.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Treat,this.btnCropTreat.node,null);
+        else if (this.btnCropTreat.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropTreat.node)) {
+            this.operationSprite.spriteFrame = this.btnCropTreat.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Treat,null,null);
         }
-        else if (UIHelper.isPointInUINode(worldPosition, this.btnAnimalTreat.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Treat,this.btnAnimalTreat.node,null);
+        else if (this.btnAnimalTreat.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalTreat.node)) {
+            this.operationSprite.spriteFrame = this.btnAnimalTreat.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Treat,null,null);
         }
-        else if (UIHelper.isPointInUINode(worldPosition, this.btnCropCleanse.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Cleanse,this.btnCropCleanse.node,null);
+        else if (this.btnCropCleanse.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropCleanse.node)) {
+            this.operationSprite.spriteFrame = this.btnCropCleanse.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Crop,CommandType.Cleanse,null,null);
         }
-        else if (UIHelper.isPointInUINode(worldPosition, this.btnAnimalCleanse.node)) {
-            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Cleanse,this.btnAnimalCleanse.node,null);
+        else if (this.btnAnimalCleanse.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalCleanse.node)) {
+            this.operationSprite.spriteFrame = this.btnAnimalCleanse.node.getComponent(Sprite).spriteFrame;
+            this.dragOperation = new DragOperation(OperationTargetType.Animal,CommandType.Cleanse,null,null);
         }
 
         if(this.dragOperation){
             this.canHide = false;
             this.collectingDiamondRefCount = 0;
+            this.operationSprite.node.active = true;
+            this.dragOperation.dragNode = this.operationSprite.node;
         }
     }
 
     private handleCropDragOperation(): void {
-        console.log("FarmSelectionWindow: handleCropDragOperation");
-        const plots = this.gameController.PlayerPlotTiles;
+       // console.log("FarmSelectionWindow: handleCropDragOperation");
+        const plots = this.playerController.visitMode ? this.gameController.FriendPlotTiles : this.gameController.PlayerPlotTiles;
         for(let i = 0; i < plots.length; i++){
             const plot = plots[i];
             //check if currentDragTarget is in the pilot
@@ -332,7 +351,7 @@ export class FarmSelectionWindow extends WindowBase {
     }
 
     private handleAnimalDragOperation(): void {
-        console.log("FarmSelectionWindow: handleAnimalDragOperation");
+        //console.log("FarmSelectionWindow: handleAnimalDragOperation");
         const fence = this.gameController.getAvailableFence();
         const animals = fence.getAnimals();
         for(let i = 0; i < animals.length; i++){
@@ -356,7 +375,7 @@ export class FarmSelectionWindow extends WindowBase {
     //#region handle crop operation
 
     private async handleCarePlot(plotTile:PlotTile): Promise<void> {
-        console.log("handleCare");
+        console.log(`handleCare plot = ${plotTile.node.name} , occupied = ${plotTile.isOccupied}`);
         if(!plotTile.isOccupied){ return; }
         const crop = plotTile.OcuippedCrop;
         if(crop){
@@ -450,7 +469,6 @@ export class FarmSelectionWindow extends WindowBase {
     //#region handle animal operation
 
     private async handleCareAnimal(animal:Animal): Promise<void> {
-        console.log("handleCareAnimal");
         if(animal.canCare()){
             let careResult:NetworkCareResult|null = null;
             if(this.playerController.visitMode){
@@ -552,5 +570,5 @@ export class FarmSelectionWindow extends WindowBase {
             callback();
         }, coinEffect.node);
 
-
+    }
 }

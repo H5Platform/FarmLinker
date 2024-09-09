@@ -145,13 +145,18 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         if(this.isPlayerOwner){
             //only player owner can update disease status
             this.scheduleDiseaseStatusUpdate();
+            const diseaseCommand = sceneItem.commands.find(command => command.type === CommandType.Disease);
+            if (diseaseCommand) {
+                console.log(`sceneItem.state = ${sceneItem.state} , diseaseCommand.state = ${diseaseCommand.state} , diseaseCommand.count = ${diseaseCommand.count}`);
+            }
         }
         else{
             //The friends can only see the disease status
            //check sceneItem.commands to see if there is any disease command
             const diseaseCommand = sceneItem.commands.find(command => command.type === CommandType.Disease);
             if (diseaseCommand) {
-                this.isSick = diseaseCommand.state === CommandState.InProgress && diseaseCommand.count > 0;
+                this.isSick = diseaseCommand.state === CommandState.InProgress && diseaseCommand.count == 1;
+                
                 console.log(`Entity ${this.id} has become sick`);
                 this.updateEntityState();
             }
@@ -218,12 +223,18 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     protected async updateSprite(pngPath: string): Promise<void> {
+
         if (this.sprite) {
-            return ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
+            if(this.sceneItem?.state === SceneItemState.Dead){
+                this.sprite.spriteFrame = this.deadSpriteFrame;
+            }
+            else{
+                return ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
                 if (texture) {
                     this.sprite.spriteFrame = texture as SpriteFrame;
-                }
-            });
+                    }
+                });
+            }
         }
         return Promise.resolve();
     }
@@ -413,7 +424,8 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     protected scheduleDiseaseStatusUpdate(): void {
-        if(this.isSick){
+        if(this.sceneItem?.state === SceneItemState.Dead){
+            this.updateEntityState();
             this.stopDiseaseStatusUpdates();
             return;
         }
@@ -468,9 +480,12 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     protected setDeadState(): void {
+        console.log(`setDeadState start ...`);
         if (this.sprite && this.deadSpriteFrame) {
             this.sprite.spriteFrame = this.deadSpriteFrame;
         }
+        this.isSick = false;
+        this.updateSickState();
         this.growState = GrowState.NONE;
         this.stopGrowth();
         this.stopDiseaseStatusUpdates();

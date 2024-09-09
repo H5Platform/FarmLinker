@@ -40,6 +40,10 @@ export class GameController extends Component {
         return this.playerPlotTiles;
     }
     private playerPlotTiles: PlotTile[] = [];
+    //getter for friendPlotTiles
+    public get FriendPlotTiles(): PlotTile[] {
+        return this.friendPlotTiles;
+    }
     private friendPlotTiles: PlotTile[] = [];
     private playerController: PlayerController| null = null;
 

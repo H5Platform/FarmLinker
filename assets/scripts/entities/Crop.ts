@@ -15,6 +15,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Crop')
 export class Crop extends GrowthableEntity {
+    
     @property({
         type: Enum(CropType)
     })
@@ -170,7 +171,7 @@ export class Crop extends GrowthableEntity {
         }
         return null;
     }
-    public async setImmunityDuration(): Promise<NetworkCleanseResult|null> {
+    public async cleanse(): Promise<NetworkCleanseResult|null> {
         if(!this.canCleanse()){
             return null;
         }

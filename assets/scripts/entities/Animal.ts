@@ -143,15 +143,17 @@ export class Animal extends GrowthableEntity {
     }
 
     public canCare(): boolean {
-        return this.sceneItem.state !== SceneItemState.Dead && this.CareCount < SharedDefines.MAX_ANIMAL_CARE_COUNT && this.lastCareTime + Animal.CARE_COOLDOWN < Date.now() / 1000;
+        //log all variables
+        console.log(`canCare: ${this.sceneItem.state} ${this.CareCount} ${this.lastCareTime} ${SharedDefines.CARE_COOLDOWN} ${Date.now() / 1000}`);
+        return this.sceneItem.state !== SceneItemState.Dead && this.CareCount < SharedDefines.MAX_ANIMAL_CARE_COUNT && this.lastCareTime + SharedDefines.CARE_COOLDOWN < Date.now() / 1000;
     }
 
     public canTreat(): boolean {
-        return this.sceneItem.state !== SceneItemState.Dead && this.TreatCount < SharedDefines.MAX_ANIMAL_TREAT_COUNT && this.lastTreatTime + Animal.TREAT_COOLDOWN < Date.now() / 1000;
+        return this.sceneItem.state !== SceneItemState.Dead && this.TreatCount < SharedDefines.MAX_ANIMAL_TREAT_COUNT && this.lastTreatTime + SharedDefines.TREAT_COOLDOWN < Date.now() / 1000;
     }
 
     public canCleanse(): boolean {
-        return this.sceneItem.state !== SceneItemState.Dead && this.CleanseCount < SharedDefines.MAX_ANIMAL_CLEANSE_COUNT && this.lastCleanseTime + Animal.CLEANSE_COOLDOWN < Date.now() / 1000;
+        return this.sceneItem.state !== SceneItemState.Dead && this.CleanseCount < SharedDefines.MAX_ANIMAL_CLEANSE_COUNT && this.lastCleanseTime + SharedDefines.CLEANSE_COOLDOWN < Date.now() / 1000;
     }
 
     public async care(): Promise<NetworkCareResult> {
