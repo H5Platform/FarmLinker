@@ -19,13 +19,6 @@ const { ccclass, property } = _decorator;
 @ccclass('Animal')
 export class Animal extends GrowthableEntity {
 
-    //define max care count
-    public static readonly MAX_CARE_COUNT: number = 4;
-    public static readonly MAX_TREAT_COUNT: number = 4;
-    public static readonly MAX_CLEANSE_COUNT: number = 4;
-    public static readonly CARE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
-    public static readonly TREAT_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
-    public static readonly CLEANSE_COOLDOWN: number = 5 * SharedDefines.TIME_MINUTE;
 
     @property
     public animalType: string = '';
@@ -136,7 +129,7 @@ export class Animal extends GrowthableEntity {
             case CommandType.Cleanse:
                 result = await NetworkManager.instance.cleanse(sceneItem.id);
                 if (result && result.success) {
-                    this.cleanse(result.data.cleanse_count);
+                    //this.cleanse(result.data.cleanse_count);
                 }
                 break;
         }
@@ -150,14 +143,79 @@ export class Animal extends GrowthableEntity {
     }
 
     public canCare(): boolean {
-        return this.growState !== GrowState.NONE && this.CareCount < Animal.MAX_CARE_COUNT;
+        return this.sceneItem.state !== SceneItemState.Dead && this.CareCount < SharedDefines.MAX_ANIMAL_CARE_COUNT && this.lastCareTime + Animal.CARE_COOLDOWN < Date.now() / 1000;
     }
 
     public canTreat(): boolean {
-        return this.TreatCount < Animal.MAX_TREAT_COUNT;
+        return this.sceneItem.state !== SceneItemState.Dead && this.TreatCount < SharedDefines.MAX_ANIMAL_TREAT_COUNT && this.lastTreatTime + Animal.TREAT_COOLDOWN < Date.now() / 1000;
     }
 
     public canCleanse(): boolean {
-        return  this.CleanseCount < Animal.MAX_CLEANSE_COUNT;
+        return this.sceneItem.state !== SceneItemState.Dead && this.CleanseCount < SharedDefines.MAX_ANIMAL_CLEANSE_COUNT && this.lastCleanseTime + Animal.CLEANSE_COOLDOWN < Date.now() / 1000;
+    }
+
+    public async care(): Promise<NetworkCareResult> {
+        let result: NetworkCareResult | null = null;
+        //check friendId is valid
+        result = await NetworkManager.instance.care(this.sceneItem.id);
+        if(result && result.success){
+            this.CareCount = result.data.care_count;
+            this.lastCareTime = Date.now() / 1000;
+        }
+        return result;
+    }
+
+    public async careByFriend(friendId: string): Promise<NetworkCareResult> {
+        let result: NetworkCareResult | null = null;
+        //check friendId is valid
+        result = await NetworkManager.instance.careFriend(this.sceneItem.id, friendId);
+        if(result && result.success){
+            this.CareCount = result.data.care_count;
+            this.lastCareTime = Date.now() / 1000;
+        }
+        return result;
+    }
+    public async treat(): Promise<NetworkTreatResult> {
+        let result: NetworkTreatResult | null = null;
+        //check friendId is valid
+        result = await NetworkManager.instance.treat(this.sceneItem.id);
+        if(result && result.success){
+            this.TreatCount = result.data.treat_count;
+            this.lastTreatTime = Date.now() / 1000;
+        }
+        return result;
+    }  
+
+    public async treatByFriend(friendId: string): Promise<NetworkTreatResult> {
+        let result: NetworkTreatResult | null = null;
+        //check friendId is valid
+        result = await NetworkManager.instance.treatFriend(this.sceneItem.id, friendId);
+        if(result && result.success){
+            this.TreatCount = result.data.treat_count;
+            this.lastTreatTime = Date.now() / 1000;
+        }
+        return result;
+    }
+
+    public async clease(): Promise<NetworkCleanseResult> {
+        let result: NetworkCleanseResult | null = null;
+        //check friendId is valid
+
+        result = await NetworkManager.instance.cleanse(this.sceneItem.id);
+        if(result && result.success){
+            this.CleanseCount = result.data.cleanse_count;
+            this.lastCleanseTime = Date.now() / 1000;
+        }
+        return result;
+    }
+    public async cleanseByFriend(friendId: string): Promise<NetworkCleanseResult> {
+        let result: NetworkCleanseResult | null = null;
+        //check friendId is valid
+        result = await NetworkManager.instance.cleanseFriend(this.sceneItem.id, friendId);
+        if(result && result.success){
+            this.CleanseCount = result.data.cleanse_count;
+            this.lastCleanseTime = Date.now() / 1000;
+        }
+        return result;
     }
 }

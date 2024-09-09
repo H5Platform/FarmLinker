@@ -1,6 +1,6 @@
 import {  _decorator, Component, Node, Sprite, Vec3, Vec2, SpriteFrame, EventTarget,Enum,director   } from 'cc';
 import { CooldownComponent } from '../components/CooldownComponent';
-import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType, DiseaseState } from '../misc/SharedDefines';
+import { GrowState, CropType, SharedDefines, SceneItem, CommandState, SceneItemState, CommandType, DiseaseState, NetworkCareResult, NetworkTreatResult, NetworkCleanseResult } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { PlayerController } from '../controllers/PlayerController';
 import { InventoryItem } from '../components/InventoryComponent';
@@ -84,7 +84,122 @@ export class Crop extends GrowthableEntity {
         }
     }
 
-    // Any additional Crop-specific methods can be added here
+    public canCare(): boolean {
+        return this.careCount >= 0 && this.careCount < SharedDefines.MAX_CROP_CARE_COUNT && this.lastCareTime + SharedDefines.CARE_COOLDOWN < Date.now() / 1000;
+    }
+
+    public canTreat(): boolean {
+        return this.treatCount >= 0 && this.treatCount < SharedDefines.MAX_CROP_TREAT_COUNT && this.lastTreatTime + SharedDefines.TREAT_COOLDOWN < Date.now() / 1000;
+    }
+
+    public canCleanse(): boolean {
+        return this.cleanseCount >= 0 && this.cleanseCount < SharedDefines.MAX_CROP_CLEANSE_COUNT && this.lastCleanseTime + SharedDefines.CLEANSE_COOLDOWN < Date.now() / 1000;
+    }
+
+    public async care(): Promise<NetworkCareResult|null> {
+        if(!this.canCare()){
+            return null;
+        }
+
+        const careResult:NetworkCareResult = await NetworkManager.instance.care(this.sceneItem.id);
+        
+        if (careResult.success) {
+            this.CareCount = careResult.data.care_count;
+            this.lastCareTime = Date.now() / 1000;
+            return careResult;
+        }
+        else {
+            console.log("Care failed");
+           
+        }
+        return null;
+        
+    }
+    public async careByFriend(friendId: string): Promise<NetworkCareResult|null> {
+        if(!this.canCare()){
+            return null;
+        }
+        const careResult:NetworkCareResult = await NetworkManager.instance.careFriend(this.sceneItem.id,friendId);
+
+        if(careResult.success){
+            this.CareCount = careResult.data.care_count;
+            this.lastCareTime = Date.now() / 1000;
+            if(careResult.data.friend_id){
+                console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${friendId} , diamond_added = ${careResult.data.diamond_added}`);
+                
+                //await this.playDiamondCollectionEffect(careResult.data.diamond_added);
+            }
+            return careResult;
+        }
+        else{
+            console.log("Care failed");
+        }
+        return null;
+    }
+
+    public async treat(): Promise<NetworkTreatResult|null> {
+        if(!this.canTreat()){
+            return null;
+        }
+        const treatResult:NetworkTreatResult = await NetworkManager.instance.treat(this.sceneItem.id);
+        if(treatResult.success){
+            this.TreatCount = treatResult.data.treat_count;
+            this.lastTreatTime = Date.now() / 1000;
+            return treatResult;
+        }
+        else{
+            console.log("Treat failed");
+        }
+        return null;
+    }
+    public async treatByFriend(friendId: string): Promise<NetworkTreatResult|null> {
+        if(!this.canTreat()){
+            return null;
+        }
+        const treatResult:NetworkTreatResult = await NetworkManager.instance.treatFriend(this.sceneItem.id,friendId);
+        if(treatResult.success){
+            this.TreatCount = treatResult.data.treat_count;
+            this.lastTreatTime = Date.now() / 1000;
+            if(treatResult.data.friend_id){
+                console.log(`treat friend , name = ${treatResult.data.friend_id} , friend_id = ${friendId} , diamond_added = ${treatResult.data.diamond_added}`);
+            }
+            return treatResult;
+        }
+        else{
+            console.log("Treat failed");
+        }
+        return null;
+    }
+    public async setImmunityDuration(): Promise<NetworkCleanseResult|null> {
+        if(!this.canCleanse()){
+            return null;
+        }
+        const cleanseResult:NetworkCleanseResult = await NetworkManager.instance.cleanse(this.sceneItem.id);
+        if(cleanseResult.success){
+            this.CleanseCount = cleanseResult.data.cleanse_count;
+            this.lastCleanseTime = Date.now() / 1000;
+            return cleanseResult;
+        }
+        else{
+            console.log("Cleanse failed");
+        }
+        return null;
+    }
+    public async cleanseByFriend(friendId: string): Promise<NetworkCleanseResult|null> {
+        if(!this.canCleanse()){
+            return null;
+        }
+        const cleanseResult:NetworkCleanseResult = await NetworkManager.instance.cleanseFriend(this.sceneItem.id,friendId);
+        if(cleanseResult.success){
+            this.CleanseCount = cleanseResult.data.cleanse_count;
+            this.lastCleanseTime = Date.now() / 1000;
+            return cleanseResult;
+        }
+        else{
+            console.log("Cleanse failed");
+        }
+        return null;
+    }
 }
 
 /*

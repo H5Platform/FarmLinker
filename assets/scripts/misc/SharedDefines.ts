@@ -292,6 +292,21 @@ export class SharedDefines {
     public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
     public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
 
+    //作物相关
+    public static readonly MAX_CROP_CARE_COUNT: number = 4;
+    public static readonly MAX_CROP_TREAT_COUNT: number = 4;
+    public static readonly MAX_CROP_CLEANSE_COUNT: number = 4;
+
+    //动物相关
+    public static readonly MAX_ANIMAL_CARE_COUNT: number = 2;
+    public static readonly MAX_ANIMAL_TREAT_COUNT: number = 2;
+    public static readonly MAX_ANIMAL_CLEANSE_COUNT: number = 2;
+
+    //冷却时间
+    public static readonly CARE_COOLDOWN: number = 5 * 60;
+    public static readonly TREAT_COOLDOWN: number = 5 * 60;
+    public static readonly CLEANSE_COOLDOWN: number = 5 * 60;
+
     public static readonly DISEASE_STATUS_UPDATE_INTERVAL: number = 60 * 60;    //每小时更新一次生病状态
 
     public static readonly TIME_MINUTE: number = 60;

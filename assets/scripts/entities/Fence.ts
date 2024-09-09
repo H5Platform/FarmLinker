@@ -224,7 +224,7 @@ export class Fence extends SceneEntity implements IDropZone{
                     cleanseResult = await NetworkManager.instance.cleanse(sceneItem.id);
                 }
                 if (cleanseResult.success) {
-                    animal.cleanse(cleanseResult.data.cleanse_count);
+                    animal.setImmunityDuration(cleanseResult.data.cleanse_count);
                     if(cleanseResult.data.friend_id){
                         console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
                         this.playDiamondCollectionEffect(cleanseResult.data.diamond_added);

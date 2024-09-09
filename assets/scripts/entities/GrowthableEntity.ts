@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, Vec3 } from 'cc';
-import { GrowState, SceneItem, CommandState, SceneItemState, CommandType, SharedDefines } from '../misc/SharedDefines';
+import { GrowState, SceneItem, CommandState, SceneItemState, CommandType, SharedDefines, NetworkCareResult, NetworkTreatResult, NetworkCleanseResult } from '../misc/SharedDefines';
 import { CooldownComponent } from '../components/CooldownComponent';
 import { InventoryItem } from '../components/InventoryComponent';
 import { ResourceManager } from '../managers/ResourceManager';
@@ -57,10 +57,16 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
 
     @property
     protected careCount: number = 0;
+    protected careCooldown: number = 0;
+    protected lastCareTime: number = 0;
     @property
     protected treatCount: number = 0;
+    protected treatCooldown: number = 0;
+    protected lastTreatTime: number = 0;
     @property
     protected cleanseCount: number = 0;
+    protected cleanseCooldown: number = 0;
+    protected lastCleanseTime: number = 0;
 
     public get CareCount(): number { return this.careCount; }
     public set CareCount(value: number) {
@@ -372,6 +378,18 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         return this.growthTime == 0;
     }
 
+    //#region Care, Treat, Cleanse
+    public abstract canCare(): boolean;
+    public abstract canTreat(): boolean;
+    public abstract canCleanse(): boolean;
+    public abstract care(): Promise<NetworkCareResult>;
+    public abstract careByFriend(friendId: string): Promise<NetworkCareResult>;
+    public abstract treat(): Promise<NetworkTreatResult>;
+    public abstract treatByFriend(friendId: string): Promise<NetworkTreatResult>;
+    public abstract cleanse(): Promise<NetworkCleanseResult>;
+    public abstract cleanseByFriend(friendId: string): Promise<NetworkCleanseResult>;
+    //#endregion
+
     private async updateDiseaseStatus(updateDiseaseTimes:number = 1): Promise<void> {
         if (!this.sceneItem || !this.sceneItem.id) {
             console.warn('Cannot update disease status: Scene item or ID is not set');
@@ -434,7 +452,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         this.unschedule(this.updateDiseaseStatus);
     }
 
-    public cleanse(immunityDuration: number): void {
+    public setImmunityDuration(immunityDuration: number): void {
         this.isSick = false;
         this.updateSickState();
         this.unschedule(this.updateDiseaseStatus);

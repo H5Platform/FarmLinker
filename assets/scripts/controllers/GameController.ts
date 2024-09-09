@@ -115,6 +115,16 @@ export class GameController extends Component {
         }
     }
 
+    public getAvailableFence(): Fence | null {
+        if(this.playerFence && !this.playerController.visitMode){
+            return this.playerFence;
+        }
+        if(this.friendFence && this.playerController.visitMode){
+            return this.friendFence;
+        }
+        return null;
+    }
+
     public startGame(): void {
         this.setGameViewVisibility(true);
         this.setFriendGameViewVisibility(false);
