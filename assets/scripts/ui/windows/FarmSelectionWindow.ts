@@ -549,7 +549,7 @@ export class FarmSelectionWindow extends WindowBase {
         // }
 
 
-       // this.callback(data);
+        this.callback(data);
 
         this.gameController.getPlayerController().currentOperation = data;
         WindowManager.instance.hide(SharedDefines.WINDOW_SELECTION_NAME);

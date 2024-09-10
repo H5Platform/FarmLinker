@@ -143,14 +143,14 @@ export class PlotTile extends SceneEntity implements IDropZone {
         }
         console.log(`select plot tile , name = ${this.node.name} , occupied = ${this.isOccupied}`);
         if (this.isOccupied) {
-            // if(this.occupiedCrop.canHarvest()){
-            //     this.occupiedCrop.harvest();
-            //     return;
-            // }
-            // else{
+             if(this.occupiedCrop.canHarvest()){
+                 this.occupiedCrop.harvest();
+                 return;
+             }
+            else{
                 WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
                 console.log('select plot command , name = ' + this.node.name);
-           // }
+            }
         }
         else{
             this.dragDropComponent = dragComponent;

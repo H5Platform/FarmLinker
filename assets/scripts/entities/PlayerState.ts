@@ -59,6 +59,7 @@ export class PlayerState {
     // Setters with event emission
     public set level(value: number) {
         if (this._level !== value) {
+            console.log(`set level: ${value}`);
             const oldLevel = this._level;
             this._level = value;
             this.eventTarget.emit(SharedDefines.EVENT_PLAYER_LEVEL_UP, { oldLevel, newLevel: value });
@@ -132,10 +133,12 @@ export class PlayerState {
     }
 
     private checkLevelUp(): void {
+        console.log(`PlayerState: checkLevelUp  level: ${this.level} experience: ${this.experience}`);
         const expNeededForNextLevel = this.getExpNeededForNextLevel();
-        if (this._experience >= expNeededForNextLevel) {
-            this._experience -= expNeededForNextLevel;
+        if (this.experience >= expNeededForNextLevel) {
+            this.experience -= expNeededForNextLevel;
             this.level += 1;
+            console.log(`PlayerState: checkLevelUp  levelup: ${this.level} experience: ${this.experience}`);
             this.checkLevelUp(); // prevent too many levels
         }
     }
