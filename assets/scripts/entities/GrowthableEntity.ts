@@ -415,6 +415,11 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
                     this.updateSickState();
                     console.log(`Entity ${this.id} has become sick`);
                 }
+                //update last_updated_time for this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease)
+                const diseaseCommand = this.sceneItem.commands.find(cmd => cmd.type === CommandType.Disease);
+                if(diseaseCommand && result.last_updated_time){
+                    diseaseCommand.last_updated_time = result.last_updated_time;
+                }
             }
         } catch (error) {
             console.error('Failed to update disease status:', error);

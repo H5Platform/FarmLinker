@@ -179,6 +179,7 @@ export class NetworkDiseaseStatusResult{
     message: string;
     is_sick: boolean;
     count:  number;
+    last_updated_time:string|null;
 }
 
 export class NetworkSyntheListResult{
