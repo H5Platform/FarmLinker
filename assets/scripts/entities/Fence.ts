@@ -140,10 +140,10 @@ export class Fence extends SceneEntity implements IDropZone{
                 console.log(`Animal ${animal.id} worldPos: ${worldPos}, localPos: ${localPos},touchPos = ${touchPos}`);
                 if (animalUITransform.getBoundingBox().contains(new Vec2(localPos.x, localPos.y))) {
                     console.log(`Animal ${animal.id} is selected`);
-                    // if(animal.canHarvest()){
-                    //     animal.harvest();
-                    //     return;
-                    // }
+                    if(animal.canHarvest()){
+                        animal.harvest();
+                        return;
+                    }
                     
                     // Animal is selected
                     WindowManager.instance.show(

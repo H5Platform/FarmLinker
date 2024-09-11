@@ -226,7 +226,7 @@ export class GameWindow extends WindowBase {
             return;
         }
         const playerState = this.playerController.playerState;
-    
+        console.log(`refreshBasePlayerStateInfo: level: ${playerState.level}`);
         if (this.lblLevel) {
             this.lblLevel.string = playerState.level.toString();
         }
