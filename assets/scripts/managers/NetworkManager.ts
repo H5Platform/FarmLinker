@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -36,7 +36,7 @@ export class NetworkManager extends Component {
     public static readonly API_SYNTHE_END: string = '/game/syntheEnd';
     public static readonly API_VISIT: string = '/game/visit';
     public static readonly API_ADD_BUILDING: string = '/scene/addBuilding';
-    
+    public static readonly API_RECOMMEND_FRIENDS: string = '/friend/recommend';
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -724,6 +724,34 @@ export class NetworkManager extends Component {
             const result = JSON.parse(response) as NetworkVisitResult;
             console.log(`visit result: ${JSON.stringify(result)}`);
             //this.eventTarget.emit(NetworkManager.EVENT_VISIT, result);
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    //recommend friend
+    public async recommendFriends(userId:string,num:number): Promise<NetworkRecommendFriendsResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_RECOMMEND_FRIENDS}`;
+
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            userid: userId,
+            recommendNum: num
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkRecommendFriendsResult;
             return result;
         } catch (error) {
             this.handleError(error);

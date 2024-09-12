@@ -242,6 +242,19 @@ export class NetworkAddBuildingResultData{
     diamond: number;
     prosperity: number;
 }
+
+export class NetworkRecommendFriendsResult{
+    success: boolean;
+    message: string;
+    data: NetworkRecommendFriendsResultData[];
+}
+
+export class NetworkRecommendFriendsResultData{
+    userid: string;
+    nickname: string;
+    level: number;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;
