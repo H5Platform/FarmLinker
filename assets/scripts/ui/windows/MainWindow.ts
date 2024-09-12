@@ -1,17 +1,26 @@
-import { _decorator, Node, Button } from 'cc';
+import { _decorator, Node, Button, EditBox } from 'cc';
 import { WindowBase } from '../base/WindowBase';
 import { WindowManager } from '../WindowManager';
+import { NetworkManager } from '../../managers/NetworkManager';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MainWindow')
 export class MainWindow extends WindowBase {
+
+    @property(EditBox)
+    private ebUserId: EditBox | null = null;
+    //password
+    @property(EditBox)
+    private ebPassword: EditBox | null = null;
+
     @property(Button)
     private btnStart: Button | null = null;
 
     public initialize(): void {
         super.initialize();
         this.setupEventListeners();
+        globalThis.mainWindow = this;
         console.log('MainWindow initialized');
     }
 
@@ -33,10 +42,19 @@ export class MainWindow extends WindowBase {
         }
     }
 
-    private onStartButtonClicked(): void {
-        // Add your start game logic here
-        WindowManager.instance.show("GameWindow");
-        this.hide();
+    private async onStartButtonClicked(): Promise<void> {
+
+        const result = await NetworkManager.instance.login(this.ebUserId!.string, this.ebPassword!.string);
+
+        if(result.success){ 
+            // Add your start game logic here
+            WindowManager.instance.show("GameWindow");
+            this.hide();
+        }
+        else{
+            console.log(result.message);
+            WindowManager.instance.show("ToastWindow",result.message);
+        }
     }
 
     protected onDestroy(): void {

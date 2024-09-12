@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite, SpriteFrame, Color } from 'cc';
 const { ccclass, property } = _decorator;
 import { ResourceManager } from '../../managers/ResourceManager';
-import { CropType, SharedDefines } from '../../misc/SharedDefines';
+import { CropType, NetworkRecommendFriendsResultData, SharedDefines } from '../../misc/SharedDefines';
 import { WindowBase } from '../base/WindowBase';
 import { GameController } from '../../controllers/GameController';
 import { PlotTile } from '../../entities/PlotTile';
@@ -33,6 +33,12 @@ export class GameWindow extends WindowBase {
     public cropContainer: Node | null = null;
     @property(Node)
     public cropButtonTemplate: Node | null = null;
+
+    @property(ScrollView)
+    public friendScrollView: ScrollView | null = null;
+
+    @property(Node)
+    public friendButtonTemplate: Node | null = null;
 
     @property(Button)
     public btnCraft: Button | null = null;
@@ -87,6 +93,7 @@ export class GameWindow extends WindowBase {
         }
         this.refreshBasePlayerStateInfo();
         this.updateButtonsVisibility();
+        this.updateRecommendedFriends();
     }
 
     public hide(): void 
@@ -106,10 +113,23 @@ export class GameWindow extends WindowBase {
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
         }
+
+        const content = this.friendScrollView?.content;
+        if (content) {
+            content.children.forEach(child => {
+                const button = child.getComponent(Button);
+                if (button) {
+                    button.node.off(Button.EventType.CLICK);
+                }
+            });
+        }
+        
         //btnCraft click event
         if (this.btnCraft) {
             this.btnCraft.node.off(Button.EventType.CLICK, this.onBtnCraftClicked, this);
         }
+
+ 
     }
 
     private setupEventLisnters(): void 
@@ -274,6 +294,78 @@ export class GameWindow extends WindowBase {
 
     private onBtnBackClicked(): void {
         this.gameController?.backToHome();
+    }
+
+    private async updateRecommendedFriends(): Promise<void> {
+        if (!this.friendScrollView || !this.friendButtonTemplate) {
+            console.error('Friend ScrollView or button template is not set');
+            return;
+        }
+
+        const userId = this.playerController?.playerState.id;
+        if (!userId) {
+            console.error('User ID is not available');
+            return;
+        }
+
+        const result = await NetworkManager.instance.recommendFriends(userId, 5);
+        if (result && result.success) {
+            //log all data
+            console.log(result.data);
+            this.populateFriendScrollView(result.data);
+        } else {
+            console.error('Failed to get recommended friends');
+        }
+    }
+
+    private populateFriendScrollView(friendsData: NetworkRecommendFriendsResultData[]): void {
+        const content = this.friendScrollView.content;
+        //remove all children except friendButtonTemplate
+        content.children.forEach(child => {
+            if (child !== this.friendButtonTemplate) {
+                child.destroy();
+            }
+        });
+
+        friendsData.forEach(friend => {
+            const buttonNode = instantiate(this.friendButtonTemplate);
+            buttonNode.active = true;
+            content.addChild(buttonNode);
+
+            buttonNode.name = friend.id;
+
+            // Set friend name
+            // const nameLabel = buttonNode.getChildByName('NameLabel')?.getComponent(Label);
+            // if (nameLabel) {
+            //     nameLabel.string = friend.name;
+            // }
+
+            // Set friend avatar (assuming there's an avatar URL in the friend data)
+            // const avatarSprite = buttonNode.getComponent(Sprite);
+            // if (avatarSprite && friend.avatarUrl) {
+            //     // Load and set avatar sprite frame
+            //     ResourceManager.instance.loadAsset<SpriteFrame>(friend.avatarUrl, SpriteFrame).then(spriteFrame => {
+            //         if (spriteFrame) {
+            //             avatarSprite.spriteFrame = spriteFrame;
+            //         }
+            //     });
+            // }
+
+            // Add click event to visit friend
+            const button = buttonNode.getComponent(Button);
+            if (button) {
+                button.node.on(Button.EventType.CLICK, () => this.onFriendButtonClicked(friend.id), this);
+            }
+        });
+
+        const layout = content.getComponent(Layout);
+        if (layout) {
+            layout.updateLayout();
+        }
+    }
+
+    private onFriendButtonClicked(friendUserId: string): void {
+        this.gameController?.visitFriend(friendUserId);
     }
 }
 

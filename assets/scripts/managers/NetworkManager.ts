@@ -2,7 +2,7 @@
 
 import { _decorator, Component,EventTarget  } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkLoginResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -128,28 +128,28 @@ export class NetworkManager extends Component {
         }
     }
 
-    public async login(userId: string): Promise<boolean> {
+    public async login(userId: string,password:string): Promise<NetworkLoginResult> {
         const loginUrl = `${this.baseUrl}:${this.loginPort}${NetworkManager.API_LOGIN}`;
-        const data = { userid: userId };
+        const data = { userid: userId,password:password };
 
         for (let attempt = 1; attempt <= this.maxLoginRetries; attempt++) {
             try {
                 console.log(loginUrl);
                 const response = await HttpHelper.post(loginUrl, data, this.defaultHeaders);
-                const result = JSON.parse(response);
+                const result = JSON.parse(response) as NetworkLoginResult;
                 
                 if (result.success) {
                     console.log('Login successful',result);
                     this.token = result.sessionToken;
                     this.userId = result.user.id;
                     this.eventTarget.emit(NetworkManager.EVENT_LOGIN_SUCCESS, result.user, result.sessionToken);
-                    return;
+                    return result;
                 } else {
                     console.warn(`Login attempt ${attempt} failed: ${result.message}`);
                     if (attempt === this.maxLoginRetries) {
                         console.error('Max login attempts reached');
                         this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, 'Max login attempts reached');
-                        return;
+                        return result;
                     }
                     await this.delay(1000 * attempt);
                 }
@@ -158,13 +158,12 @@ export class NetworkManager extends Component {
                 if (attempt === this.maxLoginRetries) {
                     this.handleError(error);
                     this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, error);
-                    return;
+                    return null;
                 }
                 await this.delay(1000 * attempt);
             }
         }
 
-        return false;
     }
 
     public async requestSceneItemsByUserId(userId: string): Promise<void> {

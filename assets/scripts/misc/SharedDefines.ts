@@ -73,6 +73,13 @@ export enum SyntheState{
     Complete = 2
 }
 
+export class NetworkLoginResult{
+    success: boolean;
+    message: string;
+    sessionToken: string;
+    user: NetworkUser;
+}
+
 export class NetworkUser{
     id: string;
     nickname: string;
@@ -250,7 +257,7 @@ export class NetworkRecommendFriendsResult{
 }
 
 export class NetworkRecommendFriendsResultData{
-    userid: string;
+    id: string;
     nickname: string;
     level: number;
 }
