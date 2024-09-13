@@ -1,5 +1,5 @@
 {
-  "__version__": "1.0.5",
+  "__version__": "1.0.6",
   "custom_joint_texture_layouts": [],
   "general": {
     "designResolution": {
@@ -30,5 +30,8 @@
       "name": "PlotTile",
       "value": 16
     }
-  ]
+  ],
+  "script": {
+    "preserveSymlinks": true
+  }
 }
