@@ -5874,6 +5874,12 @@
     "friendButtonTemplate": {
       "__id__": 215
     },
+    "btnAddCoin": {
+      "__id__": 51
+    },
+    "btnAddDiamond": {
+      "__id__": 81
+    },
     "btnCraft": {
       "__id__": 197
     },

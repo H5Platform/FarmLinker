@@ -14,6 +14,7 @@ import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { NetworkManager } from '../../managers/NetworkManager';
+import { DashFunManager } from '../../managers/DashFunManager';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -39,6 +40,12 @@ export class GameWindow extends WindowBase {
 
     @property(Node)
     public friendButtonTemplate: Node | null = null;
+
+    @property(Button)
+    public btnAddCoin:Button|null =null;
+
+    @property(Button)
+    public btnAddDiamond:Button|null =null;
 
     @property(Button)
     public btnCraft: Button | null = null;
@@ -141,6 +148,14 @@ export class GameWindow extends WindowBase {
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
             
         }
+        //btnAddCoin click event
+        if (this.btnAddCoin) {
+            this.btnAddCoin.node.on(Button.EventType.CLICK, this.onBtnAddCoinClicked, this);
+        }
+        //btnAddDiamond click event
+        if (this.btnAddDiamond) {
+            this.btnAddDiamond.node.on(Button.EventType.CLICK, this.onBtnAddDiamondClicked, this);
+        }
         //btnCraft click event
         if (this.btnCraft) {
             this.btnCraft.node.on(Button.EventType.CLICK, this.onBtnCraftClicked, this);
@@ -157,6 +172,8 @@ export class GameWindow extends WindowBase {
         if (this.btnBack) {
             this.btnBack.node.on(Button.EventType.CLICK, this.onBtnBackClicked, this);
         }
+
+        //DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_REQUEST_PAYMENT_RESULT, this.onPaymentSuccess, this);
     }
 
     private updateButtonsVisibility(): void {
@@ -276,6 +293,16 @@ export class GameWindow extends WindowBase {
             return;
         this.scrollViewCrops.node!.active = true;
         this.currentSelectedPlot = plot;
+    }
+
+    private onBtnAddCoinClicked(): void {
+        DashFunManager.instance.requestPayment("金币*100","购买金币","金币*100",1);
+       // this.playerController?.playerState.addCoin(100);
+    }
+
+    private onBtnAddDiamondClicked(): void {
+        DashFunManager.instance.requestPayment("钻石*100","购买钻石","钻石*100",1);
+       // this.playerController?.playerState.addDiamond(100);
     }
 
     private onBtnCraftClicked(): void {

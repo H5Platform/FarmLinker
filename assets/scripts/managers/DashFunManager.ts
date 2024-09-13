@@ -4,6 +4,11 @@ const { ccclass, property } = _decorator;
 
 export class DashFunManager extends Component{
 
+    //define requestPaymentResult event
+    public static EVENT_REQUEST_PAYMENT_RESULT = "EVENT_REQUEST_PAYMENT_RESULT";
+
+    
+
     private static _instance:DashFunManager | null = null;
 
     public static get instance():DashFunManager{
@@ -197,7 +202,7 @@ window.addEventListener("message", ({data})=>{
             this.eventTarget.emit("getUserProfileResult", dashfun.result.data);
         }
         if(dashfun.method == "requestPaymentResult"){
-            this.eventTarget.emit("requestPaymentResult", dashfun.result.data);
+            this.eventTarget.emit(DashFunManager.EVENT_REQUEST_PAYMENT_RESULT, dashfun.result.data);
         }
         if(dashfun.method == "openInvoiceResult"){
             this.eventTarget.emit("openInvoiceResult", dashfun.result.data);
