@@ -25,6 +25,9 @@ async function examplePost() {
 }
  */
 
+    public static openLink(url:string){
+        window.open(url, "_blank");
+    }
 
     /**
      * 发送GET请求
