@@ -94,7 +94,7 @@ export class BuildingPlacementComponent extends Component {
 
     public async placeBuilding(callback: (result: NetworkAddBuildingResult) => void): Promise<void> {
         console.log("Place building");
-
+        SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 255));
 
         const buildingComponent = this.node.addComponent(Building);
         

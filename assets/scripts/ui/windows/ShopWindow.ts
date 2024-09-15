@@ -148,6 +148,16 @@ export class ShopWindow extends WindowBase {
     private switchToMode(mode: ShopMode): void {
         this.purchaseNode!.active = mode === ShopMode.BUY;
         this.sellNode!.active = mode === ShopMode.SELL;
+
+        const lbBuy = this.buyButton!.node.getComponentInChildren(Label);
+        const lbSell = this.sellButton!.node.getComponentInChildren(Label);
+        if (mode === ShopMode.BUY) {
+            lbBuy.color = Color.fromHEX(new Color(), "#88563F");
+            lbSell.color = Color.fromHEX(new Color(), "#C4A47E");
+        } else {
+            lbSell.color = Color.fromHEX(new Color(), "#88563F");
+            lbBuy.color = Color.fromHEX(new Color(), "#C4A47E");
+        }
     }
 
     private animateButton(buttonNode: Node): void {

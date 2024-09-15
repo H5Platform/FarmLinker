@@ -157,10 +157,13 @@ export class PlotTile extends SceneEntity implements IDropZone {
             WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
             console.log('select plot , name = ' + this.node.name);
         }
-        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {
+            console.log(`select cooldown end , name = ${this.node.name}`);
+         });
     }
 
     private async onSelectionWindowItemClicked(data: any): Promise<void> {
+        console.log(`onSelectionWindowItemClicked start...`);
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
         if (this.isOccupied) {
             const sceneItem = this.occupiedCrop.SceneItem;

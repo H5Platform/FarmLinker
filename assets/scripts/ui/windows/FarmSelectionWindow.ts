@@ -94,11 +94,6 @@ export class FarmSelectionWindow extends WindowBase {
         super.initialize();
         this.playerController = this.gameController.getPlayerController();
         this.inventoryComponent = this.playerController.inventoryComponent;
-
-        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_CLICK, this.onClick, this);
-        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_TOUCH_MOVE, this.onTouchMove, this);
-        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_TOUCH_END, this.onTouchEnd, this);
-        //this.btnCropCare.node.on(Button.EventType.CLICK, this.onCare, this);
         
         this.btnCropTreat.node.on(Button.EventType.CLICK, this.onTreat, this);
         this.btnCropCleanse.node.on(Button.EventType.CLICK, this.onCleanse, this);
@@ -120,8 +115,10 @@ export class FarmSelectionWindow extends WindowBase {
         this.collectingDiamondRefCount = 0;
         this.canHide = true;
         this.operationSprite.node.active = false;
+
         //set selection node active true
         this.selectionNode!.active = true;
+        this.selectionNode!.setWorldPosition(new Vec3(this.clickLocation.x,this.clickLocation.y,0));
         this.updateFarmSelectionViewVisibilityByType(this.currentSelectionType);
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
             
@@ -135,14 +132,29 @@ export class FarmSelectionWindow extends WindowBase {
             console.log(`animation count: ${animations.length}`);
             this.updateScrollView(animations);
         }
-       
+        this.setupEventListeners();
+    }
+
+    private setupEventListeners(): void {
+        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_CLICK, this.onClick, this);
+        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_TOUCH_MOVE, this.onTouchMove, this);
+        this.playerController.inputComponent.eventTarget.on(SharedDefines.EVENT_TOUCH_END, this.onTouchEnd, this);
+    }
+
+    private removeEventListeners(): void {
+        this.playerController.inputComponent.eventTarget.off(SharedDefines.EVENT_CLICK, this.onClick, this);
+        this.playerController.inputComponent.eventTarget.off(SharedDefines.EVENT_TOUCH_MOVE, this.onTouchMove, this);
+        this.playerController.inputComponent.eventTarget.off(SharedDefines.EVENT_TOUCH_END, this.onTouchEnd, this);
     }
 
     public hide(): void {
         if(!this.canHide || this.collectingDiamondRefCount > 0){
             return;
         }
+        console.log(`hide FarmSelectionWindow`);
         super.hide();
+        this.callback = null;
+        this.removeEventListeners();
     }
 
     private updateFarmSelectionViewVisibilityByType(type:FarmSelectionType): void {
@@ -171,15 +183,18 @@ export class FarmSelectionWindow extends WindowBase {
 
     private onClick(event:EventTouch): void {
         console.log("FarmSelectionWindow: onClick");
+        if(!this.selectionNode.activeInHierarchy){
+            return;
+        }
         //get world position of touch
         const worldPosition = event.getUILocation();
-        if(UIHelper.isPointInUINode(worldPosition, this.btnCropCare.node) || UIHelper.isPointInUINode(worldPosition, this.btnAnimalCare.node)){
+        if((this.btnCropCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropCare.node)) || (this.btnAnimalCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalCare.node))){
             this.onCare();
         }
-        else if(UIHelper.isPointInUINode(worldPosition, this.btnCropTreat.node) || UIHelper.isPointInUINode(worldPosition, this.btnAnimalTreat.node)){
+        else if((this.btnCropTreat.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropTreat.node)) || (this.btnAnimalTreat.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalTreat.node))){
             this.onTreat();
         }
-        else if(UIHelper.isPointInUINode(worldPosition, this.btnCropCleanse.node) || UIHelper.isPointInUINode(worldPosition, this.btnAnimalCleanse.node)){
+        else if((this.btnCropCleanse.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropCleanse.node)) || (this.btnAnimalCleanse.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalCleanse.node))){
             this.onCleanse();
         }
     }

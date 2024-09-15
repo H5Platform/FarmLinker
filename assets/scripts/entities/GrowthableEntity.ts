@@ -111,6 +111,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     public get SceneItem(): SceneItem | null { return this.sceneItem; }
 
     protected onLoad(): void {
+        
         this.cooldownComponent = this.getComponent(CooldownComponent);
         if (!this.cooldownComponent) {
             this.cooldownComponent = this.addComponent(CooldownComponent);
@@ -118,6 +119,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     public initializeWithInventoryItem(inventoryItem: InventoryItem): void {
+        this.sickSprite.node.active = false;
         this.sourceInventoryItem = inventoryItem;
         this.init(inventoryItem.detailId,true);
         this.initialize(inventoryItem.detailId);
@@ -479,6 +481,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     protected updateSickState(): void {
+        console.log(`updateSickState start..., isSick = ${this.isSick}`);
         if (this.sickSprite) {
             this.sickSprite.node.active = this.isSick;
         }

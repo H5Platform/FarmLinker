@@ -52,10 +52,10 @@ export class MainWindow extends WindowBase {
     }
 
     private async onStartButtonClicked(): Promise<void> {
+        console.log("onStartButtonClicked start...");
+        const result = await this.gameController.login(this.ebUserId!.string, this.ebPassword!.string);
 
-        const result = await NetworkManager.instance.login(this.ebUserId!.string, this.ebPassword!.string);
-
-        if(result.success){ 
+        if(result && result.success){ 
             // Add your start game logic here
             WindowManager.instance.show("GameWindow");
             this.hide();

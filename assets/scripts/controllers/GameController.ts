@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, BoxCollider2D } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -60,7 +60,7 @@ export class GameController extends Component {
         await this.preloadJsonDatas();
         this.initializePlayerController();
         this.setupEventListeners();
-        this.login();
+       // this.login();
     }
 
     update(deltaTime: number) {
@@ -242,17 +242,18 @@ export class GameController extends Component {
 
     //#region network relates
     
-    private async login(): Promise<void> {
+    public async login(userid:string,password:string): Promise<NetworkLoginResult> {
         if(NetworkManager.instance.SimulateNetwork){
             return;
         }
 
         console.log(`login start ...`);
-        //TODO replace userid with real user id
-        const userid = SharedDefines.CURRENT_USER_ID;
-        await NetworkManager.instance.login(userid);
-
-        await NetworkManager.instance.requestSceneItemsByUserId(userid);
+        const result = await NetworkManager.instance.login(userid,password);
+        if(result.success){
+            await NetworkManager.instance.requestSceneItemsByUserId(userid);
+            return result;
+        }
+        return null;
     }
 
     private onLoginSuccess(userData:any,token:string): void {

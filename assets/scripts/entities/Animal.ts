@@ -30,6 +30,8 @@ export class Animal extends GrowthableEntity {
         //find game controller by class
         this.gameController = director.getScene().getComponentInChildren(GameController);
         this.playerController = this.gameController.getPlayerController();
+
+       
     }
 
     public initialize(id: string): void {
