@@ -97,12 +97,23 @@ export class CraftWindow extends WindowBase {
         const buildDataList = BuildDataManager.instance.getAllBuildData();
         for (const buildData of buildDataList) {
             const item = instantiate(this.itemTemplate);
-            const label = item.getComponentInChildren(Label);
+            //find label by name
+            const lbName = item.getChildByName("lbName").getComponent(Label);
+            const lbCoin = item.getChildByName("lbCoin").getComponent(Label);
+            const diamondNode = item.getChildByName("diamond");
+            const lbDiamond = diamondNode.getChildByName("lbDiamond").getComponent(Label);
             const sprite = item.getComponentInChildren(Sprite);
             const button = item.getComponent(Button);
 
-            if (label) {
-                label.string = buildData.name;
+            if (lbName) {
+                lbName.string = buildData.description;
+            }
+            if (lbCoin) {
+                lbCoin.string = buildData.cost_coin.toString();
+            }
+            diamondNode.active = buildData.cost_diamond > 0;
+            if (lbDiamond) {
+                lbDiamond.string = buildData.cost_diamond.toString();
             }
 
             if (sprite) {

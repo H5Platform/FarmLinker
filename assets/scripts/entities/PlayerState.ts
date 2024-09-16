@@ -46,6 +46,7 @@ export class PlayerState {
         this.experience = userData.exp;
         this.gold = userData.coin;
         this.diamond = userData.diamond;
+        this.prosperity = userData.prosperity;
         this._registerTime = new Date(userData.register_time);
         this._lastLoginTime = new Date(userData.last_login_time);
         this._token = token;

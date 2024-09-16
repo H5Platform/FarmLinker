@@ -20,6 +20,10 @@ import { DashFunManager } from '../../managers/DashFunManager';
 export class GameWindow extends WindowBase {
 
     @property(Label)
+    public lbUserName: Label | null = null;
+    @property(Label)
+    public lbProsperity: Label | null = null;
+    @property(Label)
     public lblLevel: Label | null = null;
     @property(ProgressBar)
     public progressExp : ProgressBar | null = null;
@@ -90,6 +94,8 @@ export class GameWindow extends WindowBase {
         super.show(...args);
         //set crop container invisible
         this.scrollViewCrops.node.active = false;
+        //set friendScrollView invisible
+        this.friendScrollView.node.active = false;
         this.gameController?.startGame();
 
         if (this.coinDisplay) {
@@ -264,6 +270,13 @@ export class GameWindow extends WindowBase {
         }
         const playerState = this.playerController.playerState;
         console.log(`refreshBasePlayerStateInfo: level: ${playerState.level}`);
+        if (this.lbUserName) {
+           // this.lbUserName.string = playerState.name;
+        }
+        if (this.lbProsperity) {
+            this.lbProsperity.string = playerState.prosperity.toString();
+            console.log('playerState.prosperity: ' + playerState.prosperity);
+        }
         if (this.lblLevel) {
             this.lblLevel.string = playerState.level.toString();
         }
@@ -315,8 +328,10 @@ export class GameWindow extends WindowBase {
     }
 
     private async onBtnFriendClicked(): Promise<void> {
+        //toggle friendScrollView
+        this.friendScrollView.node.active = !this.friendScrollView.node.active;
         console.log('onBtnFriendClicked');
-        this.gameController?.visitFriend("123");
+       // this.gameController?.visitFriend("123");
     }
 
     private onBtnBackClicked(): void {
