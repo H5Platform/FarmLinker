@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, BoxCollider2D } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, BoxCollider2D, UITransform } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';

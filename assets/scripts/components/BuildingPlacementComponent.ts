@@ -1,6 +1,6 @@
 // BuildingPlacementComponent.ts
 
-import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform,  Rect, Sprite, SpriteFrame, Color } from 'cc';
+import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform, Rect, Sprite, SpriteFrame, Color, BoxCollider2D, Intersection2D, Graphics, Collider2D, Contact2DType, IPhysics2DContact, RigidBody2D } from 'cc';
 import { BuildingManager } from '../managers/BuildingManager';
 import { NetworkAddBuildingResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
@@ -16,6 +16,45 @@ export class BuildingPlacementComponent extends Component {
     private isPlacing: boolean = false;
     private camera: Camera | null = null;
     private buildingSprite: Sprite | null = null;
+    private collider: Collider2D | null = null;
+    private contactCount: number = 0;
+
+    private isIntersecting: boolean = false;
+
+    protected onEnable(): void {
+
+        //get rigidbody
+        let rigidbody = this.node.getComponent(RigidBody2D);
+        if (rigidbody) {
+            rigidbody.enabledContactListener = true;
+        }
+        this.collider = this.node.getComponent(Collider2D);
+        if (this.collider) {
+            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
+
+    protected onDisable(): void {
+        let rigidbody = this.node.getComponent(RigidBody2D);
+        if (rigidbody) {
+            rigidbody.enabledContactListener = false;
+        }
+        if (this.collider) {
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
+
+    private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
+        this.contactCount++;
+        console.log(`onBeginContact ${otherCollider.node.name}, contact count: ${this.contactCount}`);
+    }
+
+    private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
+        this.contactCount--;
+        console.log(`onEndContact ${otherCollider.node.name}, contact count: ${this.contactCount}`);
+    }
 
     public initialize(buildData: any, buildingManager: BuildingManager): void {
         this.node.name = buildData.id;
@@ -25,7 +64,7 @@ export class BuildingPlacementComponent extends Component {
         if (cameraNode) {
             this.camera = cameraNode.getComponent(Camera);
         }
-        else{
+        else {
             console.error("Cannot find camera node");
             return;
         }
@@ -43,11 +82,11 @@ export class BuildingPlacementComponent extends Component {
     public onTouchMove(event: EventTouch): void {
         if (this.isPlacing) {
             const uiLocation = event.getLocation();
-            this.updateBuildingPosition( new Vec3(uiLocation.x, uiLocation.y, 0));
+            this.updateBuildingPosition(new Vec3(uiLocation.x, uiLocation.y, 0));
             if (this.canPlaceBuilding()) {
                 SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
             }
-            else{
+            else {
                 SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 0, 0, 125));
             }
         }
@@ -63,33 +102,24 @@ export class BuildingPlacementComponent extends Component {
 
 
     private updateBuildingAppearance(): void {
-        
+        console.log(`BuildingPlacementComponent.updateBuildingAppearance start .. pending texture = ${this.buildData.texture}`);
         ResourceManager.instance.loadAsset(`${SharedDefines.WINDOW_BUILDING_TEXTURES}${this.buildData.texture}/spriteFrame`, SpriteFrame).then((spriteFrame) => {
             this.buildingSprite.spriteFrame = spriteFrame as SpriteFrame;
+
+            const uiTransform = this.node.getComponent(UITransform);
+            //update collider box size
+            const collider = this.node.getComponent(BoxCollider2D);
+            if (collider) {
+                collider.size = uiTransform.contentSize;
+            }
         });
+
+
     }
 
+    private debugDraw: Graphics | null = null;
     public canPlaceBuilding(): boolean {
-        const position = this.node.getWorldPosition();
-        const ray = new geometry.Ray();
-        Vec3.subtract(ray.o, position, new Vec3(0, 10, 0));
-        ray.d = Vec3.UP;
-
-        const uiTransform = this.node.getComponent(UITransform);
-        const worldPos = this.node.getWorldPosition();
-        //@TODO The contentSize can be changed manully or by configuration.
-        const rect = new Rect(worldPos.x, worldPos.y, uiTransform.contentSize.width, uiTransform.contentSize.height);  
-
-        const colliders = PhysicsSystem2D.instance.testAABB(rect);
-        if (colliders.length > 0) {
-            console.log('Colliders found:', colliders.length);
-            colliders.forEach(collider => {
-                console.log('Collider:', collider.node.name);
-            });
-            
-            return false
-        }
-        return true;
+        return this.contactCount === 0;
     }
 
     public async placeBuilding(callback: (result: NetworkAddBuildingResult) => void): Promise<void> {
@@ -97,7 +127,7 @@ export class BuildingPlacementComponent extends Component {
         SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 255));
 
         const buildingComponent = this.node.addComponent(Building);
-        
+
         const buildingContainer = Director.instance.getScene().getChildByPath(SharedDefines.PATH_BUILDINGS);
         if (buildingContainer) {
             this.node.removeFromParent();
@@ -107,10 +137,10 @@ export class BuildingPlacementComponent extends Component {
             return;
         }
 
-        
-       const result  = await NetworkManager.instance.addBuilding(this.buildData.id,this.node.getWorldPosition().x,this.node.getWorldPosition().y,buildingContainer.name);
-       console.log("add building result",result);
-       if(result.success){
+
+        const result = await NetworkManager.instance.addBuilding(this.buildData.id, this.node.getWorldPosition().x, this.node.getWorldPosition().y, buildingContainer.name);
+        console.log("add building result", result);
+        if (result.success) {
 
             buildingComponent.initializeFromSceneItem(result.data.sceneItem);
             // 完成建造
@@ -120,7 +150,7 @@ export class BuildingPlacementComponent extends Component {
             this.isPlacing = false;
             callback(result);
             this.destroy();
-       }
+        }
 
     }
 
