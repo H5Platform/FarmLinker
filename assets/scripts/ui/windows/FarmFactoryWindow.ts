@@ -60,15 +60,26 @@ export class FarmFactoryWindow extends WindowBase {
     }
 
     private updateScrollView(sceneSyntheDataList: NetworkSyntheResultData[],syntheDatas: any[]): void {
+        console.log(`updateScrollView: start...`);
         this.clearScrollViewContent();
-        this.populateInProgressItems(sceneSyntheDataList);
-        //log all syntheDatas & sceneSyntheDataList
-        console.log(`syntheDatas:`,syntheDatas);
-        console.log(`sceneSyntheDataList:`,sceneSyntheDataList);
-        this.populateAvailableItems(syntheDatas,sceneSyntheDataList);
+        // Add a delay of 0.1 seconds before populating items
+        this.scheduleOnce(() => {
+            this.populateInProgressItems(sceneSyntheDataList);
+            this.populateAvailableItems(syntheDatas, sceneSyntheDataList);
+        }, 0.1);
+
+        // // Remove the direct calls to these methods
+        // // this.populateInProgressItems(sceneSyntheDataList);
+        // // this.populateAvailableItems(syntheDatas,sceneSyntheDataList);
+        // this.populateInProgressItems(sceneSyntheDataList);
+        // //log all syntheDatas & sceneSyntheDataList
+        // console.log(`syntheDatas:`,syntheDatas);
+        // console.log(`sceneSyntheDataList:`,sceneSyntheDataList);
+        // this.populateAvailableItems(syntheDatas,sceneSyntheDataList);
     }
 
     private clearScrollViewContent(): void {
+        console.log(`clearScrollViewContent: start...`);
         const content = this.scrollView.content;
         if (content) {
             content.children.forEach(child => {
@@ -77,16 +88,18 @@ export class FarmFactoryWindow extends WindowBase {
                 }
             });
         }
+        
     }
 
     private populateInProgressItems(sceneSyntheDataList: NetworkSyntheResultData[]): void {
-        sceneSyntheDataList.forEach(item => {
-            const itemNode = this.createInProgressItemNode(item);
+        console.log(`populateInProgressItems: start...`);
+        sceneSyntheDataList.forEach(async item => {
+            const itemNode = await this.createInProgressItemNode(item);
             this.scrollView.content.addChild(itemNode);
         });
     }
 
-    private createInProgressItemNode(item: NetworkSyntheResultData): Node {
+    private async createInProgressItemNode(item: NetworkSyntheResultData): Promise<Node> {
         const itemNode = instantiate(this.itemTemplate);
         itemNode.active = true;
 
@@ -96,7 +109,7 @@ export class FarmFactoryWindow extends WindowBase {
             return itemNode;
         }
 
-        this.setupTargetItem(itemNode, syntheData);
+        await this.setupTargetItem(itemNode, syntheData);
         this.setupSourceItems(itemNode, syntheData);
         this.setupInProgressStatus(itemNode, item);
         this.setupItemButtons(itemNode, syntheData,item.state);
@@ -119,8 +132,8 @@ export class FarmFactoryWindow extends WindowBase {
         const availableSyntheDatas = this.filterAvailableSyntheDatas(syntheDatas,sceneSyntheDataList);
         //log all availableSyntheDatas
         console.log(`availableSyntheDatas:`,availableSyntheDatas);
-        availableSyntheDatas.forEach(data => {
-            const itemNode = this.createAvailableItemNode(data);
+        availableSyntheDatas.forEach(async data => {
+            const itemNode = await this.createAvailableItemNode(data);
             this.scrollView.content.addChild(itemNode);
         });
     }
@@ -130,18 +143,18 @@ export class FarmFactoryWindow extends WindowBase {
         return syntheDatas.filter(data => !inProgressIds.has(data.id));
     }
 
-    private createAvailableItemNode(data: any): Node {
+    private async createAvailableItemNode(data: any): Promise<Node> {
         const itemNode = instantiate(this.itemTemplate);
         itemNode.active = true;
 
-        this.setupTargetItem(itemNode, data);
+        await this.setupTargetItem(itemNode, data);
         this.setupSourceItems(itemNode, data);
         this.setupItemButtons(itemNode, data);
 
         return itemNode;
     }
 
-    private setupTargetItem(itemNode: Node, data: any): void {
+    private async setupTargetItem(itemNode: Node, data: any): Promise<void> {
         const sprTarget = itemNode.getChildByName('sprTarget').getComponent(Sprite);
         const txtTargetName = itemNode.getChildByName('txtTargetName').getComponent(Label);
         const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
@@ -149,17 +162,19 @@ export class FarmFactoryWindow extends WindowBase {
         const targetItem = ItemDataManager.instance.getItemById(data.synthe_item_id);
 
         txtRemainingTime.node.active = false;
-        this.loadTargetSprite(sprTarget, targetItem);
+        await this.loadTargetSprite(sprTarget, targetItem);
         txtTargetName.string = data.description;
     }
 
-    private loadTargetSprite(sprTarget: Sprite, targetItem: any): void {
-        ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${targetItem.png}/spriteFrame`, SpriteFrame)
-            .then(spriteFrame => {
-                if (spriteFrame) {
-                    sprTarget.spriteFrame = spriteFrame;
-                }
-            });
+    private async loadTargetSprite(sprTarget: Sprite, targetItem: any): Promise<void> {
+        if(!sprTarget){
+            console.error(`sprTarget is null`);
+            return;
+        }
+        const spriteFrame = await ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${targetItem.png}/spriteFrame`, SpriteFrame);
+        if (spriteFrame && sprTarget) {
+            sprTarget.spriteFrame = spriteFrame;
+        }
     }
 
     private setupSourceItems(itemNode: Node, data: any): void {
@@ -174,10 +189,14 @@ export class FarmFactoryWindow extends WindowBase {
             itemNode.getChildByName('sprPlus').getComponent(Sprite),
             itemNode.getChildByName('sprPlus2').getComponent(Sprite)
         ];
-
-        formulas.forEach((formula, index) => {
+        
+        if(!formulas || formulas.length == 0){
+            console.error(`formulas is null or empty`);
+            return;
+        }
+        formulas.forEach(async (formula, index) => {
             if (index < sources.length) {
-                this.setSourceData(sources[index], formula, qualities[index]);
+                await this.setSourceData(sources[index], formula, qualities[index]);
                 sources[index].active = true;
                 if (index > 0 && index - 1 < plusSprites.length) {
                     plusSprites[index - 1].node.active = true;
@@ -194,17 +213,19 @@ export class FarmFactoryWindow extends WindowBase {
         }
     }
 
-    private setSourceData(sourceNode: Node, sourceItemId: any, quality: any): void {
+    private async setSourceData(sourceNode: Node, sourceItemId: any, quality: any): Promise<void> {
         const txtName = sourceNode.getChildByName('txtName').getComponent(Label);
         const sourceSprite = sourceNode.getComponent(Sprite);
+        if(!sourceSprite){
+            console.error(`sourceSprite is null , sourceNode name: ${sourceNode.name}`);
+            return;
+        }
         const item = ItemDataManager.instance.getItemById(sourceItemId);
         txtName.string = `${item.description}x${quality}`;
-        ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame)
-            .then(spriteFrame => {
-                if (spriteFrame) {
-                    sourceSprite.spriteFrame = spriteFrame;
-                }
-            });
+        const spriteFrame = await ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame);
+        if (spriteFrame && sourceSprite) {
+            sourceSprite.spriteFrame = spriteFrame;
+        }
     }
 
     private setupItemButtons(itemNode: Node, data: any,state:SyntheState = SyntheState.None): void {

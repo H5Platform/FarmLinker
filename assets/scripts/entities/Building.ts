@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, UITransform, BoxCollider2D } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
-import { SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { BuildingType, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { PlayerState } from '../entities/PlayerState';
 import { BuildDataManager } from '../managers/BuildDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
@@ -26,6 +26,11 @@ export class Building extends Component {
 
     private buildingData: any;
     private sceneItem: SceneItem | null = null;
+    private buildingType: BuildingType = BuildingType.None;
+    //getter isFactory
+    public get isFactory(): boolean {
+        return this.buildingType == BuildingType.Factory;
+    }
     //getter
     public get SceneItem(): SceneItem | null {
         return this.sceneItem;
@@ -48,6 +53,7 @@ export class Building extends Component {
         this.id = buildingData.id;
         this.updateSprite();
         this.setState(BuildingState.CONSTRUCTING);
+        this.buildingType = buildingData.item_type;
     }
 
     public initializeFromSceneItem(sceneItem: SceneItem): void {

@@ -9,6 +9,8 @@ export class WindowBase extends Component {
     @property(Node)
     private animationNode: Node | null = null;
 
+    private playingTween: Tween<Node> | null = null;
+
     protected gameController: GameController | null = null;
 
     public initialize(): void {
@@ -29,6 +31,11 @@ export class WindowBase extends Component {
     }
 
     public hide(): void {
+        if (this.playingTween) {
+            this.playingTween.stop();
+            this.playingTween = null;
+            this.animationNode.setScale(1, 1, 1);
+        }
         this.node.active = false;
         
     }
@@ -45,7 +52,7 @@ export class WindowBase extends Component {
         node.setScale(0.7, 0.7, 1);
     
         // Create the animation
-        const tween = new Tween(node)
+        this.playingTween = new Tween(node)
             //.to(0.1, { scale: new Vec3(0.7, 0.7, 1) })
             .to(0.5, { scale: new Vec3(1.1, 1.1, 1) }, { easing: 'bounceOut' })
             .to(0.15, { scale: new Vec3(0.95, 0.95, 1) })

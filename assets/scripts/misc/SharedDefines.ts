@@ -33,6 +33,12 @@ export enum SceneItemType {
     Building = 3
 }
 
+export enum BuildingType {
+    None = 0,
+    Factory = 1,
+    Decoration = 2
+}
+
 export enum SceneItemState {
     None = 0,
     InProgress = 1,

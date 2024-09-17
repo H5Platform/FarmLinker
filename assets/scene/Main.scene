@@ -147,7 +147,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 550.8611599297012,
+    "_orthoHeight": 609.0028490028491,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -1223,7 +1223,8 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "baseUrl": "http://127.0.0.1",
+    "localBaseUrl": "http://127.0.0.1",
+    "serverBaseUrl": "https://110.41.190.31",
     "loginPort": 3000,
     "gameServerPort": 3001,
     "maxLoginRetries": 3,

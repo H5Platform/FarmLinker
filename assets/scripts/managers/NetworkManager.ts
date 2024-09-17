@@ -1,8 +1,9 @@
 // NetworkManager.ts
 
-import { _decorator, Component,EventTarget  } from 'cc';
+import { _decorator, Component, EventTarget, sys } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
 import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkLoginResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { BUILD } from 'cc/env';
 const { ccclass, property } = _decorator;
 
 interface LoginResp{
@@ -54,8 +55,20 @@ export class NetworkManager extends Component {
     public static readonly EVENT_QUERY_DISEASE_STATUS: string = 'query-disease-status';
     private static _instance: NetworkManager | null = null;
 
+    private get baseUrl(): string {
+        // Check if the game is running in preview mode (local development)
+        if (BUILD) {
+            return this.serverBaseUrl;
+        } else {
+            return this.localBaseUrl;
+        }
+    }
+
     @property
-    private baseUrl: string = '';
+    private localBaseUrl: string = 'http://localhost';
+
+    @property
+    private serverBaseUrl: string = 'https://your-server-domain.com';
 
     @property
     private loginPort: number = 3000; // 登录服务器端口
