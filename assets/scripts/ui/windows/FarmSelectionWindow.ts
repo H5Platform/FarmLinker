@@ -3,7 +3,7 @@ import { WindowBase } from '../base/WindowBase';
 import { PlayerController } from '../../controllers/PlayerController';
 import { InventoryComponent, InventoryItem, ItemType } from '../../components/InventoryComponent';
 import { PlotTile } from '../../entities/PlotTile';
-import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SharedDefines } from '../../misc/SharedDefines';
+import { CommandType, FarmSelectionType, InteractionMode, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SharedDefines } from '../../misc/SharedDefines';
 import { ResourceManager } from '../../managers/ResourceManager';
 import { Fence } from '../../entities/Fence';
 import { AnimalDataManager } from '../../managers/AnimalDataManager';
@@ -225,6 +225,7 @@ export class FarmSelectionWindow extends WindowBase {
 
     private onTouchEnd(event:EventTouch): void {
         console.log("FarmSelectionWindow: onTouchEnd");
+        this.playerController.interactionMode = InteractionMode.CameraDrag;
         this.canHide = true;
         this.hide();
         this.dragOperation = null;
@@ -338,6 +339,7 @@ export class FarmSelectionWindow extends WindowBase {
             this.collectingDiamondRefCount = 0;
             this.operationSprite.node.active = true;
             this.dragOperation.dragNode = this.operationSprite.node;
+            this.playerController.interactionMode = InteractionMode.Command;
         }
     }
 
@@ -566,7 +568,6 @@ export class FarmSelectionWindow extends WindowBase {
 
         this.callback(data);
 
-        this.gameController.getPlayerController().currentOperation = data;
         WindowManager.instance.hide(SharedDefines.WINDOW_SELECTION_NAME);
     }
 

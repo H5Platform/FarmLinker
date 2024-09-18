@@ -45,8 +45,10 @@ export class InputComponent extends Component {
         this.eventTarget.emit(SharedDefines.EVENT_TOUCH_END, event);
 
         // 判断是否为点击事件
-        if (touchEndTime - this.touchStartTime <= InputComponent.CLICK_THRESHOLD * 1000 &&
-            Vec2.distance(this.touchStartPosition, touchEndPosition) < 10) { // 添加一个小的位移容差
+        const touchDuration = touchEndTime - this.touchStartTime;
+        const touchDistance = Vec2.distance(this.touchStartPosition, touchEndPosition);
+        
+        if (touchDuration <= InputComponent.CLICK_THRESHOLD * 1000 && touchDistance < 10) {
             if (this.onClick) {
                 this.onClick(event);
             }

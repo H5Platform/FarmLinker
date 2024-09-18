@@ -1,10 +1,10 @@
-import { _decorator, Component, Director, instantiate, Node, Prefab,EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString, CCInteger } from 'cc';
+import { _decorator, Component, Director, instantiate, Node, Prefab, EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString, CCInteger } from 'cc';
 import { PlayerState } from '../entities/PlayerState';
 import { InventoryComponent, InventoryItem } from '../components/InventoryComponent';
 import { InputComponent } from '../components/InputComonent';
 import { BuildingManager } from '../managers/BuildingManager';
 import { BuildingPlacementComponent } from '../components/BuildingPlacementComponent';
-import { CommandType, FarmSelectionType, SharedDefines } from '../misc/SharedDefines';
+import { CommandType, FarmSelectionType, InteractionMode, SharedDefines } from '../misc/SharedDefines';
 import { DragDropComponent } from '../components/DragDropComponent';
 import { Fence } from '../entities/Fence';
 import { PlotTile } from '../entities/PlotTile';
@@ -12,6 +12,7 @@ import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { WindowManager } from '../ui/WindowManager';
 import { Building } from '../entities/Building';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -53,7 +54,6 @@ export class PlayerController extends Component {
     private _camera : Camera;
     private currentBuildingPlacement: BuildingPlacementComponent | null = null;
     private dragDropComponent: DragDropComponent | null = null;
-    private currentOperation: CommandType | null = null;
     
 
     //getter playerstate
@@ -79,6 +79,17 @@ export class PlayerController extends Component {
 
     public eventTarget: EventTarget = new EventTarget();
 
+    //getter
+    public get interactionMode(): InteractionMode {
+        return this._interactionMode;
+    }
+    //setter interactionmode
+    public set interactionMode(value: InteractionMode) {
+        this._interactionMode = value;
+    }
+    private _interactionMode: InteractionMode = InteractionMode.CameraDrag;
+    private lastTouchPosition: Vec2 = new Vec2();
+
     protected onLoad(): void {
         this._playerState = new PlayerState(`0`,1,0,this.initialMoney,0);
         this._inventoryComponent = this.node.getComponent(InventoryComponent);
@@ -91,7 +102,9 @@ export class PlayerController extends Component {
         if (inputNode) {
             this._inputComponent = inputNode.getComponent(InputComponent);
             this._inputComponent.onClick = this.handleClick.bind(this);
-           // this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
+            this._inputComponent.onTouchStart = this.handleTouchStart.bind(this);
+            this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
+            this._inputComponent.onTouchEnd = this.handleTouchEnd.bind(this);
         }
         else{
             console.error('No InputNode found');
@@ -121,6 +134,47 @@ export class PlayerController extends Component {
 
     update(deltaTime: number) {
         
+    }
+
+    private handleTouchStart(event: EventTouch): void {
+        if (this.interactionMode !== InteractionMode.CameraDrag) {
+            return;
+        }
+
+        this.lastTouchPosition = event.getLocation();
+        this.interactionMode = InteractionMode.CameraDrag;
+    }
+
+    private handleTouchMove(event: EventTouch): void {
+        if (this.interactionMode === InteractionMode.CameraDrag) {
+            const currentPosition = event.getLocation();
+            const delta = currentPosition.subtract(this.lastTouchPosition);
+            this.moveCamera(delta);
+            this.lastTouchPosition = currentPosition;
+        } //else if (this.currentBuildingPlacement) {
+        //     this.currentBuildingPlacement.onTouchMove(event);
+        // }
+        // Add other interaction modes here if needed
+    }
+
+    private handleTouchEnd(event: EventTouch): void {
+        if (this.interactionMode === InteractionMode.CameraDrag) {
+            
+            // In any case, reset to camera drag mode
+            this.interactionMode = InteractionMode.CameraDrag;
+        }
+    }
+
+    private moveCamera(delta: Vec2): void {
+        if (!this._camera) return;
+
+        const currentPosition = this._camera.node.position;
+        const newPosition = new Vec3(
+            currentPosition.x - delta.x * 0.01,
+            currentPosition.y + delta.y * 0.01,
+            currentPosition.z
+        );
+        this._camera.node.setPosition(newPosition);
     }
 
     private handleClick(event: EventTouch): void {
@@ -173,51 +227,7 @@ export class PlayerController extends Component {
             }
         }
 
-        // Reset current operation when clicking
-        this.currentOperation = null;
     }
-
-    // private handleTouchMove(event: EventTouch): void {
-    //     console.log("playercontroller: handleTouchMove");
-    //     if (this.currentOperation) {
-    //         const colliders = this.getCollidersByClickPosition(event.getLocation());
-    //         if (colliders) {
-    //             this.performOperationOnColliders(colliders, this.currentOperation,event.getLocation());
-    //         }
-    //     }
-    // }
-
-    // private performOperationOnColliders(colliders: readonly Collider2D[], operation: CommandType, touchPos: Vec2): void {
-    //     const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
-    //     const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
-
-    //     for (const collider of colliders) {
-    //         if (collider.node.layer & plotLayer) {
-    //             const plotTile = collider.node.getComponent(PlotTile);
-    //             if (plotTile && ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner))) {
-    //                 this.performOperationOnPlotTile(plotTile, operation);
-    //             }
-    //         } else if (collider.node.layer & fenceLayer) {
-    //             const fence = collider.node.getComponent(Fence);
-    //             if (fence && ((!this.visitMode && fence.IsPlayerOwner) || (this.visitMode && !fence.IsPlayerOwner))) {
-    //                 this.performOperationOnFence(fence, operation, touchPos);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // private performOperationOnPlotTile(plotTile: PlotTile, operation: CommandType): void {
-    //     if (plotTile.canPerformOperation(operation)) {
-    //         plotTile.performOperation(operation);
-    //     }
-    // }
-
-    // private performOperationOnFence(fence: Fence, operation: CommandType, touchPos: Vec2): void {
-    //     const animal = fence.getAnimalAtPosition(touchPos);
-    //     if (animal && animal.canPerformOperation(operation)) {
-    //         animal.performOperation(operation);
-    //     }
-    // }
 
     private getCollidersByClickPosition(position: Vec2):readonly Collider2D[] | null {
         if (!this._camera) {
@@ -251,6 +261,9 @@ export class PlayerController extends Component {
     //#region building placement
 
     public startBuildingPlacement(buildData: any,placementContainer:Node): void {
+        if (this.interactionMode !== InteractionMode.CameraDrag) return;
+
+        this.interactionMode = InteractionMode.BuildingPlacement;
         const buildingNode = instantiate(this.placementBuildingPrefab);
         if (!placementContainer) {
             const canvas = Director.instance.getScene().getChildByName("Canvas");
@@ -314,6 +327,7 @@ export class PlayerController extends Component {
             this._inputComponent.onTouchEnd = null;
             this._inputComponent.onTouchCancel = null;
         }
+        this.interactionMode = InteractionMode.CameraDrag;
     }
 
     //#endregion

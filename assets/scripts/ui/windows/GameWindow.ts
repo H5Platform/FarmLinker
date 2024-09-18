@@ -15,6 +15,7 @@ import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { NetworkManager } from '../../managers/NetworkManager';
 import { DashFunManager } from '../../managers/DashFunManager';
+import { GradeDataManager } from '../../managers/GradeDataManager';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -290,8 +291,7 @@ export class GameWindow extends WindowBase {
     }
     
     private getExpNeededForNextLevel(level: number): number {
-        // This should match the logic in PlayerState
-        return Math.floor(100 * Math.pow(1.5, level - 1));
+        return GradeDataManager.instance.getExpNeededForLevel(level + 1);
     }
 
     private async onCropButtonClicked(cropType : CropType): Promise<void>  {

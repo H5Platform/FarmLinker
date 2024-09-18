@@ -17,6 +17,7 @@ import { InventoryItem } from '../components/InventoryComponent';
 import { PlayerState } from '../entities/PlayerState';
 import { GrowthableEntity } from '../entities/GrowthableEntity';
 import { SyntheDataManager } from '../managers/SyntheDataManager';
+import { GradeDataManager } from '../managers/GradeDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -80,6 +81,7 @@ export class GameController extends Component {
         await BuildDataManager.instance.loadBuildData();
         await AnimalDataManager.instance.loadAnimalData();
         await SyntheDataManager.instance.loadSyntheData();
+        await GradeDataManager.instance.initialize();
     }
 
     //create getplayerController() method

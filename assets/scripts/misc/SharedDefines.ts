@@ -1,3 +1,10 @@
+export enum InteractionMode {
+    CameraDrag,
+    BuildingPlacement,
+    Command,
+    Plant
+}
+
 export enum CropType {
     WHEAT = 1,
     CABBAGE ,
