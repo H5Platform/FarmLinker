@@ -1,5 +1,6 @@
 import { _decorator, JsonAsset } from 'cc';
 import { ResourceManager } from './ResourceManager';
+import { SharedDefines } from '../misc/SharedDefines';
 
 interface GradeData {
     id: string;
@@ -22,9 +23,9 @@ export class GradeDataManager {
     private constructor() {}
 
     public async initialize(): Promise<void> {
-        const jsonAsset = await ResourceManager.instance.loadAsset('data/GradeData', JsonAsset) as any;
+        const jsonAsset = await ResourceManager.instance.loadAsset(SharedDefines.JSON_GRADE_DATA, JsonAsset) as any;
         if (jsonAsset && jsonAsset.json) {
-            const gradeDataList: GradeData[] = jsonAsset.json;
+            const gradeDataList: GradeData[] = jsonAsset.json.list;
             gradeDataList.forEach(gradeData => {
                 this.gradeDataMap.set(gradeData.level, gradeData);
             });
