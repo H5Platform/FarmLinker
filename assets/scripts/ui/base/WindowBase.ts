@@ -46,7 +46,7 @@ export class WindowBase extends Component {
             return;
         }
         const node = this.animationNode;
-        const originalScale = node.scale.clone();
+        const originalScale = Vec3.ONE;//node.scale.clone();
         
         // Reset scale
         node.setScale(0.7, 0.7, 1);

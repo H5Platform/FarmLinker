@@ -14,6 +14,9 @@ const { ccclass, property } = _decorator;
 @ccclass('FarmFactoryWindow')
 export class FarmFactoryWindow extends WindowBase {
 
+    @property(Label)
+    private lbTitle: Label = null;
+
     //define a item node
     @property(Node)
     private itemTemplate: Node = null;
@@ -45,6 +48,7 @@ export class FarmFactoryWindow extends WindowBase {
     public show(...args: any[]): void {
         super.show(...args);
         this.currentBuilding = args[0] as Building;
+        this.lbTitle.string = this.currentBuilding.BuildingData.description;
         console.log(`FarmFactoryWindow show buildingId: ${this.currentBuilding.id}`);
         
         this.getSceneSyntheDataListFromServer(this.currentBuilding.SceneItem.id, this.currentBuilding.id);

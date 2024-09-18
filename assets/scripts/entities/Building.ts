@@ -24,6 +24,10 @@ export class Building extends Component {
 
     private sprite: Sprite | null = null;
 
+    //getter buidingData
+    public get BuildingData(): any {
+        return this.buildingData;
+    }
     private buildingData: any;
     private sceneItem: SceneItem | null = null;
     private buildingType: BuildingType = BuildingType.None;
