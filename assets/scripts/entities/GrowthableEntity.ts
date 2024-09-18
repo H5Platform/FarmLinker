@@ -418,9 +418,10 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
                     console.log(`Entity ${this.id} has become sick`);
                 }
                 //update last_updated_time for this.sceneItem?.commands.find(cmd => cmd.type === CommandType.Disease)
-                const diseaseCommand = this.sceneItem.commands.find(cmd => cmd.type === CommandType.Disease);
-                if(diseaseCommand && result.last_updated_time){
-                    diseaseCommand.last_updated_time = result.last_updated_time;
+                const diseaseCommandIndex = this.sceneItem.commands.findIndex(cmd => cmd.type === CommandType.Disease);
+                if (diseaseCommandIndex !== -1 && result.last_updated_time) {
+                    this.sceneItem.commands[diseaseCommandIndex].last_updated_time = result.last_updated_time;
+                    console.log(`update disease status success, last_updated_time = ${result.last_updated_time}`);
                 }
             }
         } catch (error) {
