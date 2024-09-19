@@ -146,11 +146,14 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
         if(this.isPlayerOwner){
             //only player owner can update disease status
-            this.scheduleDiseaseStatusUpdate();
-            const diseaseCommand = sceneItem.commands.find(command => command.type === CommandType.Disease);
-            if (diseaseCommand) {
-                console.log(`sceneItem.state = ${sceneItem.state} , diseaseCommand.state = ${diseaseCommand.state} , diseaseCommand.count = ${diseaseCommand.count}`);
+            let lastUpdateTime = DateHelper.stringToDate(sceneItem.last_updated_time) || new Date();
+            if(sceneItem.commands){
+                const diseaseCommand = sceneItem.commands.find(command => command.type === CommandType.Disease);
+                if(diseaseCommand){
+                    lastUpdateTime = DateHelper.stringToDate(diseaseCommand.last_updated_time);
+                }
             }
+            this.scheduleDiseaseStatusUpdate(lastUpdateTime);
         }
         else{
             //The friends can only see the disease status
@@ -409,6 +412,8 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             return;
         }
 
+        let lastUpdateTime = DateHelper.stringToDate(this.sceneItem?.last_updated_time) || new Date();
+
         try {
             const result = await NetworkManager.instance.updateDiseaseStatus(this.sceneItem.id, updateDiseaseTimes);
             if (result && result.success) {
@@ -423,15 +428,21 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
                     this.sceneItem.commands[diseaseCommandIndex].last_updated_time = result.last_updated_time;
                     console.log(`update disease status success, last_updated_time = ${result.last_updated_time}`);
                 }
+                else{
+                    console.warn(`update disease status failed , diseaseCommandIndex = ${diseaseCommandIndex} , result.last_updated_time = ${result.last_updated_time}`);
+                }
+                if(result.last_updated_time){
+                    lastUpdateTime = DateHelper.stringToDate(result.last_updated_time);
+                }
             }
         } catch (error) {
             console.error('Failed to update disease status:', error);
         }
 
-        this.scheduleDiseaseStatusUpdate();
+        this.scheduleDiseaseStatusUpdate(lastUpdateTime);
     }
 
-    protected scheduleDiseaseStatusUpdate(): void {
+    protected scheduleDiseaseStatusUpdate(last_updated_time:Date): void {
         if(this.sceneItem?.state === SceneItemState.Dead){
             this.updateEntityState();
             this.stopDiseaseStatusUpdates();
@@ -450,9 +461,8 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             this.isSick = false;
             this.updateSickState();
         }
-        const lastUpdateTime = diseaseCommand 
-            ? DateHelper.stringToDate(diseaseCommand.last_updated_time).getTime() / 1000
-            : DateHelper.stringToDate(this.sceneItem?.last_updated_time || '').getTime() / 1000;
+
+        const lastUpdateTime = last_updated_time.getTime() / 1000;
 
         const timeSinceLastUpdate = currentTime - lastUpdateTime;
         const missedIntervals = Math.floor(timeSinceLastUpdate / interval);
@@ -472,12 +482,13 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         this.unschedule(this.updateDiseaseStatus);
     }
 
-    public setImmunityDuration(immunityDuration: number): void {
+    public setImmunityDuration(immunityDuration: number,lastUpdateTime:Date): void {
         this.isSick = false;
         this.updateSickState();
         this.unschedule(this.updateDiseaseStatus);
         this.scheduleOnce(() => {
-            this.scheduleDiseaseStatusUpdate();
+            
+            this.scheduleDiseaseStatusUpdate(lastUpdateTime);
         }, immunityDuration * 3600);
     }
 

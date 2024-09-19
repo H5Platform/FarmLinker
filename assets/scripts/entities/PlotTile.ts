@@ -217,7 +217,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
                     if (cleanseResult.success) {
                        // this.occupiedCrop.CleanseCount = cleanseResult.data.cleanse_count;
                        const immunityDuration = cleanseResult.data.cleanse_count; // Default to 24 hours if not provided
-                        this.occupiedCrop.setImmunityDuration(immunityDuration);
+                        this.occupiedCrop.setImmunityDuration(immunityDuration,new Date());
                         if(cleanseResult.data.friend_id){
                             console.log(`cleanse friend , name = ${cleanseResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${cleanseResult.data.diamond_added}`);
                             await this.playDiamondCollectionEffect(cleanseResult.data.diamond_added);
