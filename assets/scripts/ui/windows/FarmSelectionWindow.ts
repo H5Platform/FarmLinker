@@ -132,7 +132,10 @@ export class FarmSelectionWindow extends WindowBase {
             console.log(`animation count: ${animations.length}`);
             this.updateScrollView(animations);
         }
-        this.setupEventListeners();
+
+        this.scheduleOnce(()=>{
+            this.setupEventListeners();
+        },1);
     }
 
     private setupEventListeners(): void {

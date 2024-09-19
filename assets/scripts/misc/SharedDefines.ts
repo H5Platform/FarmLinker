@@ -410,6 +410,7 @@ export class SharedDefines {
     public static readonly JSON_BUILD_DATA: string = 'data/BuildData';
     public static readonly JSON_ANIMAL_DATA: string = 'data/AnimalData';
     public static readonly JSON_SYNTHE_DATA: string = 'data/SyntheData';
+    public static readonly JSON_GRADE_DATA: string = 'data/GradeData';
 
     public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';

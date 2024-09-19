@@ -88,7 +88,6 @@ export class PlayerController extends Component {
         this._interactionMode = value;
     }
     private _interactionMode: InteractionMode = InteractionMode.CameraDrag;
-    private lastTouchPosition: Vec2 = new Vec2();
 
     protected onLoad(): void {
         this._playerState = new PlayerState(`0`,1,0,this.initialMoney,0);
@@ -141,20 +140,13 @@ export class PlayerController extends Component {
             return;
         }
 
-        this.lastTouchPosition = event.getLocation();
         this.interactionMode = InteractionMode.CameraDrag;
     }
 
     private handleTouchMove(event: EventTouch): void {
         if (this.interactionMode === InteractionMode.CameraDrag) {
-            const currentPosition = event.getLocation();
-            const delta = currentPosition.subtract(this.lastTouchPosition);
-            this.moveCamera(delta);
-            this.lastTouchPosition = currentPosition;
-        } //else if (this.currentBuildingPlacement) {
-        //     this.currentBuildingPlacement.onTouchMove(event);
-        // }
-        // Add other interaction modes here if needed
+            this.moveCamera(event.getDelta());
+        } 
     }
 
     private handleTouchEnd(event: EventTouch): void {
@@ -170,8 +162,8 @@ export class PlayerController extends Component {
 
         const currentPosition = this._camera.node.position;
         const newPosition = new Vec3(
-            currentPosition.x - delta.x * 0.01,
-            currentPosition.y + delta.y * 0.01,
+            currentPosition.x - delta.x ,
+            currentPosition.y - delta.y ,
             currentPosition.z
         );
         this._camera.node.setPosition(newPosition);
