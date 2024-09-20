@@ -48,12 +48,12 @@ export class BuildingPlacementComponent extends Component {
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
         this.contactCount++;
-        console.log(`onBeginContact ${otherCollider.node.name}, contact count: ${this.contactCount}`);
+        console.log(`onBeginContact self: ${this.node.name}, other: ${otherCollider.node.name}, contact count: ${this.contactCount}`);
     }
 
     private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
         this.contactCount--;
-        console.log(`onEndContact ${otherCollider.node.name}, contact count: ${this.contactCount}`);
+        console.log(`onEndContact self: ${this.node.name}, other: ${otherCollider.node.name}, contact count: ${this.contactCount}`);
     }
 
     public initialize(buildData: any, buildingManager: BuildingManager): void {

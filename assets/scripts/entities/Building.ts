@@ -63,6 +63,7 @@ export class Building extends Component {
     public initializeFromSceneItem(sceneItem: SceneItem): void {
         console.log(`Building initializeFromSceneItem start`);
         this.id = sceneItem.item_id;
+        this.node.name = this.id;
         this.sceneItem = sceneItem;
         this.buildingData = BuildDataManager.instance.findBuildDataById(this.id);
         if (!this.buildingData) {
