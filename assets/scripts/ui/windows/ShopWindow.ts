@@ -232,9 +232,9 @@ export class ShopWindow extends WindowBase {
         label.string = item.description;//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
         price.string = isBuyMode ? `${item.buy_price}` : `${item.sellPrice}`;
         const inventoryItem = this.inventoryComponent?.getItem(item.id) || null;
-        if (inventoryItem && inventoryItem.quantity > 1) {
+        if (!isBuyMode && inventoryItem && inventoryItem.quantity > 1) {
             labelNum.node.active = true;
-            labelNum.string = `${inventoryItem.quantity}`;
+            labelNum.string = `x${inventoryItem.quantity}`;
         }
         else {
             labelNum.node.active = false;

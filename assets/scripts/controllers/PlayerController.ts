@@ -115,8 +115,8 @@ export class PlayerController extends Component {
         const fence = Director.instance.getScene().getComponentInChildren(Fence);
         this.dragDropComponent.registerDropZone(fence);
         
-        const canvas = director.getScene().getChildByName('Canvas');
-        this.backgroundNode = canvas?.getChildByName('bg');
+        const canvas = director.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY_CANVAS);
+        this.backgroundNode = canvas?.getChildByPath('Gameplay/BG');
         if (this.backgroundNode) {
             const uiTransform = this.backgroundNode.getComponent(UITransform);
             if (uiTransform) {
@@ -171,12 +171,19 @@ export class PlayerController extends Component {
         if (!this._camera || !this.backgroundNode) return;
 
         const currentPosition = this._camera.node.position;
-        const cameraSize = this._camera.getComponent(UITransform).contentSize;
+        const orthoHeight = this._camera.orthoHeight;
+        const aspectRatio = this._camera.camera.aspect;
+        const orthoWidth = orthoHeight * aspectRatio;
 
-        const minX = cameraSize.width / 2;
-        const maxX = this.backgroundSize.width - cameraSize.width / 2;
-        const minY = cameraSize.height / 2;
-        const maxY = this.backgroundSize.height - cameraSize.height / 2;
+        // Calculate the background's center position
+        const bgCenterX = 0;
+        const bgCenterY = 0;
+
+        // Calculate the camera's movement limits
+        const minX = bgCenterX - this.backgroundSize.width / 2 + orthoWidth;
+        const maxX = bgCenterX + this.backgroundSize.width / 2 - orthoWidth;
+        const minY = bgCenterY - this.backgroundSize.height / 2 + orthoHeight;
+        const maxY = bgCenterY + this.backgroundSize.height / 2 - orthoHeight;
 
         const newX = Math.max(minX, Math.min(maxX, currentPosition.x - delta.x));
         const newY = Math.max(minY, Math.min(maxY, currentPosition.y - delta.y));
