@@ -1,4 +1,4 @@
-import { _decorator, Component, Director, instantiate, Node, Prefab, EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString, CCInteger } from 'cc';
+import { _decorator, Component, Director, instantiate, Node, Prefab, EventTarget, EventTouch, Vec3, Camera, director, PhysicsSystem2D, Vec2, Collider2D, Layers, CCString, CCInteger, Size, UITransform } from 'cc';
 import { PlayerState } from '../entities/PlayerState';
 import { InventoryComponent, InventoryItem } from '../components/InventoryComponent';
 import { InputComponent } from '../components/InputComonent';
@@ -18,6 +18,8 @@ const { ccclass, property } = _decorator;
 @ccclass('PlayerController')
 export class PlayerController extends Component {
 
+    private backgroundNode: Node | null = null;
+    private backgroundSize: Size = new Size(0, 0);
 
     @property(CCInteger)
     public initialMoney: number = 20;
@@ -113,6 +115,14 @@ export class PlayerController extends Component {
         const fence = Director.instance.getScene().getComponentInChildren(Fence);
         this.dragDropComponent.registerDropZone(fence);
         
+        const canvas = director.getScene().getChildByName('Canvas');
+        this.backgroundNode = canvas?.getChildByName('bg');
+        if (this.backgroundNode) {
+            const uiTransform = this.backgroundNode.getComponent(UITransform);
+            if (uiTransform) {
+                this.backgroundSize = uiTransform.contentSize;
+            }
+        }
     }
 
     start() {
@@ -158,14 +168,20 @@ export class PlayerController extends Component {
     }
 
     private moveCamera(delta: Vec2): void {
-        if (!this._camera) return;
+        if (!this._camera || !this.backgroundNode) return;
 
         const currentPosition = this._camera.node.position;
-        const newPosition = new Vec3(
-            currentPosition.x - delta.x ,
-            currentPosition.y - delta.y ,
-            currentPosition.z
-        );
+        const cameraSize = this._camera.getComponent(UITransform).contentSize;
+
+        const minX = cameraSize.width / 2;
+        const maxX = this.backgroundSize.width - cameraSize.width / 2;
+        const minY = cameraSize.height / 2;
+        const maxY = this.backgroundSize.height - cameraSize.height / 2;
+
+        const newX = Math.max(minX, Math.min(maxX, currentPosition.x - delta.x));
+        const newY = Math.max(minY, Math.min(maxY, currentPosition.y - delta.y));
+
+        const newPosition = new Vec3(newX, newY, currentPosition.z);
         this._camera.node.setPosition(newPosition);
     }
 
