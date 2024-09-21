@@ -54,8 +54,8 @@ export class WindowBase extends Component {
         // Create the animation
         this.playingTween = new Tween(node)
             //.to(0.1, { scale: new Vec3(0.7, 0.7, 1) })
-            .to(0.05, { scale: new Vec3(1.05, 1.05, 1) }, { easing: 'bounceOut' })
-            .to(0.05, { scale: new Vec3(0.95, 0.95, 1) })
+            .to(0.07, { scale: new Vec3(1.03, 1.03, 1) }, { easing: 'bounceOut' })
+            .to(0.05, { scale: new Vec3(0.92, 0.92, 1) })
             .to(0.1, { scale: originalScale })
             .start();
     }
