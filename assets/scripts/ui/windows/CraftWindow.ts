@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ScrollView, instantiate, Prefab, Label, Sprite, resources, SpriteFrame, Button } from 'cc';
+import { _decorator, Component, Node, ScrollView, instantiate, Prefab, Label, Sprite, resources, SpriteFrame, Button, Vec2, UITransform, Vec3 } from 'cc';
 import { WindowBase } from '../base/WindowBase';
 import { BuildDataManager } from '../../managers/BuildDataManager';
 import { PlayerController } from '../../controllers/PlayerController';
@@ -7,6 +7,8 @@ import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { BuildingManager } from '../../managers/BuildingManager';
+import { CraftScrollViewItem } from '../components/ScrollViewItems/CraftScrollViewItem';
+
 const { ccclass, property } = _decorator;
 
 enum ViewType{
@@ -24,6 +26,7 @@ export class CraftWindow extends WindowBase {
     private placementContainer: Node | null = null;
     @property(ScrollView)
     private scrollView: ScrollView | null = null;
+    private scrollViewItemSize: Vec2 = new Vec2();
 
     @property(Node)
     private itemTemplate: Node | null = null;
@@ -48,6 +51,13 @@ export class CraftWindow extends WindowBase {
 
     public initialize(): void {
         super.initialize();
+        const uiTransform = this.scrollView.node.getComponent(UITransform);
+        if(uiTransform){
+            this.scrollView.node.on(Node.EventType.SIZE_CHANGED, () => {
+                this.onScrollViewSizeChanged();
+            });
+            this.scrollViewItemSize.set(uiTransform.width, uiTransform.height);
+        }
        
         if(this.gameController)
         {
@@ -84,6 +94,20 @@ export class CraftWindow extends WindowBase {
         }
     }
 
+    protected onScrollViewSizeChanged(): void {
+        const uiTransform = this.scrollView.node.getComponent(UITransform);
+        console.log(`scrollviewItemSize: ${this.scrollViewItemSize.x}, ${this.scrollViewItemSize.y}`);
+        console.log(` uiTransform.width: ${uiTransform.width}, uiTransform.height: ${uiTransform.height}`);
+        const scrollViewRealScaleX = uiTransform.width / this.scrollViewItemSize.x;
+        const scrollViewRealScaleY = uiTransform.height / this.scrollViewItemSize.y;
+        for (let i = 0; i < this.buildItems.length; i++) {
+            const item = this.buildItems[i].getComponent(CraftScrollViewItem);
+            if (item) {
+                item.setScale(new Vec3(scrollViewRealScaleX, scrollViewRealScaleY, 1));
+            }
+        }
+    }
+
     private onCloseButtonClicked(): void {
         WindowManager.instance.hide(SharedDefines.WINDOW_CRAFT_NAME);
     }
@@ -97,69 +121,32 @@ export class CraftWindow extends WindowBase {
         const buildDataList = BuildDataManager.instance.getAllBuildData();
         for (const buildData of buildDataList) {
             const item = instantiate(this.itemTemplate);
-            //find label by name
-            const lbName = item.getChildByName("lbName").getComponent(Label);
-            const lbCoin = item.getChildByName("lbCoin").getComponent(Label);
-            const diamondNode = item.getChildByName("diamond");
-            const lbDiamond = diamondNode.getChildByName("lbDiamond").getComponent(Label);
-            const sprite = item.getComponentInChildren(Sprite);
-            const button = item.getComponent(Button);
-
-            if (lbName) {
-                lbName.string = buildData.description;
+            const craftScrollViewItem = item.getComponent(CraftScrollViewItem);
+            if (craftScrollViewItem) {
+                craftScrollViewItem.initialize(buildData, this.onBuildItemClicked.bind(this));
+                this.content.addChild(item);
+                this.buildItems.push(item);
+            } else {
+                console.error('CraftScrollViewItem component not found on item prefab');
             }
-            if (lbCoin) {
-                lbCoin.string = buildData.cost_coin.toString();
-            }
-            diamondNode.active = buildData.cost_diamond > 0;
-            if (lbDiamond) {
-                lbDiamond.string = buildData.cost_diamond.toString();
-            }
-
-            if (sprite) {
-                const spriteFrame = await this.loadSpriteFrame(buildData.texture);
-                if (spriteFrame) {
-                    sprite.spriteFrame = spriteFrame;
-                }
-            }
-
-            if (button) {
-                button.node.on(Button.EventType.CLICK, () => this.onBuildItemClicked(buildData), this);
-            }
-
-            item.name = buildData.id;
-            this.content.addChild(item);
-            this.buildItems.push(item);
         }
 
         this.updateItemsVisibility();
-    }
-
-    private async loadSpriteFrame(iconName: string): Promise<SpriteFrame | null> {
-        return new Promise((resolve) => {
-            resources.load(`${SharedDefines.WINDOW_BUILDING_TEXTURES}${iconName}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
-                if (err) {
-                    console.error(`Failed to load sprite frame for ${iconName}:`, err);
-                    resolve(null);
-                } else {
-                    resolve(spriteFrame);
-                }
-            });
-        });
+        //set itemTemplate to inactive
+        this.itemTemplate.active = false;
     }
 
     private updateItemsVisibility(): void {
         if (!this.playerController) return;
 
         const playerLevel = this.playerController.playerState.level;
-        const buildDataList = BuildDataManager.instance.getAllBuildData();
 
         for (let i = 0; i < this.buildItems.length; i++) {
-            const item = this.buildItems[i];
-            const buildData = buildDataList[i];
-            const requiredLevel = parseInt(buildData.level_need);
+            const item = this.buildItems[i].getComponent(CraftScrollViewItem);
 
-            item.active = playerLevel >= requiredLevel;
+            if (item) {
+                item.updateVisibilityByLevel(playerLevel);
+            }
         }
     }
 
