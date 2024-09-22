@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46",
+  "uuid": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46@6c48a",
-      "displayName": "AnimalGoose_02",
+      "uuid": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c@6c48a",
+      "displayName": "AnimalDuck_02",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46",
+        "imageUuidOrDatabaseUri": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,8 +34,8 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46@f9941",
-      "displayName": "AnimalGoose_02",
+      "uuid": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c@f9941",
+      "displayName": "AnimalDuck_02",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46@6c48a",
+        "imageUuidOrDatabaseUri": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "352dc6c9-6b4a-4595-8bd9-75ffcbcb3f46@6c48a"
+    "redirect": "ed0409e0-b30a-4604-bab4-6a3f85ce8e6c@6c48a"
   }
 }
