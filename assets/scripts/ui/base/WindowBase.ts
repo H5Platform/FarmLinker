@@ -24,29 +24,11 @@ export class WindowBase extends Component {
 
     private realScale: Vec3 = new Vec3();
 
-    protected onScrollViewSizeChanged(): void {
-        const uiTransform = this.node.getComponent(UITransform);
-        if (uiTransform) {
-            this.originalContentSize.set(uiTransform.width, uiTransform.height, 0);
-        }
-        this.updateRealScale();
-    }
 
     protected onLoad(): void {
-        const widget = this.node.getComponent(Widget);
-        widget.node.on(Node.EventType.SIZE_CHANGED, () => {
-            this.onScrollViewSizeChanged();
-        });
     }
 
     protected start(): void {
-
-        // const uiTransform = this.node.getComponent(UITransform);
-        // if (uiTransform) {
-        //     this.originalContentSize.set(uiTransform.width, uiTransform.height, 0);
-        // }
-
-        // this.updateRealScale();
     }
 
     public initialize(): void {
@@ -96,15 +78,5 @@ export class WindowBase extends Component {
             .to(0.06, { scale: new Vec3(0.97, 0.97, 1) })
             .to(0.9, { scale: originalScale })
             .start();
-    }
-
-    protected updateRealScale(): void {
-
-        console.log(`updateRealScale start .. originalContentSize: ${this.originalContentSize}`);
-        const screenSize = this.originalContentSize;//view.getVisibleSize();
-        const designSize = view.getDesignResolutionSize();
-        const scaleX = screenSize.x / designSize.x;
-        const scaleY = screenSize.y / designSize.y;
-        this.realScale.set(scaleX, scaleY, 1);
     }
 }

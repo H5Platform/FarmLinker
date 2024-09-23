@@ -26,7 +26,6 @@ export class CraftWindow extends WindowBase {
     private placementContainer: Node | null = null;
     @property(ScrollView)
     private scrollView: ScrollView | null = null;
-    private scrollViewItemSize: Vec2 = new Vec2();
 
     @property(Node)
     private itemTemplate: Node | null = null;
@@ -51,13 +50,6 @@ export class CraftWindow extends WindowBase {
 
     public initialize(): void {
         super.initialize();
-        const uiTransform = this.scrollView.node.getComponent(UITransform);
-        if(uiTransform){
-            this.scrollView.node.on(Node.EventType.SIZE_CHANGED, () => {
-                this.onScrollViewSizeChanged();
-            });
-            this.scrollViewItemSize.set(uiTransform.width, uiTransform.height);
-        }
        
         if(this.gameController)
         {
@@ -91,20 +83,6 @@ export class CraftWindow extends WindowBase {
         }
         if (this.btnCancel) {
             this.btnCancel.node.on(Button.EventType.CLICK, this.onBtnCancelClicked, this);
-        }
-    }
-
-    protected onScrollViewSizeChanged(): void {
-        const uiTransform = this.scrollView.node.getComponent(UITransform);
-        console.log(`scrollviewItemSize: ${this.scrollViewItemSize.x}, ${this.scrollViewItemSize.y}`);
-        console.log(` uiTransform.width: ${uiTransform.width}, uiTransform.height: ${uiTransform.height}`);
-        const scrollViewRealScaleX = uiTransform.width / this.scrollViewItemSize.x;
-        const scrollViewRealScaleY = uiTransform.height / this.scrollViewItemSize.y;
-        for (let i = 0; i < this.buildItems.length; i++) {
-            const item = this.buildItems[i].getComponent(CraftScrollViewItem);
-            if (item) {
-                item.setScale(new Vec3(scrollViewRealScaleX, scrollViewRealScaleY, 1));
-            }
         }
     }
 
