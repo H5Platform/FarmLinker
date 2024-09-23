@@ -227,7 +227,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         return expectedStageIndex;
     }
 
-    protected async updateSprite(pngPath: string): Promise<void> {
+    public async updateSprite(pngPath: string): Promise<void> {
 
         if (this.sprite) {
             if(this.sceneItem?.state === SceneItemState.Dead){
@@ -523,7 +523,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
 
     protected onDestroy(): void {
         this.stopDiseaseStatusUpdates();
-        this.stopGrowth();
+        //this.stopGrowth();
         if(this.isPlayerOwner){
             this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
         }

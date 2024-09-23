@@ -243,8 +243,10 @@ export class Fence extends SceneEntity implements IDropZone{
         animalNode.name = inventoryItem.detailId;
         const animal = animalNode.getComponent(Animal);
         animal.initializeWithInventoryItem(inventoryItem);
+        animal.updateSprite(`${SharedDefines.WINDOW_SHOP_TEXTURES}${inventoryItem.iconName}`);
         const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
         gameplayNode.addChild(animal.node);
+
         //animalNode.setWorldPosition(worldPos);
         this.dragDropComponent.startDragging(animal, animalNode);
     }

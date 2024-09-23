@@ -25,9 +25,11 @@ export class Crop extends GrowthableEntity {
     private cropDataIndex: number = 0;
 
     public initialize(id: string): void {
+        this.baseSpritePath = SharedDefines.CROPS_TEXTURES;
         this.loadEntityData(id);
         if (this.growthStages.length > 0) {
             this.setupData(this.growthStages[0]);
+           // this.updateSprite(`${this.baseSpritePath}${this.growthStages[0].png}`);
         } else {
             console.error(`No growth stages found for crop with id: ${id}`);
         }

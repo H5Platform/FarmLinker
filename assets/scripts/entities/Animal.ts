@@ -27,6 +27,7 @@ export class Animal extends GrowthableEntity {
     private playerController: PlayerController;
 
     protected onLoad(): void {
+        
         //find game controller by class
         this.gameController = director.getScene().getComponentInChildren(GameController);
         this.playerController = this.gameController.getPlayerController();
@@ -35,9 +36,11 @@ export class Animal extends GrowthableEntity {
     }
 
     public initialize(id: string): void {
+        this.baseSpritePath = SharedDefines.ANIMALS_TEXTURES;
         this.loadEntityData(id);
         if (this.growthStages.length > 0) {
             this.setupData(this.growthStages[0]);
+           // this.updateSprite(`${this.baseSpritePath}${this.growthStages[0].png}`);
         } else {
             console.error(`No growth stages found for animal with id: ${id}`);
         }
@@ -201,7 +204,7 @@ export class Animal extends GrowthableEntity {
         return result;
     }
 
-    public async clease(): Promise<NetworkCleanseResult> {
+    public async cleanse(): Promise<NetworkCleanseResult> {
         let result: NetworkCleanseResult | null = null;
         //check friendId is valid
 

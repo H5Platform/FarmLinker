@@ -243,6 +243,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
         cropNode.name = inventoryItem.detailId;
         const crop = cropNode.getComponent(Crop);
         crop.initializeWithInventoryItem(inventoryItem);
+        crop.updateSprite(`${SharedDefines.WINDOW_SHOP_TEXTURES}${inventoryItem.iconName}`);
         const gameplayNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY);
         gameplayNode.addChild(crop.node);
         //cropNode.setWorldPosition(worldPos);
