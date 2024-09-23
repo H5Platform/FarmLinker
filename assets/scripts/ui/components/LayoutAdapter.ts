@@ -67,12 +67,13 @@ export class LayoutAdapter extends Component {
     }
 
     protected updateLayoutPaddingAndSpacing(): void {
-        this.layout.paddingLeft *= this.realScale.x;
-        this.layout.paddingRight *= this.realScale.x;
-        this.layout.paddingTop *= this.realScale.y;
-        this.layout.paddingBottom *= this.realScale.y;
-        this.layout.spacingX *= this.realScale.x;
-        this.layout.spacingY *= this.realScale.y;
+        //to floor the padding and spacing
+        this.layout.paddingLeft = Math.floor(this.layout.paddingLeft * this.realScale.x);
+        this.layout.paddingRight = Math.floor(this.layout.paddingRight * this.realScale.x);
+        this.layout.paddingTop = Math.floor(this.layout.paddingTop * this.realScale.y);
+        this.layout.paddingBottom = Math.floor(this.layout.paddingBottom * this.realScale.y);
+        this.layout.spacingX = Math.floor(this.layout.spacingX * this.realScale.x);
+        this.layout.spacingY = Math.floor(this.layout.spacingY * this.realScale.y);
         //log layout padding and spacing
         console.log(`layout padding: ${this.layout.paddingLeft}, ${this.layout.paddingRight}, ${this.layout.paddingTop}, ${this.layout.paddingBottom}`);
         console.log(`layout spacing: ${this.layout.spacingX}, ${this.layout.spacingY}`);

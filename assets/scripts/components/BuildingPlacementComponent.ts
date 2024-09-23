@@ -48,11 +48,16 @@ export class BuildingPlacementComponent extends Component {
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
         this.contactCount++;
+        SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
+        
         console.log(`onBeginContact self: ${this.node.name}, other: ${otherCollider.node.name}, contact count: ${this.contactCount}`);
     }
 
     private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
         this.contactCount--;
+        if (this.contactCount === 0) {
+            SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 0, 0, 125));
+        }
         console.log(`onEndContact self: ${this.node.name}, other: ${otherCollider.node.name}, contact count: ${this.contactCount}`);
     }
 
@@ -83,12 +88,7 @@ export class BuildingPlacementComponent extends Component {
         if (this.isPlacing) {
             const uiLocation = event.getLocation();
             this.updateBuildingPosition(new Vec3(uiLocation.x, uiLocation.y, 0));
-            if (this.canPlaceBuilding()) {
-                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
-            }
-            else {
-                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 0, 0, 125));
-            }
+
         }
     }
 
