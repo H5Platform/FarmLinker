@@ -2,7 +2,7 @@ import { _decorator, Node, Button, EditBox } from 'cc';
 import { WindowBase } from '../base/WindowBase';
 import { WindowManager } from '../WindowManager';
 import { NetworkManager } from '../../managers/NetworkManager';
-import { DashFunManager } from '../../managers/DashFunManager';
+import { DashFunManager, UserProfile } from '../../managers/DashFunManager';
 
 const { ccclass, property } = _decorator;
 
@@ -23,15 +23,16 @@ export class MainWindow extends WindowBase {
         this.setupEventListeners();
         globalThis.mainWindow = this;
         DashFunManager.instance.updateLoadingProgress(10);
-        DashFunManager.instance.eventTarget.on("getUserProfileResult", this.onGetUserProfileResult, this);
+        DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_GET_USER_PROFILE_RESULT, this.onGetUserProfileResult, this);
         console.log('MainWindow initialized');
     }
 
     public show(...args: any[]): void {
         super.show(...args);
         console.log('MainWindow shown');
-        DashFunManager.instance.updateLoadingProgress(100);
+        
         DashFunManager.instance.getUserProfile();
+        
     }
 
     public hide(): void {
@@ -47,8 +48,20 @@ export class MainWindow extends WindowBase {
         }
     }
 
-    private onGetUserProfileResult(data:any){
+    private async onGetUserProfileResult(data:any){
         console.log("onGetUserProfileResult", data);
+        DashFunManager.instance.updateLoadingProgress(100);
+        const userProfile = data as UserProfile;
+        const result = await this.gameController.login(userProfile.id, "");
+        if(result && result.success){ 
+            // Add your start game logic here
+            WindowManager.instance.show("GameWindow");
+            this.hide();
+        }
+        else{
+            console.log(result.message);
+            WindowManager.instance.show("ToastWindow",result.message);
+        }
     }
 
     private async onStartButtonClicked(): Promise<void> {

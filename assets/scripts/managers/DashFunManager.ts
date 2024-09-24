@@ -1,11 +1,26 @@
-import { _decorator,Component,EventTarget } from "cc";
+import { _decorator,Component,EventTarget, System } from "cc";
 
 const { ccclass, property } = _decorator;
 
+export class UserProfile{
+    id: string;
+    channelId: string;
+    displayName: string;
+    userName: string;
+    avatarUrl: string;
+    from: number;
+    createData: number;
+    loginTime: number;
+}
+
 export class DashFunManager extends Component{
 
+    //define getUserProfileResult event
+    public static EVENT_GET_USER_PROFILE_RESULT = "getUserProfileResult";
     //define requestPaymentResult event
-    public static EVENT_REQUEST_PAYMENT_RESULT = "EVENT_REQUEST_PAYMENT_RESULT";
+    public static EVENT_REQUEST_PAYMENT_RESULT = "requestPaymentResult";
+    //define openInvoiceResult event
+    public static EVENT_OPEN_INVOICE_RESULT = "openInvoiceResult";
 
     
 
@@ -21,7 +36,7 @@ export class DashFunManager extends Component{
     public eventTarget:EventTarget = new EventTarget();
 
     public onLoad(): void {
-        window.addEventListener("message", this.onMessage.bind(this));
+        window.parent.addEventListener("message", this.onMessage.bind(this));
     }
     
     /*
@@ -46,7 +61,11 @@ export class DashFunManager extends Component{
             }
         }
         console.log(`updateLoadingProgress ${value}`);
-        window.postMessage(msg, "*");
+        window.parent.postMessage(msg, "*");
+
+        // if (typeof window.loading === 'function') {
+        //     window.loading(value);
+        // }
     }
 
     /**
@@ -92,7 +111,7 @@ window.addEventListener("message", ({data}) => {
                 method:"getUserProfile"
             }
         }
-        window.postMessage(msg, "*");
+        window.parent.postMessage(msg, "*");
     }
 
     /*
@@ -137,7 +156,7 @@ parent.postMessage(msg, "*")
                 }
             }
         }
-        window.postMessage(msg, "*");
+        window.parent.postMessage(msg, "*");
     }
 
     /*
@@ -189,7 +208,7 @@ window.addEventListener("message", ({data})=>{
                 }
             }
         }
-        window.postMessage(msg, "*");
+        window.parent.postMessage(msg, "*");
     }
    
 
@@ -198,14 +217,14 @@ window.addEventListener("message", ({data})=>{
         const dashfun = data.dashfun;
         if(!dashfun) return;
 
-        if(dashfun.method == "getUserProfileResult"){
-            this.eventTarget.emit("getUserProfileResult", dashfun.result.data);
+        if(dashfun.method == DashFunManager.EVENT_GET_USER_PROFILE_RESULT){
+            this.eventTarget.emit(DashFunManager.EVENT_GET_USER_PROFILE_RESULT, dashfun.result.data);
         }
-        if(dashfun.method == "requestPaymentResult"){
+        if(dashfun.method == DashFunManager.EVENT_REQUEST_PAYMENT_RESULT){
             this.eventTarget.emit(DashFunManager.EVENT_REQUEST_PAYMENT_RESULT, dashfun.result.data);
         }
-        if(dashfun.method == "openInvoiceResult"){
-            this.eventTarget.emit("openInvoiceResult", dashfun.result.data);
+        if(dashfun.method == DashFunManager.EVENT_OPEN_INVOICE_RESULT){
+            this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, dashfun.result.data);
         }
     }
 }
