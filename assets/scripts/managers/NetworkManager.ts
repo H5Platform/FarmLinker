@@ -18,6 +18,7 @@ export class NetworkManager extends Component {
 
     public static readonly API_GET_LATEST_COMMAND_DURATION: string = "/game/getLatestCommandDuration";
     public static readonly API_GET_USER_SCENE_ITEMS: string = "/game/getUserSceneItems";
+    public static readonly API_UPDATE_AVATAR_URL: string = "/user/updateAvatarUrl";
     public static readonly API_PLANT: string = "/game/plant";
     public static readonly API_ADD_INVENTORY_ITEM: string = "/inventory/add";
     public static readonly API_REMOVE_INVENTORY_ITEM: string = "/inventory/remove";
@@ -195,6 +196,24 @@ export class NetworkManager extends Component {
             
         } catch (error) {
             this.handleError(error);
+        }
+    }
+
+    //implement requestUpdateAvatarUrl
+    public async requestUpdateAvatarUrl(avatarUrl: string): Promise<boolean> {
+        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_UPDATE_AVATAR_URL}`;
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+        const data = { userid: this.userId, avatarUrl };
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response);
+            return result.success;
+        } catch (error) {
+            this.handleError(error);
+            return false;
         }
     }
 

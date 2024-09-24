@@ -14,6 +14,7 @@ export class PlayerState {
     private _gold: number;
     private _diamond: number;
     private _prosperity: number;
+    private _headUrl: string = '';
 
     // Getters
     public get id(): string { return this._id; }
@@ -26,6 +27,8 @@ export class PlayerState {
     public get gold(): number { return this._gold; }
     public get diamond(): number { return this._diamond; }
     public get prosperity(): number { return this._prosperity; }
+    public get headUrl(): string { return this._headUrl; }
+    public set headUrl(value: string) { this._headUrl = value; }
     public eventTarget: EventTarget;
 
     

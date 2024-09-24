@@ -383,16 +383,17 @@ export class GameWindow extends WindowBase {
             // }
 
             // Set friend avatar (assuming there's an avatar URL in the friend data)
-            // const avatarSprite = buttonNode.getComponent(Sprite);
-            // if (avatarSprite && friend.avatarUrl) {
-            //     // Load and set avatar sprite frame
-            //     ResourceManager.instance.loadAsset<SpriteFrame>(friend.avatarUrl, SpriteFrame).then(spriteFrame => {
-            //         if (spriteFrame) {
-            //             avatarSprite.spriteFrame = spriteFrame;
-            //         }
-            //     });
-            // }
-
+            if (friend.avatarUrl) {
+                const avatarSprite = buttonNode.getComponent(Sprite);
+                if (avatarSprite && friend.avatarUrl) {
+                    // Load and set avatar sprite frame
+                    ResourceManager.instance.loadAsset<SpriteFrame>(friend.avatarUrl, SpriteFrame).then(spriteFrame => {
+                        if (spriteFrame) {
+                            avatarSprite.spriteFrame = spriteFrame;
+                        }
+                    });
+                }
+            }
             // Add click event to visit friend
             const button = buttonNode.getComponent(Button);
             if (button) {

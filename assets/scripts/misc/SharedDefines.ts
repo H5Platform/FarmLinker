@@ -273,6 +273,7 @@ export class NetworkRecommendFriendsResultData{
     id: string;
     nickname: string;
     level: number;
+    avatarUrl: string;
 }
 
 export class SceneItem{

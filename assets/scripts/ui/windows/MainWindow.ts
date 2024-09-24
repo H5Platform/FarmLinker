@@ -54,6 +54,10 @@ export class MainWindow extends WindowBase {
         const userProfile = data as UserProfile;
         const result = await this.gameController.login(userProfile.id, "");
         if(result && result.success){ 
+            if(userProfile.avatarUrl && this.gameController.getPlayerController().playerState.headUrl != userProfile.avatarUrl){
+                console.log(`update avatar url: ${userProfile.avatarUrl}`);
+                await NetworkManager.instance.requestUpdateAvatarUrl(userProfile.avatarUrl);
+            }
             // Add your start game logic here
             WindowManager.instance.show("GameWindow");
             this.hide();
