@@ -19,6 +19,14 @@ export class LayoutAdapter extends Component {
         return this._layout;
     }
 
+    //define padding and spacing
+    private paddingLeft: number = 0;
+    private paddingRight: number = 0;
+    private paddingTop: number = 0;
+    private paddingBottom: number = 0;
+    private spacingX: number = 0;
+    private spacingY: number = 0;
+
     private originalContentSize: Vec3 = new Vec3();
     private currentContentSize: Vec3 = new Vec3();
     private realScale: Vec3 = new Vec3();
@@ -29,6 +37,15 @@ export class LayoutAdapter extends Component {
             this.originalContentSize.set(uiTransform.width, uiTransform.height, 0);
             this.currentContentSize.set(uiTransform.width, uiTransform.height, 0);
         }
+
+        this.paddingLeft = this.layout.paddingLeft;
+        this.paddingRight = this.layout.paddingRight;
+        this.paddingTop = this.layout.paddingTop;
+        this.paddingBottom = this.layout.paddingBottom;
+        this.spacingX = this.layout.spacingX;
+        this.spacingY = this.layout.spacingY;
+
+        
         this.updateRealScale();
 
         const widget = this.node.getComponent(Widget);
@@ -52,11 +69,11 @@ export class LayoutAdapter extends Component {
     }
 
     protected updateRealScale(): void {
-        console.log(`updateRealScale start .. originalContentSize: ${this.currentContentSize}`);
+        console.log(`updateRealScale start .. name = ${this.node.name}, originalContentSize: ${this.currentContentSize}`);
         const screenSize = this.currentContentSize;
         const designSize = this.originalContentSize;
-        const scaleX = this.adapterWidth ? screenSize.x / designSize.x : 1;
-        const scaleY = this.adapterHeight ? screenSize.y / designSize.y : 1;
+        const scaleX = this.adapterWidth ? Math.floor((screenSize.x / designSize.x) * 100) / 100 : 1;
+        const scaleY = this.adapterHeight ? Math.floor((screenSize.y / designSize.y) * 100) / 100 : 1;
         this.realScale.set(scaleX, scaleY, 1);
         //log realScale
         console.log(`realScale: ${this.realScale}`);
@@ -68,12 +85,12 @@ export class LayoutAdapter extends Component {
 
     protected updateLayoutPaddingAndSpacing(): void {
         //to floor the padding and spacing
-        this.layout.paddingLeft = Math.floor(this.layout.paddingLeft * this.realScale.x);
-        this.layout.paddingRight = Math.floor(this.layout.paddingRight * this.realScale.x);
-        this.layout.paddingTop = Math.floor(this.layout.paddingTop * this.realScale.y);
-        this.layout.paddingBottom = Math.floor(this.layout.paddingBottom * this.realScale.y);
-        this.layout.spacingX = Math.floor(this.layout.spacingX * this.realScale.x);
-        this.layout.spacingY = Math.floor(this.layout.spacingY * this.realScale.y);
+        this.layout.paddingLeft = Math.floor(this.paddingLeft * this.realScale.x);
+        this.layout.paddingRight = Math.floor(this.paddingRight * this.realScale.x);
+        this.layout.paddingTop = Math.floor(this.paddingTop * this.realScale.y);
+        this.layout.paddingBottom = Math.floor(this.paddingBottom * this.realScale.y);
+        this.layout.spacingX = Math.floor(this.spacingX * this.realScale.x);
+        this.layout.spacingY = Math.floor(this.spacingY * this.realScale.y);
         //log layout padding and spacing
         console.log(`layout padding: ${this.layout.paddingLeft}, ${this.layout.paddingRight}, ${this.layout.paddingTop}, ${this.layout.paddingBottom}`);
         console.log(`layout spacing: ${this.layout.spacingX}, ${this.layout.spacingY}`);

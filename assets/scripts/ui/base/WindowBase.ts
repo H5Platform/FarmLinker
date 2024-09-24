@@ -77,6 +77,14 @@ export class WindowBase extends Component {
             .to(0.03, { scale: new Vec3(1.03, 1.03, 1) }, { easing: 'bounceOut' })
             .to(0.06, { scale: new Vec3(0.97, 0.97, 1) })
             .to(0.9, { scale: originalScale })
+            .call(() => {
+                this.onJellyAnimationEnd();
+            })
             .start();
+    }
+
+    protected onJellyAnimationEnd(): void {
+        this.playingTween = null;
+        this.animationNode.setScale(1, 1, 1);
     }
 }
