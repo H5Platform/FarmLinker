@@ -276,6 +276,17 @@ export class NetworkRecommendFriendsResultData{
     avatarUrl: string;
 }
 
+export class NetworkQueryPaymentResult{
+    success: boolean;
+    message: string;
+    data: NetworkQueryPaymentResultData;
+}
+
+export class NetworkQueryPaymentResultData{
+    type: string;
+    amount: number;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;

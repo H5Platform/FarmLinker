@@ -2,7 +2,7 @@
 
 import { _decorator, Component, EventTarget, sys } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkLoginResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { BUILD } from 'cc/env';
 const { ccclass, property } = _decorator;
 
@@ -39,6 +39,7 @@ export class NetworkManager extends Component {
     public static readonly API_VISIT: string = '/game/visit';
     public static readonly API_ADD_BUILDING: string = '/scene/addBuilding';
     public static readonly API_RECOMMEND_FRIENDS: string = '/friend/recommend';
+    public static readonly API_QUERY_PAYMENT_RESULT: string = '/payment/queryPaymentResult';
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -59,7 +60,7 @@ export class NetworkManager extends Component {
     private get baseUrl(): string {
         // Check if the game is running in preview mode (local development)
         if (BUILD) {
-            return this.serverBaseUrl;
+            return "https://farmlinker-tma-test.dashfun.games";//this.serverBaseUrl;
         } else {
             return this.localBaseUrl;
         }
@@ -75,6 +76,8 @@ export class NetworkManager extends Component {
     private loginPort: number = 3000; // 登录服务器端口
     @property
     private gameServerPort: number = 3001; // 游戏服务器端口
+    @property
+    private paymentPort: number = 3003; // 支付服务器端口
 
     @property
     private maxLoginRetries: number = 3;
@@ -120,30 +123,16 @@ export class NetworkManager extends Component {
         NetworkManager._instance = this;
     }
 
-    public async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-        const url = this.buildUrl(endpoint);
-        try {
-            const response = await HttpHelper.get(url, params);
-            return JSON.parse(response) as T;
-        } catch (error) {
-            this.handleError(error);
-            throw error;
+    private buildApiUrl(api: string, port?: number): string {
+        let url = this.baseUrl;
+        if (!BUILD && port) {
+            url += `:${port}`;
         }
-    }
-
-    public async post<T>(endpoint: string, data?: any): Promise<T> {
-        const url = this.buildUrl(endpoint);
-        try {
-            const response = await HttpHelper.post(url, data, this.defaultHeaders);
-            return JSON.parse(response) as T;
-        } catch (error) {
-            this.handleError(error);
-            throw error;
-        }
+        return `${url}${api}`;
     }
 
     public async login(userId: string,password:string): Promise<NetworkLoginResult> {
-        const loginUrl = `${this.baseUrl}:${this.loginPort}${NetworkManager.API_LOGIN}`;
+        const loginUrl = this.buildApiUrl(NetworkManager.API_LOGIN, this.loginPort);
         const data = { userid: userId,password:password };
 
         for (let attempt = 1; attempt <= this.maxLoginRetries; attempt++) {
@@ -181,7 +170,7 @@ export class NetworkManager extends Component {
     }
 
     public async requestSceneItemsByUserId(userId: string): Promise<void> {
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_GET_USER_SCENE_ITEMS}`;
+        const url = this.buildApiUrl(NetworkManager.API_GET_USER_SCENE_ITEMS, this.gameServerPort);
         console.log(url);
         const headers = {
             'Authorization': this.token,
@@ -201,7 +190,7 @@ export class NetworkManager extends Component {
 
     //implement requestUpdateAvatarUrl
     public async requestUpdateAvatarUrl(avatarUrl: string): Promise<boolean> {
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_UPDATE_AVATAR_URL}`;
+        const url = this.buildApiUrl(NetworkManager.API_UPDATE_AVATAR_URL, this.gameServerPort);
         const headers = {
             'Authorization': this.token,
             ...this.defaultHeaders
@@ -221,7 +210,7 @@ export class NetworkManager extends Component {
         if(this.simulateNetwork){
             return {success:true,duration:0};
         }
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_GET_LATEST_COMMAND_DURATION}`;
+        const url = this.buildApiUrl(NetworkManager.API_GET_LATEST_COMMAND_DURATION, this.gameServerPort);
         const headers = {
             'Authorization': this.token,
             ...this.defaultHeaders
@@ -244,7 +233,7 @@ export class NetworkManager extends Component {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_PLANT}`;
+        const url = this.buildApiUrl(NetworkManager.API_PLANT, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -278,7 +267,7 @@ export class NetworkManager extends Component {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_HARVEST}`;
+        const url = this.buildApiUrl(NetworkManager.API_HARVEST, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -308,7 +297,7 @@ export class NetworkManager extends Component {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_ADD_INVENTORY_ITEM}`;
+        const url = this.buildApiUrl(NetworkManager.API_ADD_INVENTORY_ITEM, this.gameServerPort);
         
         const headers = {
             'Authorization': token,
@@ -337,7 +326,7 @@ export class NetworkManager extends Component {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_REMOVE_INVENTORY_ITEM}`;
+        const url = this.buildApiUrl(NetworkManager.API_REMOVE_INVENTORY_ITEM, this.gameServerPort);
         
         const headers = {
             'Authorization': token,
@@ -361,12 +350,18 @@ export class NetworkManager extends Component {
         }
     }
 
+    /**
+     * 商店购买物品
+     * @param itemId 
+     * @param num 
+     * @returns 
+     */
     public async buyItem(itemId: string,num:number): Promise<boolean> {
         if (this.simulateNetwork) {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_BUY_ITEM}`;
+        const url = this.buildApiUrl(NetworkManager.API_BUY_ITEM, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -395,7 +390,7 @@ export class NetworkManager extends Component {
             return true;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_SELL_ITEM}`;
+        const url = this.buildApiUrl(NetworkManager.API_SELL_ITEM, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -424,7 +419,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CARE}`;
+        const url = this.buildApiUrl(NetworkManager.API_CARE, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -452,7 +447,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CARE_FRIEND}`;
+        const url = this.buildApiUrl(NetworkManager.API_CARE_FRIEND, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -481,7 +476,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_TREAT}`;
+        const url = this.buildApiUrl(NetworkManager.API_TREAT, this.gameServerPort);
         
         const headers = {
             'Authorization': this.token,
@@ -509,7 +504,7 @@ export class NetworkManager extends Component {
             return null;
         }
     
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_TREAT_FRIEND}`;
+        const url = this.buildApiUrl(NetworkManager.API_TREAT_FRIEND, this.gameServerPort);
     
         const headers = {
             'Authorization': this.token,
@@ -539,7 +534,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CLEANSE}`;
+        const url = this.buildApiUrl(NetworkManager.API_CLEANSE, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -568,7 +563,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_CLEANSE_FRIEND}`;
+        const url = this.buildApiUrl(NetworkManager.API_CLEANSE_FRIEND, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -597,7 +592,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_UPDATE_DISEASE_STATUS}`;
+        const url = this.buildApiUrl(NetworkManager.API_UPDATE_DISEASE_STATUS, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -626,7 +621,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_ADD_BUILDING}`;
+        const url = this.buildApiUrl(NetworkManager.API_ADD_BUILDING, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -656,7 +651,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_QUERY_SYNTHE_LIST}`;
+        const url = this.buildApiUrl(NetworkManager.API_QUERY_SYNTHE_LIST, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -683,7 +678,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_START_SYNTHE}`;
+        const url = this.buildApiUrl(NetworkManager.API_START_SYNTHE, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -711,7 +706,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_SYNTHE_END}`;
+        const url = this.buildApiUrl(NetworkManager.API_SYNTHE_END, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -739,7 +734,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_VISIT}`;
+        const url = this.buildApiUrl(NetworkManager.API_VISIT, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -768,7 +763,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = `${this.baseUrl}:${this.gameServerPort}${NetworkManager.API_RECOMMEND_FRIENDS}`;
+        const url = this.buildApiUrl(NetworkManager.API_RECOMMEND_FRIENDS, this.gameServerPort);
 
         const headers = {
             'Authorization': this.token,
@@ -790,8 +785,33 @@ export class NetworkManager extends Component {
         }
     }
 
-    private buildUrl(endpoint: string): string {
-        return `${this.baseUrl}${endpoint}`;
+    //implement queryPaymentResult
+    public async queryPaymentResult(gameId:string,paymentId:string): Promise<NetworkQueryPaymentResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+        
+        const url = this.buildApiUrl(NetworkManager.API_QUERY_PAYMENT_RESULT, this.paymentPort);
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            user_id: this.userId,
+            game_id: gameId,
+            payment_id: paymentId
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkQueryPaymentResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+        
     }
 
     private handleError(error: any): void {

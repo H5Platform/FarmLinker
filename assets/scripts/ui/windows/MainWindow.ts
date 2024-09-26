@@ -58,6 +58,7 @@ export class MainWindow extends WindowBase {
                 console.log(`update avatar url: ${userProfile.avatarUrl}`);
                 await NetworkManager.instance.requestUpdateAvatarUrl(userProfile.avatarUrl);
             }
+            DashFunManager.instance.requestPayment("200钻石", "购买200钻石", "200钻石", 0.1);
             // Add your start game logic here
             WindowManager.instance.show("GameWindow");
             this.hide();

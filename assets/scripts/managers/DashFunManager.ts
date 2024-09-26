@@ -1,4 +1,5 @@
 import { _decorator,Component,EventTarget, System } from "cc";
+import { NetworkManager } from "./NetworkManager";
 
 const { ccclass, property } = _decorator;
 
@@ -11,6 +12,11 @@ export class UserProfile{
     from: number;
     createData: number;
     loginTime: number;
+}
+
+export enum PayItemType{
+    Coin = 0,
+    Diamond,
 }
 
 export class DashFunManager extends Component{
@@ -33,10 +39,12 @@ export class DashFunManager extends Component{
         return this._instance;
     }
 
+    private _gameId:string = "ForTest";
+
     public eventTarget:EventTarget = new EventTarget();
 
     public onLoad(): void {
-        window.parent.addEventListener("message", this.onMessage.bind(this));
+        window.addEventListener("message", this.onMessage.bind(this));
     }
     
     /*
@@ -144,14 +152,15 @@ const msg = {
 parent.postMessage(msg, "*")
     */
 
-    public requestPayment(title:string, desc:string, info:string, price:number){
+    public requestPayment(title:string, desc:string, type:PayItemType, price:number){
+        console.log(`requestPayment title: ${title} , desc: ${desc} , type: ${type} , price: ${price}`);
         const msg = {
             dashfun:{
                 method: "requestPayment",
                 payload:{
                     title:title,
                     desc:desc,
-                    info:info,
+                    info:type.toString(),
                     price:price,
                 }
             }
@@ -199,6 +208,7 @@ window.addEventListener("message", ({data})=>{
 })
     */
     public openInvoice(invoiceLink:string, paymentId:string){
+        console.log(`openInvoice ${invoiceLink} , paymentId: ${paymentId}`);
         const msg = {
             dashfun:{
                 method: "openInvoice",
@@ -221,9 +231,15 @@ window.addEventListener("message", ({data})=>{
             this.eventTarget.emit(DashFunManager.EVENT_GET_USER_PROFILE_RESULT, dashfun.result.data);
         }
         if(dashfun.method == DashFunManager.EVENT_REQUEST_PAYMENT_RESULT){
-            this.eventTarget.emit(DashFunManager.EVENT_REQUEST_PAYMENT_RESULT, dashfun.result.data);
+            this.openInvoice(dashfun.result.data.invoiceLink, dashfun.result.data.paymentId);
+            //this.eventTarget.emit(DashFunManager.EVENT_REQUEST_PAYMENT_RESULT, dashfun.result.data);
         }
         if(dashfun.method == DashFunManager.EVENT_OPEN_INVOICE_RESULT){
+            const {paymentId, status} = dashfun.result.data;
+            console.log(`openInvoiceResult paymentId: ${paymentId} , status: ${status}`);
+            if(status == "paid"){
+                NetworkManager.instance.queryPaymentResult("ForTest", paymentId);
+            }
             this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, dashfun.result.data);
         }
     }

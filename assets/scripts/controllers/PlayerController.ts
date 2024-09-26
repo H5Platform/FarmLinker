@@ -337,9 +337,9 @@ export class PlayerController extends Component {
 
         // 清除触摸事件处理
         if (this._inputComponent) {
-            this._inputComponent.onTouchStart = null;
-            this._inputComponent.onTouchMove = null;
-            this._inputComponent.onTouchEnd = null;
+            this._inputComponent.onTouchStart = this.handleTouchStart.bind(this);
+            this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
+            this._inputComponent.onTouchEnd = this.handleTouchEnd.bind(this);
             this._inputComponent.onTouchCancel = null;
         }
         this.interactionMode = InteractionMode.CameraDrag;
