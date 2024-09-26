@@ -14,10 +14,13 @@ import { PlayerController } from '../controllers/PlayerController';
 import { UIEffectHelper } from '../helpers/UIEffectHelper';
 import { GameWindow } from '../ui/windows/GameWindow';
 import { CoinType } from '../effects/CoinCollectionEffectComponent';
+import { GameController } from '../controllers/GameController';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
 export class Fence extends SceneEntity implements IDropZone{
+    @property(GameController)
+    public gameController: GameController | null = null;
     @property
     public capacity: number = 0;
 
@@ -267,7 +270,7 @@ export class Fence extends SceneEntity implements IDropZone{
 
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
-            const worldPos = animal.node.getWorldPosition();
+            let worldPos = animal.node.getWorldPosition();
             //this.node.addChild(animal.node);
             
 
@@ -285,11 +288,13 @@ export class Fence extends SceneEntity implements IDropZone{
                 }
             });
 
+            //convert world pos to design pos
+            const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
             NetworkManager.instance.plant(
                 animal.id,
                 SceneItemType.Animal,
-                worldPos.x,
-                worldPos.y,
+                designPos.x,
+                designPos.y,
                 this.node.name,
             );
 

@@ -320,12 +320,15 @@ export class PlotTile extends SceneEntity implements IDropZone {
                 this.currentDraggable = null;
             });
             const worldPos = this.node.getWorldPosition();
+            const worldScale = this.node.getWorldScale();
+            //convert world pos to design pos
+            const designPos = new Vec2(worldPos.x / worldScale.x, worldPos.y / worldScale.y);
             this.currentDraggable = draggable;
             NetworkManager.instance.plant(
                 crop.id,
                 SceneItemType.Crop,
-                worldPos.x,
-                worldPos.y,
+                designPos.x,
+                designPos.y,
                 this.node.name
             );
             
@@ -402,7 +405,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
             case CommandType.Cleanse:
                 result = await NetworkManager.instance.cleanse(sceneItem.id);
                 if (result && result.success) {
-                    this.occupiedCrop.setImmunityDuration(result.data.cleanse_count);
+                    this.occupiedCrop.setImmunityDuration(result.data.cleanse_count,new Date());
                 }
                 break;
         }

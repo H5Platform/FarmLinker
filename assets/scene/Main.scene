@@ -1342,6 +1342,7 @@
     "serverBaseUrl": "https://farmlinker-tma-test.dashfun.games",
     "loginPort": 3000,
     "gameServerPort": 3001,
+    "paymentPort": 3003,
     "maxLoginRetries": 3,
     "defaultHeadersJson": "{}",
     "simulateNetwork": false,
@@ -1357,6 +1358,9 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "gameplayCanvas": {
+      "__id__": 49
+    },
     "playerControllerPrefab": {
       "__uuid__": "6e6d57bc-47c1-49b4-b8a3-a9c7e546a3e4",
       "__expectedType__": "cc.Prefab"

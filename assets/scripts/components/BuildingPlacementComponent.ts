@@ -7,6 +7,7 @@ import { ResourceManager } from '../managers/ResourceManager';
 import { Building } from '../entities/Building';
 import { NetworkManager } from '../managers/NetworkManager';
 import { SpriteHelper } from '../helpers/SpriteHelper';
+import { GameController } from '../controllers/GameController';
 const { ccclass, property } = _decorator;
 
 @ccclass('BuildingPlacementComponent')
@@ -138,8 +139,11 @@ export class BuildingPlacementComponent extends Component {
             return;
         }
 
-
-        const result = await NetworkManager.instance.addBuilding(this.buildData.id, this.node.getWorldPosition().x, this.node.getWorldPosition().y, buildingContainer.name);
+        //get game controller
+        const gameController = Director.instance.getScene().getComponentInChildren(GameController);
+        //convert world pos to design pos   
+        const designPos = new Vec2(this.node.getWorldPosition().x / gameController.ScreenScale.x, this.node.getWorldPosition().y / gameController.ScreenScale.y);
+        const result = await NetworkManager.instance.addBuilding(this.buildData.id, designPos.x, designPos.y, buildingContainer.name);
         console.log("add building result", result);
         if (result.success) {
 

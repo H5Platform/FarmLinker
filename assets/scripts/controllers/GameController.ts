@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, BoxCollider2D, UITransform } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -18,10 +18,14 @@ import { PlayerState } from '../entities/PlayerState';
 import { GrowthableEntity } from '../entities/GrowthableEntity';
 import { SyntheDataManager } from '../managers/SyntheDataManager';
 import { GradeDataManager } from '../managers/GradeDataManager';
+import { UIAdaptComponent } from '../ui/UIAdaptComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component {
+
+    @property(Canvas)
+    private gameplayCanvas: Canvas| null = null;
 
     @property(Prefab)
     private playerControllerPrefab: Prefab| null = null;
@@ -32,7 +36,6 @@ export class GameController extends Component {
     private friendGameplayContainer: Node| null = null;
     @property(Node)
     private buildingContainer: Node| null = null;
-
     private playerFence: Fence| null = null;
     private friendFence: Fence| null = null;
 
@@ -47,6 +50,11 @@ export class GameController extends Component {
     }
     private friendPlotTiles: PlotTile[] = [];
     private playerController: PlayerController| null = null;
+    //getter for screenScale
+    public get ScreenScale(): Vec2 {
+        return this.screenScale;
+    }
+    private screenScale:Vec2 = new Vec2(1,1);
 
     public eventTarget: EventTarget = new EventTarget();
 
@@ -54,6 +62,8 @@ export class GameController extends Component {
         
         this.setGameViewVisibility(false);
         this.setFriendGameViewVisibility(false);
+
+
     }
 
     async start() {
@@ -62,6 +72,14 @@ export class GameController extends Component {
         this.initializePlayerController();
         this.setupEventListeners();
        // this.login();
+
+        //calculate screen scale
+        const screenSize = this.gameplayCanvas.node.getComponent(UITransform).contentSize;
+        console.log(`screenSize:${screenSize}`);
+        const designSize = view.getDesignResolutionSize();
+        this.screenScale.x = screenSize.width / designSize.width;
+        this.screenScale.y = screenSize.height / designSize.height;
+        console.log(`screenScale:${this.screenScale}`);
     }
 
     update(deltaTime: number) {
@@ -349,7 +367,9 @@ export class GameController extends Component {
 
             if (node && component) {
                 //this.setupSceneItem(node, component, item);
-                node.setWorldPosition(new Vec3(item.x, item.y, 0));
+                //convert world pos to design pos
+                const worldPos = new Vec2(item.x * this.screenScale.x, item.y * this.screenScale.y);
+                node.setWorldPosition(new Vec3(worldPos.x, worldPos.y, 0));
             }
         }
     }
