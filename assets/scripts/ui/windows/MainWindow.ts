@@ -2,7 +2,7 @@ import { _decorator, Node, Button, EditBox } from 'cc';
 import { WindowBase } from '../base/WindowBase';
 import { WindowManager } from '../WindowManager';
 import { NetworkManager } from '../../managers/NetworkManager';
-import { DashFunManager, UserProfile } from '../../managers/DashFunManager';
+import { DashFunManager, PayItemType, UserProfile } from '../../managers/DashFunManager';
 
 const { ccclass, property } = _decorator;
 
@@ -30,7 +30,6 @@ export class MainWindow extends WindowBase {
     public show(...args: any[]): void {
         super.show(...args);
         console.log('MainWindow shown');
-        
         DashFunManager.instance.getUserProfile();
         
     }
@@ -58,7 +57,7 @@ export class MainWindow extends WindowBase {
                 console.log(`update avatar url: ${userProfile.avatarUrl}`);
                 await NetworkManager.instance.requestUpdateAvatarUrl(userProfile.avatarUrl);
             }
-            DashFunManager.instance.requestPayment("200钻石", "购买200钻石", "200钻石", 0.1);
+            DashFunManager.instance.requestPayment( "200 diamonds", "get 200 diamonds",PayItemType.Diamond, 10);
             // Add your start game logic here
             WindowManager.instance.show("GameWindow");
             this.hide();

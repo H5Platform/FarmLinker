@@ -43,8 +43,15 @@ export class DashFunManager extends Component{
 
     public eventTarget:EventTarget = new EventTarget();
 
-    public onLoad(): void {
+    //define constructor
+    public constructor(){
+        super();
+        console.log("DashFunManager constructor");
         window.addEventListener("message", this.onMessage.bind(this));
+    }
+
+    protected start(): void {
+        
     }
     
     /*
@@ -120,6 +127,7 @@ window.addEventListener("message", ({data}) => {
             }
         }
         window.parent.postMessage(msg, "*");
+        
     }
 
     /*
@@ -223,6 +231,7 @@ window.addEventListener("message", ({data})=>{
    
 
     protected onMessage(event:MessageEvent){
+        console.log("onMessage start ...");
         const data = event.data;
         const dashfun = data.dashfun;
         if(!dashfun) return;
