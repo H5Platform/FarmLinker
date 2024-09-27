@@ -1,8 +1,19 @@
-import { _decorator, Component, Node,ResolutionPolicy, screen, view } from 'cc';
+import { _decorator, Component, Node,ResolutionPolicy, screen, view, EventTarget } from 'cc';
+import { SharedDefines } from '../misc/SharedDefines';
 const { ccclass, property } = _decorator;
+
+export enum Orientation {
+    Portrait,
+    Landscape,
+}
 
 @ccclass('UIAdaptComponent')
 export class UIAdaptComponent extends Component {
+
+    private orientation: Orientation = Orientation.Portrait;
+
+    public eventTarget: EventTarget = new EventTarget();
+
     start() {
         //监听窗口大小变化时的回调，每次窗口变化都要自动适配
         screen.on('window-resize', (width: number, height: number) => this.updateScreenSize(),this);
@@ -12,6 +23,16 @@ export class UIAdaptComponent extends Component {
 
     update(deltaTime: number) {
         
+    }
+
+    private updateOrientation(): void {
+        const screenSize = screen.windowSize;
+        const newIsLandscape = screenSize.width > screenSize.height;
+    
+        if (newIsLandscape && this.orientation !== Orientation.Landscape) {
+            this.orientation = newIsLandscape ? Orientation.Landscape : Orientation.Portrait;
+            this.eventTarget.emit(SharedDefines.EVENT_ORIENTATION_CHANGED, this.orientation);
+        }
     }
 
     protected updateScreenSize(): void {

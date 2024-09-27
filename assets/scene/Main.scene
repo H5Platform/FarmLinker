@@ -3254,6 +3254,7 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "gameController": null,
     "capacity": 10,
     "_id": "91RZf6PIxCt50ES+qQs/YB"
   },

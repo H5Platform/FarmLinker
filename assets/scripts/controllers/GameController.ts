@@ -18,7 +18,6 @@ import { PlayerState } from '../entities/PlayerState';
 import { GrowthableEntity } from '../entities/GrowthableEntity';
 import { SyntheDataManager } from '../managers/SyntheDataManager';
 import { GradeDataManager } from '../managers/GradeDataManager';
-import { UIAdaptComponent } from '../ui/UIAdaptComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')

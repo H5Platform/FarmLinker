@@ -364,6 +364,8 @@ export class SharedDefines {
     public static readonly COOLDOWN_KEY_TREAT: string = 'treat';
     public static readonly COOLDOWN_KEY_CLEANSE: string = 'cleanse';
 
+    public static readonly EVENT_ORIENTATION_CHANGED: string = 'orientation-changed';
+
     public static readonly EVENT_TOUCH_START: string = 'touch-start';
     public static readonly EVENT_TOUCH_MOVE: string = 'touch-move';
     public static readonly EVENT_TOUCH_END: string = 'touch-end';

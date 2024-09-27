@@ -1,6 +1,6 @@
 // BuildingPlacementComponent.ts
 
-import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform, Rect, Sprite, SpriteFrame, Color, BoxCollider2D, Intersection2D, Graphics, Collider2D, Contact2DType, IPhysics2DContact, RigidBody2D } from 'cc';
+import { _decorator, Component, Node, Vec3, EventTouch, Camera, geometry, Director, Vec2, Layers, PhysicsSystem2D, UITransform, Rect, Sprite, SpriteFrame, Color, BoxCollider2D, Intersection2D, Graphics, Collider2D, Contact2DType, IPhysics2DContact, RigidBody2D, Size } from 'cc';
 import { BuildingManager } from '../managers/BuildingManager';
 import { NetworkAddBuildingResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { ResourceManager } from '../managers/ResourceManager';
@@ -112,7 +112,9 @@ export class BuildingPlacementComponent extends Component {
             //update collider box size
             const collider = this.node.getComponent(BoxCollider2D);
             if (collider) {
-                collider.size = uiTransform.contentSize;
+                
+                const size = uiTransform.contentSize;
+                collider.size = new Size(size.width * 0.7, size.height * 0.7);
             }
         });
 

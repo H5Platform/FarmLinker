@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, UITransform, BoxCollider2D } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, UITransform, BoxCollider2D, Size } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
 import { BuildingType, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { PlayerState } from '../entities/PlayerState';
@@ -104,7 +104,8 @@ export class Building extends Component {
         const uiTransform = this.node.getComponent(UITransform);
         const collider = this.node.getComponent(BoxCollider2D);
         if (collider) {
-            collider.size = uiTransform.contentSize;
+            const size = uiTransform.contentSize;
+            collider.size = new Size(size.width * 0.7, size.height * 0.7);
         }
     }
 
