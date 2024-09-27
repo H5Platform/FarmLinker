@@ -5,8 +5,8 @@
 library/
 temp/
 local/
-build/
-!build/web-mobile
+/build/*
+!/build/web-mobile
 profiles/
 native
 #//////////////////////////
