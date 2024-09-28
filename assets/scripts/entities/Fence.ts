@@ -19,7 +19,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
 export class Fence extends SceneEntity implements IDropZone{
-    @property(GameController)
     public gameController: GameController | null = null;
     @property
     public capacity: number = 0;
@@ -36,7 +35,8 @@ export class Fence extends SceneEntity implements IDropZone{
     }
 
     protected start(): void {
-        this.playerController = Director.instance.getScene().getComponentInChildren(PlayerController);
+        this.gameController = Director.instance.getScene().getComponentInChildren(GameController);
+        this.playerController = this.gameController.getPlayerController();
         if (!this.playerController) {
             console.error('Fence: PlayerController not found!');
         }
