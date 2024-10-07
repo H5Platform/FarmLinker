@@ -43,6 +43,7 @@ export class UIAdaptComponent extends Component {
         let designRatio = view.getDesignResolutionSize().width / view.getDesignResolutionSize().height;
         
         if (screenRatio <= 1) {
+            console.log("竖屏");
             // 屏幕高度大于或等于宽度，即竖屏
             if (screenRatio <= designRatio) {
                 this.updateFitWidth();
@@ -52,6 +53,7 @@ export class UIAdaptComponent extends Component {
                 this.updateFitHeight();
             }
         } else {
+            console.log("横屏");
             // 屏幕宽度大于高度，即横屏
             this.updateFitHeight();
         }

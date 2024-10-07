@@ -57,7 +57,6 @@ export class MainWindow extends WindowBase {
                 console.log(`update avatar url: ${userProfile.avatarUrl}`);
                 await NetworkManager.instance.requestUpdateAvatarUrl(userProfile.avatarUrl);
             }
-            DashFunManager.instance.requestPayment( "200 diamonds", "get 200 diamonds",PayItemType.Diamond, 1);
             // Add your start game logic here
             WindowManager.instance.show("GameWindow");
             this.hide();

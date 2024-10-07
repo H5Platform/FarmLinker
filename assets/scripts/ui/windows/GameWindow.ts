@@ -14,7 +14,7 @@ import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { NetworkManager } from '../../managers/NetworkManager';
-import { DashFunManager } from '../../managers/DashFunManager';
+import { DashFunManager, PayItemType } from '../../managers/DashFunManager';
 import { GradeDataManager } from '../../managers/GradeDataManager';
 
 @ccclass('GameWindow')
@@ -309,12 +309,12 @@ export class GameWindow extends WindowBase {
     }
 
     private onBtnAddCoinClicked(): void {
-        DashFunManager.instance.requestPayment("金币*100","购买金币","金币*100",1);
+        DashFunManager.instance.requestPayment("金币*100","购买金币",PayItemType.Coin,1);
        // this.playerController?.playerState.addCoin(100);
     }
 
     private onBtnAddDiamondClicked(): void {
-        DashFunManager.instance.requestPayment("钻石*100","购买钻石","钻石*100",1);
+        DashFunManager.instance.requestPayment("钻石*100","购买钻石",PayItemType.Diamond,1);
        // this.playerController?.playerState.addDiamond(100);
     }
 
