@@ -49,8 +49,9 @@ export class WindowManager extends Component {
         let windowBase = this.windowMap.get(name);
 
         if (!windowBase) {
+            const orientationStr = this.currentOrientation === WindowOrientation.LANDSCAPE ? "landscape" : "portrait";
             // Load the prefab
-            const prefabPath = `ui/windows/${name}`;
+            const prefabPath = `ui/windows/${orientationStr}/${name}`;
             const prefab = await ResourceManager.instance.loadPrefab(prefabPath);
             if (!prefab) {
                 console.error(`Failed to load prefab: ${name}`);

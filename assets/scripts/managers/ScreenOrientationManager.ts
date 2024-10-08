@@ -63,10 +63,12 @@ export class ScreenOrientationManager extends Component {
     //竖屏
     private updateFitWidth(): void {
         view.setDesignResolutionSize(
-            SharedDefines.DESIGN_RESOLUTION_WIDTH,
             SharedDefines.DESIGN_RESOLUTION_HEIGHT,
+            SharedDefines.DESIGN_RESOLUTION_WIDTH,
+            
             ResolutionPolicy.FIXED_WIDTH
         );
+        //view.setResolutionPolicy(ResolutionPolicy.FIXED_WIDTH);
         this.isLandscape = false;
         this.switchCanvas();
     }
@@ -78,6 +80,7 @@ export class ScreenOrientationManager extends Component {
             SharedDefines.DESIGN_RESOLUTION_HEIGHT,
             ResolutionPolicy.FIXED_HEIGHT
         );
+        //view.setResolutionPolicy(ResolutionPolicy.FIXED_HEIGHT);
         this.isLandscape = true;
         this.switchCanvas();
     }
@@ -106,6 +109,7 @@ export class ScreenOrientationManager extends Component {
     adjustCanvasSize(canvas: Canvas, width: number, height: number) {
         const uiTransform = canvas.getComponent(UITransform);
         if (uiTransform) {
+            console.log("adjustCanvasSize", width, height);
             uiTransform.setContentSize(width, height);
         }
     }
