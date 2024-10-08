@@ -3,6 +3,12 @@ import { ResourceManager } from '../managers/ResourceManager';
 import { WindowBase } from './base/WindowBase';
 const { ccclass, property } = _decorator;
 
+//define enum for screen orientation
+export enum WindowOrientation {
+    PORTRAIT = "portrait",
+    LANDSCAPE = "landscape"
+}
+
 @ccclass('WindowManager')
 export class WindowManager extends Component {
     @property(Camera)
@@ -11,9 +17,11 @@ export class WindowManager extends Component {
     public get uiCamera(): Camera | null {
         return this.camera;
     }
-    
+    private currentOrientation: WindowOrientation = WindowOrientation.LANDSCAPE;
 
     private static _instance: WindowManager | null = null;
+
+
     private windowMap: Map<string, WindowBase> = new Map();
 
     @property(Node)
@@ -64,7 +72,7 @@ export class WindowManager extends Component {
                 return;
             }
             // Initialize the window
-            windowBase.initialize();
+            windowBase.initialize(this.currentOrientation);
 
             // Store the window node in the map
             this.windowMap.set(name, windowBase);
@@ -85,6 +93,13 @@ export class WindowManager extends Component {
             return null;
         }
         return windowBase;
+    }
+
+    public changeWindowOrientation(isLandscape: boolean): void {
+        this.currentOrientation = isLandscape ? WindowOrientation.LANDSCAPE : WindowOrientation.PORTRAIT;
+        this.windowMap.forEach((window) => {
+            window.WindowOrientation = this.currentOrientation;
+        });
     }
 
     public hide(name: string): void {

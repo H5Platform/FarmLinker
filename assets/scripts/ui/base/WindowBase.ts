@@ -1,6 +1,6 @@
 import { _decorator, Component, ResolutionPolicy, screen, Vec3, view,Node, Tween, director, UITransform, Widget } from 'cc';
 import { GameController } from '../../controllers/GameController';
-import { WindowManager } from '../WindowManager';
+import { WindowManager, WindowOrientation } from '../WindowManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('WindowBase')
@@ -15,6 +15,16 @@ export class WindowBase extends Component {
     protected gameController: GameController | null = null;
 
     private originalContentSize: Vec3 = new Vec3();
+
+    //getter and setter 
+    public get WindowOrientation(): WindowOrientation {
+        return this.windowOrientation;
+    }
+    public set WindowOrientation(value: WindowOrientation) {
+        this.windowOrientation = value;
+        this.onOrientationChange(value);
+    }
+    private windowOrientation: WindowOrientation = WindowOrientation.LANDSCAPE;
 
 
     //getter 
@@ -31,8 +41,8 @@ export class WindowBase extends Component {
     protected start(): void {
     }
 
-    public initialize(): void {
-
+    public initialize(orientation: WindowOrientation = WindowOrientation.LANDSCAPE): void {
+        this.windowOrientation = orientation;
         const gameControllerNode = director.getScene()?.getChildByName('GameController');
         if (gameControllerNode) {
             this.gameController = gameControllerNode.getComponent(GameController);
@@ -58,6 +68,9 @@ export class WindowBase extends Component {
         }
         this.node.active = false;
         
+    }
+
+    protected onOrientationChange(windowOrientation: WindowOrientation): void {
     }
 
     protected playJellyAnimation(): void {

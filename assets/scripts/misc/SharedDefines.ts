@@ -335,6 +335,9 @@ export class SharedDefines {
 
     public static readonly CURRENT_USER_ID: string = '123';
 
+    public static readonly DESIGN_RESOLUTION_WIDTH: number = 1920;
+    public static readonly DESIGN_RESOLUTION_HEIGHT: number = 1080;
+
     public static readonly CARE_TIME_RATIO_REDUCE: number = 0.05;            //浇水/喂养冷却时间减少比例
     public static readonly TREAT_TIME_RATIO_REDUCE: number = 0.1;            //施肥/安抚冷却时间减少比例
 
