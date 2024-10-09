@@ -345,7 +345,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1920.0000000000002,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -367,8 +367,8 @@
     "__prefab": null,
     "_alignFlags": 45,
     "_target": null,
-    "_left": 0,
-    "_right": 0,
+    "_left": 1.1368683772161603e-13,
+    "_right": 1.1368683772161603e-13,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -1374,6 +1374,9 @@
     "__prefab": null,
     "canvas": {
       "__id__": 11
+    },
+    "camera": {
+      "__id__": 4
     },
     "_id": "a4/WE0f41Mh4wUla3Cj4t0"
   },

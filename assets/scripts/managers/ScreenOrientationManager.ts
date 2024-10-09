@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, view, Canvas, UITransform, ResolutionPolicy, screen } from 'cc';
+import { _decorator, Component, Node, view, Canvas, UITransform, ResolutionPolicy, screen, Camera } from 'cc';
 import { SharedDefines } from '../misc/SharedDefines';
 import { WindowManager } from '../ui/WindowManager';
 const { ccclass, property } = _decorator;
@@ -7,6 +7,8 @@ const { ccclass, property } = _decorator;
 export class ScreenOrientationManager extends Component {
     @property(Canvas)
     canvas: Canvas | null = null;
+    @property(Camera)
+    camera: Camera | null = null;
 
     private isLandscape: boolean = false;
 
@@ -99,8 +101,10 @@ export class ScreenOrientationManager extends Component {
         if (this.isLandscape) {
 
             this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_WIDTH, SharedDefines.DESIGN_RESOLUTION_HEIGHT);
+            this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_HEIGHT / 2;
         } else {
             this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_HEIGHT, SharedDefines.DESIGN_RESOLUTION_WIDTH);
+            this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_WIDTH / 2;
         }
 
         WindowManager.instance.changeWindowOrientation(this.isLandscape);
