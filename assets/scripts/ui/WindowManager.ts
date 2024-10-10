@@ -98,7 +98,7 @@ export class WindowManager extends Component {
 
     public changeWindowOrientation(isLandscape: boolean): void {
         //暂不处理运行时 切换横竖屏
-        // this.currentOrientation = isLandscape ? WindowOrientation.LANDSCAPE : WindowOrientation.PORTRAIT;
+         this.currentOrientation = isLandscape ? WindowOrientation.LANDSCAPE : WindowOrientation.PORTRAIT;
         // this.windowMap.forEach((window) => {
         //     window.WindowOrientation = this.currentOrientation;
         // });
