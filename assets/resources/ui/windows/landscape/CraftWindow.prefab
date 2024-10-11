@@ -2393,6 +2393,8 @@
     "__prefab": {
       "__id__": 92
     },
+    "designWidth": 925,
+    "designHeight": 1080,
     "adapterWidth": true,
     "adapterHeight": false,
     "_layout": null,

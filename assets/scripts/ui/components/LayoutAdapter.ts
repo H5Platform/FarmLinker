@@ -4,6 +4,11 @@ const { ccclass, property } = _decorator;
 @ccclass('LayoutAdapter')
 export class LayoutAdapter extends Component {
 
+    @property(Number)
+    public designWidth: number = 1920;
+    @property(Number)
+    public designHeight: number = 1080;
+
     @property(Boolean)
     private adapterWidth: boolean = true;
     @property(Boolean)
@@ -34,8 +39,10 @@ export class LayoutAdapter extends Component {
     protected onLoad(): void {
         const uiTransform = this.node.getComponent(UITransform);
         if (uiTransform) {
-            this.originalContentSize.set(uiTransform.width, uiTransform.height, 0);
-            this.currentContentSize.set(uiTransform.width, uiTransform.height, 0);
+            // this.originalContentSize.set(uiTransform.width, uiTransform.height, 0);
+            // this.currentContentSize.set(uiTransform.width, uiTransform.height, 0);
+            this.originalContentSize.set(this.designWidth, this.designHeight, 0);
+            this.currentContentSize.set(this.designWidth, uiTransform.height, 0);
         }
 
         this.paddingLeft = this.layout.paddingLeft;
