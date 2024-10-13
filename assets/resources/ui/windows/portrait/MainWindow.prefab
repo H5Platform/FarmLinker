@@ -2312,10 +2312,10 @@
     },
     "_alignFlags": 45,
     "_target": null,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
+    "_left": 420,
+    "_right": 420,
+    "_top": -420,
+    "_bottom": -420,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -2389,6 +2389,7 @@
       "__id__": 0
     },
     "fileId": "91Yujgzg9Oh4YPPVhv5h6j",
+    "instance": null,
     "targetOverrides": null
   }
 ]
