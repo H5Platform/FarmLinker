@@ -161,14 +161,14 @@ parent.postMessage(msg, "*")
     */
 
     public requestPayment(title:string, desc:string, type:PayItemType, price:number){
-        console.log(`requestPayment title: ${title} , desc: ${desc} , type: ${type} , price: ${price}`);
+        console.log(`requestPayment title: ${title} , desc: ${desc} , type: ${type} , price: ${price} , ceshi`);
         const msg = {
             dashfun:{
                 method: "requestPayment",
                 payload:{
                     title:title,
                     desc:desc,
-                    info:type.toString(),
+                    info:/*type.toString()*/"测试数据",
                     price:price,
                 }
             }

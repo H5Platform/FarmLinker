@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite, SpriteFrame, Color } from 'cc';
+import { _decorator, Component, Node, director, Button, instantiate,Vec3, UITransform, Prefab, Label, ProgressBar, Layout, ScrollView, Sprite, SpriteFrame, Color, Widget } from 'cc';
 const { ccclass, property } = _decorator;
 import { ResourceManager } from '../../managers/ResourceManager';
 import { CropType, NetworkRecommendFriendsResultData, SharedDefines } from '../../misc/SharedDefines';
@@ -332,6 +332,12 @@ export class GameWindow extends WindowBase {
         this.friendScrollView.node.active = !this.friendScrollView.node.active;
         console.log('onBtnFriendClicked');
        // this.gameController?.visitFriend("123");
+
+       const widget = this.friendScrollView.content.getComponent(Widget);
+       if(widget)
+       {
+            widget.updateAlignment();
+       }
     }
 
     private onBtnBackClicked(): void {
