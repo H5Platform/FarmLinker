@@ -168,7 +168,7 @@ parent.postMessage(msg, "*")
                 payload:{
                     title:title,
                     desc:desc,
-                    info:/*type.toString()*/"测试数据",
+                    info:type.toString(),
                     price:price,
                 }
             }
@@ -230,7 +230,7 @@ window.addEventListener("message", ({data})=>{
     }
    
 
-    protected onMessage(event:MessageEvent){
+    protected async onMessage(event:MessageEvent){
         console.log("onMessage start ...");
         const data = event.data;
         const dashfun = data.dashfun;
@@ -247,9 +247,21 @@ window.addEventListener("message", ({data})=>{
             const {paymentId, status} = dashfun.result.data;
             console.log(`openInvoiceResult paymentId: ${paymentId} , status: ${status}`);
             if(status == "paid"){
-                NetworkManager.instance.queryPaymentResult("ForTest", paymentId);
+                const result = await NetworkManager.instance.queryPaymentResult("ForTest", paymentId);
+                if(result.success){
+                    const type = Number.parseInt(result.data.type);
+                    if(type == PayItemType.Coin){
+                        //add coin
+                        console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
+                    }
+                    else if(type == PayItemType.Diamond){
+                        //add diamond
+                        console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
+                    }
+
+                    this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, result.success,type,result.data.amount);
+                }
             }
-            this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, dashfun.result.data);
         }
     }
 }
