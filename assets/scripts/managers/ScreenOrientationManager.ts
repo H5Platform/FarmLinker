@@ -24,6 +24,15 @@ export class ScreenOrientationManager extends Component {
         // 监听屏幕大小变化事件
         //view.on('canvas-resize', this.onScreenResize, this);
 
+        this.canvas!.node.on(Node.EventType.SIZE_CHANGED, () => {
+            //get uicontent size    
+            const uiTransform = this.canvas!.getComponent(UITransform);
+            if (uiTransform) {
+                console.log(`canvas size changed y pos = ${uiTransform.contentSize.y}`);
+                //update camera ortho height
+                this.camera!.orthoHeight = uiTransform.contentSize.y / 2;
+            }
+        }, this);
         screen.on('window-resize', (width: number, height: number) => this.updateScreenSize(),this);
     }
 
@@ -98,14 +107,13 @@ export class ScreenOrientationManager extends Component {
     }
 
     switchCanvas() {
-        if (this.isLandscape) {
-
-            this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_WIDTH, SharedDefines.DESIGN_RESOLUTION_HEIGHT);
-            this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_HEIGHT / 2;
-        } else {
-            this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_HEIGHT, SharedDefines.DESIGN_RESOLUTION_WIDTH);
-            this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_WIDTH / 2;
-        }
+        // if (this.isLandscape) {
+        //     this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_WIDTH, SharedDefines.DESIGN_RESOLUTION_HEIGHT);
+        //     this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_HEIGHT / 2;
+        // } else {
+        //     this.adjustCanvasSize(this.canvas!, SharedDefines.DESIGN_RESOLUTION_HEIGHT, SharedDefines.DESIGN_RESOLUTION_WIDTH);
+        //     this.camera.orthoHeight = SharedDefines.DESIGN_RESOLUTION_WIDTH / 2;
+        // }
 
         WindowManager.instance.changeWindowOrientation(this.isLandscape);
     }
@@ -114,7 +122,7 @@ export class ScreenOrientationManager extends Component {
         const uiTransform = canvas.getComponent(UITransform);
         if (uiTransform) {
             console.log("adjustCanvasSize", width, height);
-            uiTransform.setContentSize(width, height);
+            //uiTransform.setContentSize(width, height);
         }
     }
 }
