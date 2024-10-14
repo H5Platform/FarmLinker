@@ -248,13 +248,15 @@ window.addEventListener("message", ({data})=>{
             console.log(`openInvoiceResult paymentId: ${paymentId} , status: ${status}`);
             if(status == "paid"){
                 const result = await NetworkManager.instance.queryPaymentResult("ForTest", paymentId);
+                //LOG RESULT
+                console.log(`queryPaymentResult result: ${JSON.stringify(result)}`);
                 if(result.success){
                     const type = parseInt(result.data.type);
-                    if(type == PayItemType.Coin){
+                    if(type === PayItemType.Coin){
                         //add coin
                         console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
                     }
-                    else if(type == PayItemType.Diamond){
+                    else if(type === PayItemType.Diamond){
                         //add diamond
                         console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
                     }

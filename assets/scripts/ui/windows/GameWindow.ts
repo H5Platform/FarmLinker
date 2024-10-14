@@ -155,7 +155,8 @@ export class GameWindow extends WindowBase {
             const playerState = this.playerController.playerState;
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLeveUp, this);
             playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
-            
+            playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_GOLD_CHANGE, this.refreshBasePlayerStateInfo, this);
+            playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_DIAMOND_CHANGE, this.refreshBasePlayerStateInfo, this);
         }
         //btnAddCoin click event
         if (this.btnAddCoin) {
@@ -290,6 +291,13 @@ export class GameWindow extends WindowBase {
             const expNeededForNextLevel = this.getExpNeededForNextLevel(playerState.level);
             this.progressExp.progress = currentExp / expNeededForNextLevel;
         }
+
+        if (this.coinDisplay) {
+            this.coinDisplay.refreshDisplay();
+        }
+        if (this.diamondDisplay) {
+            this.diamondDisplay.refreshDisplay();
+        }
     }
     
     private getExpNeededForNextLevel(level: number): number {
@@ -421,6 +429,7 @@ export class GameWindow extends WindowBase {
 
     
     private onOpenInvoiceResult(success: boolean, type: number, amount: number): void {
+        console.log(`onOpenInvoiceResult success: ${success}, type: ${type}, amount: ${amount}`);
         if(success){
             if(type == PayItemType.Coin){
                 this.playerController?.playerState.addGold(amount);
