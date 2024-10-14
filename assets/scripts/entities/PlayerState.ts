@@ -39,6 +39,7 @@ export class PlayerState {
         this._experience = initialExperience;
         this._gold = initialGold;
         this._diamond = initialDiamond;
+        this._prosperity = 0;
         this.eventTarget = new EventTarget();
     }
 

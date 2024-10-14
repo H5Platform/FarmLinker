@@ -9,6 +9,10 @@ export class ScreenOrientationManager extends Component {
     canvas: Canvas | null = null;
     @property(Camera)
     camera: Camera | null = null;
+    @property(Canvas)
+    gameplayCanvas: Canvas | null = null;
+    @property(Camera)
+    gameplayCamera: Camera | null = null;
 
     private isLandscape: boolean = false;
 
@@ -31,6 +35,14 @@ export class ScreenOrientationManager extends Component {
                 console.log(`canvas size changed y pos = ${uiTransform.contentSize.y}`);
                 //update camera ortho height
                 this.camera!.orthoHeight = uiTransform.contentSize.y / 2;
+            }
+
+            //update gameplay canvas size
+            const gameplayUiTransform = this.gameplayCanvas!.getComponent(UITransform);
+            if (gameplayUiTransform) {
+                console.log(`gameplay canvas size changed y pos = ${gameplayUiTransform.contentSize.y}`);
+                //update gameplay camera ortho height
+                this.gameplayCamera!.orthoHeight = gameplayUiTransform.contentSize.y / 2;
             }
         }, this);
         screen.on('window-resize', (width: number, height: number) => this.updateScreenSize(),this);

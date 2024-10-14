@@ -278,8 +278,9 @@ export class GameWindow extends WindowBase {
            // this.lbUserName.string = playerState.name;
         }
         if (this.lbProsperity) {
-            this.lbProsperity.string = playerState.prosperity.toString();
             console.log('playerState.prosperity: ' + playerState.prosperity);
+            this.lbProsperity.string = playerState.prosperity.toString();
+            
         }
         if (this.lblLevel) {
             this.lblLevel.string = playerState.level.toString();

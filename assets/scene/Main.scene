@@ -1378,6 +1378,12 @@
     "camera": {
       "__id__": 4
     },
+    "gameplayCanvas": {
+      "__id__": 48
+    },
+    "gameplayCamera": {
+      "__id__": 15
+    },
     "_id": "a4/WE0f41Mh4wUla3Cj4t0"
   },
   {

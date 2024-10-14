@@ -49,6 +49,13 @@ export class MainWindow extends WindowBase {
 
     private async onGetUserProfileResult(data:any){
         console.log("onGetUserProfileResult", data);
+        if(data == null){
+            //relay 1 second to retry using scheduleonce
+            this.scheduleOnce(() => {
+                DashFunManager.instance.getUserProfile();
+            }, 1000);
+            return;
+        }
         DashFunManager.instance.updateLoadingProgress(100);
         const userProfile = data as UserProfile;
         const result = await this.gameController.login(userProfile.id, "");
