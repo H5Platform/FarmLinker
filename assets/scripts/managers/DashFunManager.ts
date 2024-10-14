@@ -249,7 +249,7 @@ window.addEventListener("message", ({data})=>{
             if(status == "paid"){
                 const result = await NetworkManager.instance.queryPaymentResult("ForTest", paymentId);
                 if(result.success){
-                    const type = Number.parseInt(result.data.type);
+                    const type = parseInt(result.data.type);
                     if(type == PayItemType.Coin){
                         //add coin
                         console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
