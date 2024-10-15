@@ -5,7 +5,7 @@
       "name": "Build_Bakery",
       "description": "面包坊",
       "item_type": "1",
-      "level_need": "2",
+      "level_need": "1",
       "texture": "Build_Bakery",
       "cost_coin": "10",
       "cost_diamond": "0",
