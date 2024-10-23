@@ -153,6 +153,9 @@ export class PlotTile extends SceneEntity implements IDropZone {
             }
         }
         else{
+            if(!this.isPlayerOwner){
+                return;
+            }
             this.dragDropComponent = dragComponent;
             WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
             console.log('select plot , name = ' + this.node.name);

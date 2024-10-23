@@ -224,6 +224,8 @@ export class PlayerController extends Component {
                 else if(collider.node.layer & plotLayer){
                     const plotTile = collider.node.getComponent(PlotTile);
                     if (plotTile) {
+                        //log visitMode and plotTile.IsPlayerOwner
+                        console.log(`visitMode:${this.visitMode}, plotTile.IsPlayerOwner:${plotTile.IsPlayerOwner}`);
                         if((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner)){
                             this.dragDropComponent.registerDropZone(plotTile);
                             plotTile.select(this.dragDropComponent);

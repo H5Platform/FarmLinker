@@ -62,7 +62,6 @@ export class GameController extends Component {
         this.setGameViewVisibility(false);
         this.setFriendGameViewVisibility(false);
 
-
     }
 
     async start() {
