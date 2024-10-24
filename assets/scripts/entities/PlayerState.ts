@@ -19,6 +19,7 @@ export class PlayerState {
     // Getters
     public get id(): string { return this._id; }
     public get nickname(): string { return this._nickname; }
+    public set nickname(value: string) { this._nickname = value; }
     public get registerTime(): Date { return this._registerTime; }
     public get lastLoginTime(): Date { return this._lastLoginTime; }
     public get token(): string { return this._token; }

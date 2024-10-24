@@ -275,7 +275,7 @@ export class GameWindow extends WindowBase {
         const playerState = this.playerController.playerState;
         console.log(`refreshBasePlayerStateInfo: level: ${playerState.level}`);
         if (this.lbUserName) {
-           // this.lbUserName.string = playerState.name;
+            this.lbUserName.string = playerState.nickname;
         }
         if (this.lbProsperity) {
             console.log('playerState.prosperity: ' + playerState.prosperity);
