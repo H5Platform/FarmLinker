@@ -194,6 +194,9 @@ export class ShopWindow extends WindowBase {
             if (item.sellPrice > 0) {
                 this.createItemNode(item,item.iconName, false, this.sellScrollView!, this.sellItemPool);
             }
+            else{
+                console.log(`Item ${item.name} has no sell price , sell price = ${item.sellPrice}`);
+            }
         });
     }
 

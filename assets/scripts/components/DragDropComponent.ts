@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director } from 'cc';
+import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director, Camera } from 'cc';
 const { ccclass, property } = _decorator;
 
 // 定义可拖拽对象的接口
@@ -23,6 +23,9 @@ export interface IDropZone {
 export class DragDropComponent extends Component {
     @property({type: Node})
     public dragContainer: Node | null = null;
+    //camera
+    @property({type: Camera})
+    public camera: Camera | null = null;
 
     private currentDraggingObject: IDraggable | null = null;
     private dropZones: IDropZone[] = [];
@@ -75,6 +78,7 @@ export class DragDropComponent extends Component {
             node.removeFromParent();
             this.dragContainer.addChild(node);
             node.setWorldPosition(worldPos);
+            console.log(`Dragging object ${node.name} to drag container`);
         }
         
         // 立即更新位置到鼠标位置
@@ -114,7 +118,16 @@ export class DragDropComponent extends Component {
 
 
     private getMousePosition(): Vec3 {
-        const mousePos = this.currentMousePos;
+         const mousePos = this.currentMousePos;
+        // if (this.camera) {
+        //     const worldPos = this.camera.screenToWorld(new Vec3(mousePos.x, mousePos.y, 0));
+        //     console.log(`worldPos = ${worldPos}`);
+        //     let localPos = new Vec3();
+        //     localPos = this.dragContainer.inverseTransformPoint(localPos,new Vec3(mousePos.x, mousePos.y, 0));
+        //     console.log(`localPos = ${localPos}`);
+        //     return localPos;
+        // }
+        // return new Vec3(mousePos.x, mousePos.y, 0);
         return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
         : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
     }
