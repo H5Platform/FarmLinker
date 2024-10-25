@@ -128,8 +128,14 @@ export class DragDropComponent extends Component {
         //     return localPos;
         // }
         // return new Vec3(mousePos.x, mousePos.y, 0);
-        return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
-        : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
+        const worldPos = new Vec3(mousePos.x + 192/2, mousePos.y, 0);
+        const localPos = this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
+        console.log(`localPos = ${localPos}`);
+
+        // return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
+        // : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
+
+        return localPos;
     }
 
     onDestroy() {
