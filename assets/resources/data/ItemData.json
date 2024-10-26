@@ -342,6 +342,17 @@
       "detail_id": "2061"
     },
     {
+      "id": "400107",
+      "name": "Item_HorseBaby",
+      "description": "马宝宝",
+      "item_type": "4",
+      "exp_get": "0",
+      "buy_price": "100",
+      "sell_price": "0",
+      "png": "Item_400107",
+      "detail_id": "2071"
+    },
+    {
       "id": "500101",
       "name": "Item_Wheatmeal",
       "description": "小麦粉",

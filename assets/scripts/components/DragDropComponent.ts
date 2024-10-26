@@ -149,8 +149,7 @@ export class DragDropComponent extends Component {
         // }
         // return new Vec3(mousePos.x, mousePos.y, 0);
         const worldPos = new Vec3(mousePos.x + this.deltaSizeBetweenGroundAndScreen.x, mousePos.y + this.deltaSizeBetweenGroundAndScreen.y, 0);
-        const localPos = this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
-        console.log(`localPos = ${localPos}`);
+        const localPos = this.node.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);//this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
 
         // return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
         // : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));
