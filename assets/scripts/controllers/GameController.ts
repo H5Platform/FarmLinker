@@ -53,6 +53,7 @@ export class GameController extends Component {
     public get ScreenScale(): Vec2 {
         return this.screenScale;
     }
+
     private screenScale:Vec2 = new Vec2(1,1);
 
     public eventTarget: EventTarget = new EventTarget();

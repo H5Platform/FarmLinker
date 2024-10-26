@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, view, Canvas, UITransform, ResolutionPolicy, screen, Camera } from 'cc';
+import { _decorator, Component, Node, view, Canvas, UITransform, ResolutionPolicy, screen, Camera, Vec2 } from 'cc';
 import { SharedDefines } from '../misc/SharedDefines';
 import { WindowManager } from '../ui/WindowManager';
 const { ccclass, property } = _decorator;
@@ -15,6 +15,7 @@ export class ScreenOrientationManager extends Component {
     gameplayCamera: Camera | null = null;
 
     private isLandscape: boolean = false;
+
 
     start() {
         // 设置设计分辨率

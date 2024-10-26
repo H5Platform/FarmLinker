@@ -34,14 +34,34 @@ export class DragDropComponent extends Component {
         return this.isDragging;
     }
     private isDragging: boolean = false;
+    // 地面与屏幕之间的偏移量
+    private deltaSizeBetweenGroundAndScreen:Vec2 = new Vec2(0,0);
     private currentMousePos: Vec2 = new Vec2();
     private startDragPosition: Vec3 = new Vec3();
 
     onLoad() {
+        //find gameplay canvas by name
+        const gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
+        if (!gameplayCanvasNode) {
+            console.error('GameplayCanvas not found');
+            return;
+        }
+        const gameplayCanvasContentSize = gameplayCanvasNode.getComponent(UITransform)!.contentSize;
 
+        //get canvas by name
+        const canvasNode = director.getScene()!.getChildByName('Canvas');
+        if (!canvasNode) {
+            console.error('Canvas not found');
+            return;
+        }
+        const canvasContentSize = canvasNode.getComponent(UITransform)!.contentSize;
+
+        this.deltaSizeBetweenGroundAndScreen = new Vec2((gameplayCanvasContentSize.x - canvasContentSize.x) / 2, (gameplayCanvasContentSize.y - canvasContentSize.y) / 2);
     }
 
     protected start(): void {
+
+
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
     }
@@ -128,7 +148,7 @@ export class DragDropComponent extends Component {
         //     return localPos;
         // }
         // return new Vec3(mousePos.x, mousePos.y, 0);
-        const worldPos = new Vec3(mousePos.x + 192/2, mousePos.y, 0);
+        const worldPos = new Vec3(mousePos.x + this.deltaSizeBetweenGroundAndScreen.x, mousePos.y + this.deltaSizeBetweenGroundAndScreen.y, 0);
         const localPos = this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
         console.log(`localPos = ${localPos}`);
 
