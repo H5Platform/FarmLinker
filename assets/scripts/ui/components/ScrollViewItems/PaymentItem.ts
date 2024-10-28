@@ -10,6 +10,9 @@ export class PaymentItem extends ScrollViewItem {
     @property(Button)
     private btnPayment: Button | null = null;
 
+
+    @property(Number)
+    private costDiamond: number = 0;
     //define amount num
     @property(Number)
     private amount: number = 0;

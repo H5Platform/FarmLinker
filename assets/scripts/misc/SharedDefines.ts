@@ -407,6 +407,8 @@ export class SharedDefines {
     public static readonly WINDOW_FARM_FACTORY_NAME: string = 'FarmFactoryWindow';
     public static readonly WINDOW_GAME_NAME: string = 'GameWindow';
     public static readonly WINDOW_TOAST_NAME: string = "ToastWindow";
+    public static readonly WINDOW_PAYMENT_NAME: string = "PaymentWindow";
+    public static readonly WINDOW_COIN_NAME: string = "CoinWindow";
 
     public static readonly WINDOW_CRAFT_TEXTURES: string = 'textures/craftWindow/';
     public static readonly WINDOW_BUILDING_TEXTURES: string = 'textures/buildings/';
