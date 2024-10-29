@@ -8,6 +8,12 @@ const { ccclass, property } = _decorator;
 @ccclass('PaymentItem')
 export class PaymentItem extends ScrollViewItem {
 
+    @property(Label)
+    private lblCost: Label | null = null;
+
+    @property(Label)
+    private lblAmount: Label | null = null;
+
     @property(Button)
     private btnPayment: Button | null = null;
 
@@ -33,6 +39,11 @@ export class PaymentItem extends ScrollViewItem {
         this.btnPayment.node.on(Button.EventType.CLICK, this.onPaymentButtonClick, this);
         DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
 
+    }
+
+    public refresh(): void {
+        this.lblCost.string = this.costDiamond.toString();
+        this.lblAmount.string = this.amount.toString();
     }
 
     private onPaymentButtonClick(): void {
