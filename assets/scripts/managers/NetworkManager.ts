@@ -2,7 +2,7 @@
 
 import { _decorator, Component, EventTarget, sys } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkExchangeCoinResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { BUILD } from 'cc/env';
 const { ccclass, property } = _decorator;
 
@@ -40,6 +40,7 @@ export class NetworkManager extends Component {
     public static readonly API_ADD_BUILDING: string = '/scene/addBuilding';
     public static readonly API_RECOMMEND_FRIENDS: string = '/friend/recommend';
     public static readonly API_QUERY_PAYMENT_RESULT: string = '/payment/queryPaymentResult';
+    public static readonly API_EXCHANGE_COIN: string = '/payment/exchangeCoin';
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -812,6 +813,31 @@ export class NetworkManager extends Component {
             return null;
         }
         
+    }
+
+    public async requestExchangeCoin(payIndex: number): Promise<NetworkExchangeCoinResult>{
+        if (this.simulateNetwork) {
+            return null;
+        }
+        const url = this.buildApiUrl(NetworkManager.API_EXCHANGE_COIN, this.paymentPort);
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            user_id: this.userId,
+            exchange_index: payIndex
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkExchangeCoinResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
     }
 
     private handleError(error: any): void {

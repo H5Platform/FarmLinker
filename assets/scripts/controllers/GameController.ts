@@ -18,6 +18,8 @@ import { PlayerState } from '../entities/PlayerState';
 import { GrowthableEntity } from '../entities/GrowthableEntity';
 import { SyntheDataManager } from '../managers/SyntheDataManager';
 import { GradeDataManager } from '../managers/GradeDataManager';
+import { CoinDataManager } from '../managers/CoinDataManager';
+import { DiamondDataManager } from '../managers/DiamondDataManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -99,6 +101,8 @@ export class GameController extends Component {
         await AnimalDataManager.instance.loadAnimalData();
         await SyntheDataManager.instance.loadSyntheData();
         await GradeDataManager.instance.initialize();
+        await CoinDataManager.instance.loadCoinData();
+        await DiamondDataManager.instance.loadDiamondData();
     }
 
     //create getplayerController() method

@@ -1,4 +1,3 @@
-
 export enum InteractionMode {
     CameraDrag,
     BuildingPlacement,
@@ -288,6 +287,19 @@ export class NetworkQueryPaymentResultData{
     amount: number;
 }
 
+export class NetworkExchangeCoinResult{
+    success: boolean;
+    message: string;
+    data: NetworkExchangeCoinResultData;
+}
+
+export class NetworkExchangeCoinResultData{
+    coin: number;
+    diamond: number;
+    costDiamond: number;
+    coinAmount: number;
+}
+
 export class SceneItem{
     id: string;
     item_id: string;
@@ -432,6 +444,8 @@ export class SharedDefines {
     public static readonly JSON_ANIMAL_DATA: string = 'data/AnimalData';
     public static readonly JSON_SYNTHE_DATA: string = 'data/SyntheData';
     public static readonly JSON_GRADE_DATA: string = 'data/GradeData';
+    public static readonly JSON_COIN_DATA: string = "data/CoinData";
+    public static readonly JSON_DIAMOND_DATA: string = "data/DiamondData";
 
     public static readonly PREFAB_CROP_CORN: string = 'entities/crops/Corn';
     public static readonly PREFAB_CROP_CARROT: string = 'entities/crops/Carrot';
