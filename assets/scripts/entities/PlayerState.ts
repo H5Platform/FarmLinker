@@ -47,11 +47,11 @@ export class PlayerState {
     public initialize(userData: any, token: string): void {
         this._id = userData.id;
         this._nickname = userData.nickname;
-        this.level = userData.level;
-        this.experience = userData.exp;
-        this.gold = userData.coin;
-        this.diamond = userData.diamond;
-        this.prosperity = userData.prosperity;
+        this.level = parseInt(userData.level);
+        this.experience = parseInt(userData.exp);
+        this.gold = parseInt(userData.coin);
+        this.diamond = parseInt(userData.diamond == null ? '0' : userData.diamond);
+        this.prosperity = parseInt(userData.prosperity == null ? '0' : userData.prosperity);
         this.headUrl = userData.avatarUrl;
         this._registerTime = new Date(userData.register_time);
         this._lastLoginTime = new Date(userData.last_login_time);
@@ -108,32 +108,32 @@ export class PlayerState {
 
     // Methods to modify player attributes
     public addExperience(amount: number): void {
-        this.experience += amount;
+        this.experience += Number(amount);
     }
 
     public addGold(amount: number): void {
-        this.gold += amount;
+        this.gold += Number(amount);
     }
 
     public addDiamond(amount: number): void {
-        this.diamond += amount;
+        this.diamond += Number(amount);
     }
 
     public addProsperity(amount: number): void {
-        this.prosperity += amount;
+        this.prosperity += Number(amount);
     }
 
     public spendGold(amount: number): boolean {
-        if (this._gold >= amount) {
-            this.gold -= amount;
+        if (this._gold >= Number(amount)) {
+            this.gold -= Number(amount);
             return true;
         }
         return false;
     }
 
     public spendDiamond(amount: number): boolean {
-        if (this._diamond >= amount) {
-            this.diamond -= amount;
+        if (this._diamond >= Number(amount)) {
+            this.diamond -= Number(amount);
             return true;
         }
         return false;

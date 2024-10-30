@@ -1,6 +1,6 @@
 // NetworkManager.ts
 
-import { _decorator, Component, EventTarget, sys } from 'cc';
+import { _decorator, Component, director, EventTarget, sys } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
 import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkExchangeCoinResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { BUILD } from 'cc/env';
@@ -146,13 +146,13 @@ export class NetworkManager extends Component {
                     console.log('Login successful',result);
                     this.token = result.sessionToken;
                     this.userId = result.user.id;
-                    this.eventTarget.emit(NetworkManager.EVENT_LOGIN_SUCCESS, result.user, result.sessionToken);
+                    //this.eventTarget.emit(NetworkManager.EVENT_LOGIN_SUCCESS, result.user, result.sessionToken);
                     return result;
                 } else {
                     console.warn(`Login attempt ${attempt} failed: ${result.message}`);
                     if (attempt === this.maxLoginRetries) {
                         console.error('Max login attempts reached');
-                        this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, 'Max login attempts reached');
+                        //this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, 'Max login attempts reached');
                         return result;
                     }
                     await this.delay(1000 * attempt);
@@ -161,7 +161,7 @@ export class NetworkManager extends Component {
                 console.error(`Login attempt ${attempt} error:`, error);
                 if (attempt === this.maxLoginRetries) {
                     this.handleError(error);
-                    this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, error);
+                    //this.eventTarget.emit(NetworkManager.EVENT_LOGIN_FAILED, error);
                     return null;
                 }
                 await this.delay(1000 * attempt);

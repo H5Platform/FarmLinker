@@ -51,7 +51,8 @@ export class MainWindow extends WindowBase {
         console.log("onGetUserProfileResult", data);
         if(data == null){
             //relay 1 second to retry using scheduleonce
-            this.scheduleOnce(() => {
+            this.schedule(() => {
+                console.log("retry get user profile");
                 DashFunManager.instance.getUserProfile();
             }, 1000);
             return;

@@ -56,15 +56,16 @@ export class PaymentItem extends ScrollViewItem {
         }
     }
 
-    private onOpenInvoiceResult(success: boolean, type: PayItemType, amount: number): void {
-        console.log("onOpenInvoiceResult", success, type, amount);
+    private onOpenInvoiceResult(success: boolean, index: number, amount: number): void {
+        if(this.payIndex != index){
+            return;
+        }
+        console.log("onOpenInvoiceResult", success, index, amount);
         if(success){
-            if(type == PayItemType.Coin){
-                this.playerState.addGold(amount);
-            }
-            else if(type == PayItemType.Diamond){
-                this.playerState.addDiamond(amount);
-            }
+            //log current diamond
+            console.log(`onOpenInvoiceResult current diamond: ${this.playerState.diamond}`);
+            this.playerState.addDiamond(amount);
+            console.log(`onOpenInvoiceResult after add diamond: ${this.playerState.diamond}`);
         }
     }
 

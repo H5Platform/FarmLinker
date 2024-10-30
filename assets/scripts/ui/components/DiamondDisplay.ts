@@ -11,10 +11,4 @@ export class DiamondDisplay extends CurrencyDisplayBase {
     protected getCurrencyValue(): number {
         return this.playerState ? this.playerState.diamond : 0;
     }
-
-    public addCurrency(amount: number): void {
-        if (this.playerState) {
-            this.playerState.addDiamond(amount);
-        }
-    }
 }

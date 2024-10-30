@@ -38,6 +38,4 @@ export abstract class CurrencyDisplayBase extends Component {
             this.playerState.eventTarget.off(this.eventName, this.refreshDisplay, this);
         }
     }
-
-    public abstract addCurrency(amount: number): void;
 }

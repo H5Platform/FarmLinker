@@ -251,17 +251,9 @@ window.addEventListener("message", ({data})=>{
                 //LOG RESULT
                 console.log(`queryPaymentResult result: ${JSON.stringify(result)}`);
                 if(result.success){
-                    const type = parseInt(result.data.type);
-                    if(type === PayItemType.Coin){
-                        //add coin
-                        console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
-                    }
-                    else if(type === PayItemType.Diamond){
-                        //add diamond
-                        console.log(`queryPaymentResult success: ${JSON.stringify(result)}`);
-                    }
+                    const index = parseInt(result.data.type);
 
-                    this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, result.success,type,result.data.amount);
+                    this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, result.success,index,Number(result.data.amount));
                 }
             }
         }

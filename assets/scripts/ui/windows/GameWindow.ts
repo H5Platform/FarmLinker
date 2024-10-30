@@ -128,8 +128,6 @@ export class GameWindow extends WindowBase {
             playerState.eventTarget.off(SharedDefines.EVENT_PLAYER_EXP_CHANGE, this.refreshBasePlayerStateInfo, this);
         }
 
-        DashFunManager.instance.eventTarget.off(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
-
         const content = this.friendScrollView?.content;
         if (content) {
             content.children.forEach(child => {
@@ -183,7 +181,6 @@ export class GameWindow extends WindowBase {
             this.btnBack.node.on(Button.EventType.CLICK, this.onBtnBackClicked, this);
         }
 
-        DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
     }
 
     private updateButtonsVisibility(): void {
@@ -431,17 +428,6 @@ export class GameWindow extends WindowBase {
     }
 
     
-    private onOpenInvoiceResult(success: boolean, type: number, amount: number): void {
-        console.log(`onOpenInvoiceResult success: ${success}, type: ${type}, amount: ${amount}`);
-        if(success){
-            if(type == PayItemType.Coin){
-                this.playerController?.playerState.addGold(amount);
-            }
-            else if(type == PayItemType.Diamond){
-                this.playerController?.playerState.addDiamond(amount);
-            }
-        }
-    }
 }
 
 

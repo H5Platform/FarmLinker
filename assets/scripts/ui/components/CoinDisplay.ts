@@ -12,10 +12,4 @@ export class CoinDisplay extends CurrencyDisplayBase {
     protected getCurrencyValue(): number {
         return this.playerState ? this.playerState.gold : 0;
     }
-
-    public addCurrency(amount: number): void {
-        if (this.playerState) {
-            this.playerState.addGold(amount);
-        }
-    }
 }

@@ -64,13 +64,14 @@ export class GameController extends Component {
         
         this.setGameViewVisibility(false);
         this.setFriendGameViewVisibility(false);
-
+        
+        this.initializePlayerController();
+        
     }
 
     async start() {
         console.log(`start start ...`);
         await this.preloadJsonDatas();
-        this.initializePlayerController();
         this.setupEventListeners();
        // this.login();
 
@@ -167,7 +168,7 @@ export class GameController extends Component {
         //this.playerFence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
 
         const networkManager = NetworkManager.instance;
-        networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
+        //networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
         networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
         networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
        
@@ -273,6 +274,7 @@ export class GameController extends Component {
         console.log(`login start ...`);
         const result = await NetworkManager.instance.login(userid,password);
         if(result.success){
+            this.onLoginSuccess(result.user,result.sessionToken);
             await NetworkManager.instance.requestSceneItemsByUserId(userid);
             return result;
         }
@@ -280,7 +282,8 @@ export class GameController extends Component {
     }
 
     private onLoginSuccess(userData:any,token:string): void {
-        console.log('login success');
+        //log userData
+        console.log(`onLoginSuccess: userData:`,userData);
         this.playerController.playerState.initialize(userData,token);
         const networkInventoryItems = userData.inventory_items as NetworkInventoryItem[];
         console.log(`onLoginSuccess: networkInventoryItems:`,networkInventoryItems);
