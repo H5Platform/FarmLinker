@@ -2,6 +2,12 @@
   "name": "FarmLinker",
   "uuid": "27bdfaab-03ad-4b09-a745-67a3f445f942",
   "creator": {
-    "version": "3.8.3"
+    "version": "3.8.3",
+    "registry": {
+      "remote": {}
+    },
+    "dependencies": {
+      "localization-editor": "1.0.1"
+    }
   }
 }
