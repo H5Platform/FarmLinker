@@ -9,6 +9,7 @@ import { WindowManager } from '../WindowManager';
 import { ItemDataManager } from '../../managers/ItemDataManager';
 import { NetworkManager } from '../../managers/NetworkManager';
 import { Building } from '../../entities/Building';
+import { l10n } from 'db://localization-editor/l10n';
 const { ccclass, property } = _decorator;
 
 @ccclass('FarmFactoryWindow')
@@ -167,7 +168,7 @@ export class FarmFactoryWindow extends WindowBase {
 
         txtRemainingTime.node.active = false;
         await this.loadTargetSprite(sprTarget, targetItem);
-        txtTargetName.string = data.description;
+        txtTargetName.string = l10n.t(data.description);
     }
 
     private async loadTargetSprite(sprTarget: Sprite, targetItem: any): Promise<void> {
@@ -225,7 +226,7 @@ export class FarmFactoryWindow extends WindowBase {
             return;
         }
         const item = ItemDataManager.instance.getItemById(sourceItemId);
-        txtName.string = `${item.description}x${quality}`;
+        txtName.string = `${l10n.t(item.description)}x${quality}`;
         const spriteFrame = await ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${item.png}/spriteFrame`, SpriteFrame);
         if (spriteFrame && sourceSprite) {
             sourceSprite.spriteFrame = spriteFrame;
