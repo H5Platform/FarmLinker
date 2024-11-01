@@ -3,18 +3,14 @@ const { ccclass, property } = _decorator;
 import { ResourceManager } from '../../managers/ResourceManager';
 import { CropType, NetworkRecommendFriendsResultData, SharedDefines } from '../../misc/SharedDefines';
 import { WindowBase } from '../base/WindowBase';
-import { GameController } from '../../controllers/GameController';
 import { PlotTile } from '../../entities/PlotTile';
-import { Crop } from '../../entities/Crop';
 import { PlayerController } from '../../controllers/PlayerController';
 import { CropDataManager } from '../../managers/CropDataManager';
 import { SpriteHelper } from '../../helpers/SpriteHelper';
-import { EDITOR } from 'cc/env';
 import { WindowManager } from '../WindowManager';
 import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { NetworkManager } from '../../managers/NetworkManager';
-import { DashFunManager, PayItemType } from '../../managers/DashFunManager';
 import { GradeDataManager } from '../../managers/GradeDataManager';
 
 @ccclass('GameWindow')

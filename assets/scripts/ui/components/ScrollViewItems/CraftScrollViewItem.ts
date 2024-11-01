@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Label, Sprite, Button, SpriteFrame } from 
 import { ResourceManager } from '../../../managers/ResourceManager';
 import { SharedDefines } from '../../../misc/SharedDefines';
 import { ScrollViewItem } from './ScrollViewItem';
+import { l10n } from 'db://localization-editor/l10n';
 
 const { ccclass, property } = _decorator;
 
@@ -31,7 +32,7 @@ export class CraftScrollViewItem extends ScrollViewItem {
         this.buildData = buildData;
 
         if (this.lbName) {
-            this.lbName.string = buildData.description;
+            this.lbName.string = l10n.t( buildData.description);
         }
         if (this.lbCoin) {
             this.lbCoin.string = buildData.cost_coin.toString();

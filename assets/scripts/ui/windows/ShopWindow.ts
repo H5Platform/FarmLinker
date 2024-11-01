@@ -11,6 +11,7 @@ import { WindowManager } from '../WindowManager';
 import { NetworkManager } from '../../managers/NetworkManager';
 import { CoinType } from '../../effects/CoinCollectionEffectComponent';
 import { UIEffectHelper } from '../../helpers/UIEffectHelper';
+import { l10n } from 'db://localization-editor/l10n';
 
 
 const { ccclass, property } = _decorator;
@@ -231,9 +232,10 @@ export class ShopWindow extends WindowBase {
             }
         });
 
+        
         // Set label text
-        label.string = item.description;//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
-        price.string = isBuyMode ? `${item.buy_price}` : `${item.sellPrice}`;
+        label.string = l10n.t(item.description);//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
+        price.string = isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
         const inventoryItem = this.inventoryComponent?.getItem(item.id) || null;
         if (!isBuyMode && inventoryItem && inventoryItem.quantity > 1) {
             labelNum.node.active = true;
