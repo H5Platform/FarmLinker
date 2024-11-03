@@ -71,6 +71,8 @@ export class PlotTile extends SceneEntity implements IDropZone {
         if (!this.playerController) {
             console.error('PlotTile: PlayerController not found!');
         }
+
+        console.log(`start , name = ${this.node.name} pos = ${this.node.getWorldPosition()}`);
     }
 
     public initialize(isPlayerOwner: boolean): void {

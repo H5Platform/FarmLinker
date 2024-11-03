@@ -1,4 +1,6 @@
-import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director, Camera } from 'cc';
+import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director, Camera, Layers } from 'cc';
+import { SharedDefines } from '../misc/SharedDefines';
+import { Crop } from '../entities/Crop';
 const { ccclass, property } = _decorator;
 
 // 定义可拖拽对象的接口
@@ -38,6 +40,7 @@ export class DragDropComponent extends Component {
     private deltaSizeBetweenGroundAndScreen:Vec2 = new Vec2(0,0);
     private currentMousePos: Vec2 = new Vec2();
     private startDragPosition: Vec3 = new Vec3();
+    private originDragNodeLayer: number = 0;
 
     onLoad() {
         //find gameplay canvas by name
@@ -61,6 +64,8 @@ export class DragDropComponent extends Component {
 
     protected start(): void {
 
+        
+        this.dragContainer = this.node;
 
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
@@ -91,16 +96,22 @@ export class DragDropComponent extends Component {
     public startDragging(draggable: IDraggable, node: Node): void {
         this.currentDraggingObject = draggable;
         this.isDragging = true;
+        this.originDragNodeLayer = node.layer;
         draggable.onDragStart();
         // 将拖拽对象移动到拖拽容器中，以确保它在最上层
         if (this.dragContainer && node.parent !== this.dragContainer) {
+            node.layer = this.dragContainer.layer;
+            node.walk((child: Node) => {
+                child.layer = this.dragContainer.layer;
+            });
             const worldPos = node.getWorldPosition();
             node.removeFromParent();
             this.dragContainer.addChild(node);
             node.setWorldPosition(worldPos);
             console.log(`Dragging object ${node.name} to drag container`);
         }
-        
+       
+       
         // 立即更新位置到鼠标位置
         const mousePos = this.getMousePosition();
         draggable.onDragging(mousePos);
@@ -109,7 +120,29 @@ export class DragDropComponent extends Component {
 
     private onTouchStart(event: EventTouch): void {
         if (this.isDragging && this.currentDraggingObject) {
+            // const crop = this.currentDraggingObject as Crop;
+            // const worldPos = crop.node.getWorldPosition();
+            // //find gameplay canvas
+            // const gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
+            // if (!gameplayCanvasNode) {
+            //     console.error('GameplayCanvas not found');
+            //     return;
+            // }
+            // //find child camera
+            // const camera = gameplayCanvasNode.getChildByName('Camera')!.getComponent(Camera);
+            // if (!camera) {
+            //     console.error('Camera not found');
+            //     return;
+            // }
+            // //const uiPos = new Vec3();
+            // camera.convertToUINode(worldPos,crop.node,uiPos);
+            
+
+            // const uiPos = crop.node.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
+            // console.log(`crop pos = ${uiPos}`);
+            
             const endPosition = event.getUILocation();
+            
             let acceptedDropZone: IDropZone | null = null;
             for (const dropZone of this.dropZones) {
                 if (dropZone.isPointInside(endPosition) && dropZone.canAcceptDrop(this.currentDraggingObject)) {
@@ -149,7 +182,7 @@ export class DragDropComponent extends Component {
         // }
         // return new Vec3(mousePos.x, mousePos.y, 0);
         const worldPos = new Vec3(mousePos.x + this.deltaSizeBetweenGroundAndScreen.x, mousePos.y + this.deltaSizeBetweenGroundAndScreen.y, 0);
-        const localPos = this.node.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);//this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
+        const localPos = this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));//this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
 
         // return this.dragContainer ? this.dragContainer!.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0)) 
         // : this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(mousePos.x, mousePos.y, 0));

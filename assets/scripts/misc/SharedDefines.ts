@@ -391,7 +391,7 @@ export class SharedDefines {
     public static readonly PATH_CAMERA: string = 'Canvas/Camera';
     public static readonly PATH_GAMEPLAY_CANVAS: string = 'GameplayCanvas';
     public static readonly PATH_GAMEPLAY: string = 'GameplayCanvas/Gameplay';
-    public static readonly PATH_INPUT_NODE: string = 'GameplayCanvas/InputNode';
+    public static readonly PATH_INPUT_NODE: string = 'Canvas/InputNode';
     public static readonly PATH_BUILDINGS: string = 'GameplayCanvas/Gameplay/Buildings';
 
     public static readonly EVENT_PLOT_SELECTED: string = 'plotSelected';
