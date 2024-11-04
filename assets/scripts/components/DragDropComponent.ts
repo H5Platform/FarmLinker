@@ -125,32 +125,11 @@ export class DragDropComponent extends Component {
 
     private onTouchStart(event: EventTouch): void {
         if (this.isDragging && this.currentDraggingObject) {
-            // const crop = this.currentDraggingObject as Crop;
-            // const worldPos = crop.node.getWorldPosition();
-            // //find gameplay canvas
-            // const gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
-            // if (!gameplayCanvasNode) {
-            //     console.error('GameplayCanvas not found');
-            //     return;
-            // }
-            // //find child camera
-            // const camera = gameplayCanvasNode.getChildByName('Camera')!.getComponent(Camera);
-            // if (!camera) {
-            //     console.error('Camera not found');
-            //     return;
-            // }
-            // //const uiPos = new Vec3();
-            // camera.convertToUINode(worldPos,crop.node,uiPos);
-            
-
-            // const uiPos = crop.node.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
-            // console.log(`crop pos = ${uiPos}`);
 
             const worldPos = this.currentDraggingObject.getNode().getWorldPosition();
             const gameplayWorldPos = UIHelper.convertPositionBetweenCanvas(worldPos,this.uiCanvasNode!,this.gameplayCanvasNode!);
-
-            
             const endPosition = new Vec2(gameplayWorldPos.x,gameplayWorldPos.y);//event.getUILocation();
+            console.log(`endPosition = ${endPosition}`);
             
             let acceptedDropZone: IDropZone | null = null;
             for (const dropZone of this.dropZones) {
@@ -161,6 +140,12 @@ export class DragDropComponent extends Component {
             }
             if (acceptedDropZone) {
                 let worldPos = acceptedDropZone.getNode().getWorldPosition();
+                const draggableNode = this.currentDraggingObject.getNode();
+                //set draggable node layer to origin layer
+                draggableNode.layer = this.originDragNodeLayer;
+                draggableNode.walk((child: Node) => {
+                    child.layer = this.originDragNodeLayer;
+                });
                 this.currentDraggingObject.onDragEnd(worldPos,false);
                 acceptedDropZone.onDrop(this.currentDraggingObject);
             }

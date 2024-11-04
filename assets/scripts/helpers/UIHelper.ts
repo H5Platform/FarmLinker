@@ -32,25 +32,9 @@ export class UIHelper {
         const camera = fromCanvas.getComponentInChildren(Camera)!;
         const screenPos = camera.worldToScreen(worldPos);
 
-        // 3. 将屏幕坐标标准化（转换为0-1之间的值）
-        const fromUI = fromCanvas.getComponent(UITransform)!;
-        const normalizedPos = new Vec3(
-            screenPos.x / fromUI.width,
-            screenPos.y / fromUI.height,
-            0
-        );
-
-        // 4. 将标准化坐标转换为目标Canvas的坐标
-        const toUI = toCanvas.getComponent(UITransform)!;
-        const targetPos = new Vec3(
-            normalizedPos.x * toUI.width,
-            normalizedPos.y * toUI.height,
-            0
-        );
-
         // 5. 将屏幕坐标转回世界坐标
         const targetCamera = toCanvas.getComponentInChildren(Camera)!;
-        const targetWorldPos = targetCamera.screenToWorld(targetPos);
+        const targetWorldPos = targetCamera.screenToWorld(screenPos);
 
         return targetWorldPos;
     }

@@ -15,6 +15,7 @@ import { UIEffectHelper } from '../helpers/UIEffectHelper';
 import { GameWindow } from '../ui/windows/GameWindow';
 import { CoinType } from '../effects/CoinCollectionEffectComponent';
 import { GameController } from '../controllers/GameController';
+import { UIHelper } from '../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('Fence')
@@ -161,13 +162,16 @@ export class Fence extends SceneEntity implements IDropZone{
             }
         }
 
+        const uiCanvas = this.gameController.UICanvas;
+        const gameplayCanvas = this.gameController.GameplayCanvas;
+        const worldPos = UIHelper.convertPositionBetweenCanvas(new Vec3(touchPos.x, touchPos.y, 0),gameplayCanvas.node,uiCanvas.node);
         // If no animal is selected, proceed with the original fence selection logic
         this.dragDropComponent = dragComponent;
         WindowManager.instance.show(
             SharedDefines.WINDOW_SELECTION_NAME,
             FarmSelectionType.FENCE,
             this.node,
-            touchPos,
+            worldPos,
             this.onSelectionWindowItemClicked.bind(this)
         );
     }

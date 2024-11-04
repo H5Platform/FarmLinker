@@ -1335,6 +1335,9 @@
     "gameplayCanvas": {
       "__id__": 50
     },
+    "uiCanvas": {
+      "__id__": 15
+    },
     "playerControllerPrefab": {
       "__uuid__": "6e6d57bc-47c1-49b4-b8a3-a9c7e546a3e4",
       "__expectedType__": "cc.Prefab"
