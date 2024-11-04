@@ -12,6 +12,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GrowthableEntity')
 export abstract class GrowthableEntity extends SceneEntity implements IDraggable {
+
     @property
     public id: string = '';
 
@@ -359,6 +360,10 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             console.error('Error getting latest command duration:', error);
             return null;
         }
+    }
+
+    public getNode(): Node {
+        return this.node;
     }
 
     public setPosition(position: Vec3): void {

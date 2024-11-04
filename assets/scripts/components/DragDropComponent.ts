@@ -1,10 +1,12 @@
 import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director, Camera, Layers } from 'cc';
 import { SharedDefines } from '../misc/SharedDefines';
 import { Crop } from '../entities/Crop';
+import { UIHelper } from '../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 // 定义可拖拽对象的接口
 export interface IDraggable {
+    getNode(): Node;
 
     setPosition(position: Vec3): void;
 
@@ -29,6 +31,9 @@ export class DragDropComponent extends Component {
     @property({type: Camera})
     public camera: Camera | null = null;
 
+    private uiCanvasNode: Node | null = null;
+    private gameplayCanvasNode: Node | null = null;
+    
     private currentDraggingObject: IDraggable | null = null;
     private dropZones: IDropZone[] = [];
     //getter isdragging
@@ -44,20 +49,20 @@ export class DragDropComponent extends Component {
 
     onLoad() {
         //find gameplay canvas by name
-        const gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
-        if (!gameplayCanvasNode) {
+        this.gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
+        if (!this.gameplayCanvasNode) {
             console.error('GameplayCanvas not found');
             return;
         }
-        const gameplayCanvasContentSize = gameplayCanvasNode.getComponent(UITransform)!.contentSize;
+        const gameplayCanvasContentSize = this.gameplayCanvasNode.getComponent(UITransform)!.contentSize;
 
         //get canvas by name
-        const canvasNode = director.getScene()!.getChildByName('Canvas');
-        if (!canvasNode) {
+        this.uiCanvasNode = director.getScene()!.getChildByName('Canvas');
+        if (!this.uiCanvasNode) {
             console.error('Canvas not found');
             return;
         }
-        const canvasContentSize = canvasNode.getComponent(UITransform)!.contentSize;
+        const canvasContentSize = this.uiCanvasNode.getComponent(UITransform)!.contentSize;
 
         this.deltaSizeBetweenGroundAndScreen = new Vec2((gameplayCanvasContentSize.x - canvasContentSize.x) / 2, (gameplayCanvasContentSize.y - canvasContentSize.y) / 2);
     }
@@ -140,8 +145,12 @@ export class DragDropComponent extends Component {
 
             // const uiPos = crop.node.getComponent(UITransform)!.convertToNodeSpaceAR(worldPos);
             // console.log(`crop pos = ${uiPos}`);
+
+            const worldPos = this.currentDraggingObject.getNode().getWorldPosition();
+            const gameplayWorldPos = UIHelper.convertPositionBetweenCanvas(worldPos,this.uiCanvasNode!,this.gameplayCanvasNode!);
+
             
-            const endPosition = event.getUILocation();
+            const endPosition = new Vec2(gameplayWorldPos.x,gameplayWorldPos.y);//event.getUILocation();
             
             let acceptedDropZone: IDropZone | null = null;
             for (const dropZone of this.dropZones) {
