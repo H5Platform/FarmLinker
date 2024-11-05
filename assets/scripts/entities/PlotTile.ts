@@ -13,6 +13,7 @@ import { SceneEntity } from './SceneEntity';
 import { UIEffectHelper } from '../helpers/UIEffectHelper';
 import { CoinType } from '../effects/CoinCollectionEffectComponent';
 import { GameWindow } from '../ui/windows/GameWindow';
+import { UIHelper } from '../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlotTile')
@@ -159,7 +160,11 @@ export class PlotTile extends SceneEntity implements IDropZone {
                 return;
             }
             this.dragDropComponent = dragComponent;
-            WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+            const uiCanvas = this.gameController.UICanvas;
+            const gameplayCanvas = this.gameController.GameplayCanvas;
+            const worldPos = UIHelper.convertPositionBetweenCanvas(this.node.getWorldPosition(),gameplayCanvas.node,uiCanvas.node);
+
+            WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,worldPos,this.onSelectionWindowItemClicked.bind(this));
             console.log('select plot , name = ' + this.node.name);
         }
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {

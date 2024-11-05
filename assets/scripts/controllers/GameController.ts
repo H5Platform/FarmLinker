@@ -25,8 +25,20 @@ const { ccclass, property } = _decorator;
 @ccclass('GameController')
 export class GameController extends Component {
 
+    //getter for gameplayCanvas
+    public get GameplayCanvas(): Canvas {
+        return this.gameplayCanvas;
+    }
     @property(Canvas)
     private gameplayCanvas: Canvas| null = null;
+
+    
+    //getter for uiCanvas
+    public get UICanvas(): Canvas {
+        return this.uiCanvas;
+    }
+    @property(Canvas)
+    private uiCanvas: Canvas| null = null;
 
     @property(Prefab)
     private playerControllerPrefab: Prefab| null = null;
@@ -374,7 +386,7 @@ export class GameController extends Component {
             if (node && component) {
                 //this.setupSceneItem(node, component, item);
                 //convert world pos to design pos
-                const worldPos = new Vec2(item.x * this.screenScale.x, item.y * this.screenScale.y);
+                const worldPos = new Vec2(item.x, item.y);//new Vec2(item.x * this.screenScale.x, item.y * this.screenScale.y);
                 node.setWorldPosition(new Vec3(worldPos.x, worldPos.y, 0));
             }
         }
