@@ -8,13 +8,17 @@ import { Building } from '../entities/Building';
 import { NetworkManager } from '../managers/NetworkManager';
 import { SpriteHelper } from '../helpers/SpriteHelper';
 import { GameController } from '../controllers/GameController';
+import { UIHelper } from '../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('BuildingPlacementComponent')
 export class BuildingPlacementComponent extends Component {
+    private gameController: GameController | null = null;
     private buildData: any;
     private buildingManager: BuildingManager | null = null;
     private isPlacing: boolean = false;
+    private uiCanvas: Node | null = null;
+    private gameplayCanvas: Node | null = null;
     private camera: Camera | null = null;
     private buildingSprite: Sprite | null = null;
     private collider: Collider2D | null = null;
@@ -30,10 +34,11 @@ export class BuildingPlacementComponent extends Component {
             rigidbody.enabledContactListener = true;
         }
         this.collider = this.node.getComponent(Collider2D);
-        if (this.collider) {
-            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
-            this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
-        }
+        // if (this.collider) {
+            
+        //     this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        //     this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        // }
     }
 
     protected onDisable(): void {
@@ -41,10 +46,10 @@ export class BuildingPlacementComponent extends Component {
         if (rigidbody) {
             rigidbody.enabledContactListener = false;
         }
-        if (this.collider) {
-            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
-            this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
-        }
+        // if (this.collider) {
+        //     this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        //     this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        // }
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null): void {
@@ -64,6 +69,9 @@ export class BuildingPlacementComponent extends Component {
     }
 
     public initialize(buildData: any, buildingManager: BuildingManager): void {
+        this.gameController = Director.instance.getScene().getComponentInChildren(GameController);
+        this.uiCanvas = this.gameController!.UICanvas.node;
+        this.gameplayCanvas = this.gameController!.GameplayCanvas.node;
         this.node.name = buildData.id;
         this.buildData = buildData;
         this.buildingManager = buildingManager;
@@ -83,22 +91,53 @@ export class BuildingPlacementComponent extends Component {
     public onTouchStart(event: EventTouch): void {
         this.isPlacing = true;
         const uiLocation = event.getLocation();
-        this.updateBuildingPosition(new Vec3(uiLocation.x, uiLocation.y, 0));
+        this.updateBuildingPositionAndAppearance(new Vec3(uiLocation.x, uiLocation.y, 0));
     }
 
     public onTouchMove(event: EventTouch): void {
         if (this.isPlacing) {
             const uiLocation = event.getLocation();
-            this.updateBuildingPosition(new Vec3(uiLocation.x, uiLocation.y, 0));
-
+            const uiPos = new Vec3(uiLocation.x, uiLocation.y, 0);
+            this.updateBuildingPositionAndAppearance(uiPos);
+        }
+        else{
+            //set building to origin color
+            if(this.buildingSprite) {
+                SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
+            }
         }
     }
 
+    private detectCollision(uiPos: Vec3): boolean {
+        
+        const worldPos = UIHelper.convertPositionBetweenCanvas(uiPos, this.uiCanvas, this.gameplayCanvas);
+        let rect = new Rect(this.collider.worldAABB);
+        rect.width *= 0.7;
+        rect.height *= 0.7;
+        rect.x = worldPos.x - rect.width / 2;
+        rect.y = worldPos.y - rect.height / 2;
+        const result = PhysicsSystem2D.instance.testAABB(rect);
+        return result.length > 0;
+    }
 
-    private updateBuildingPosition(uiPos: Vec3): void {
+
+    private updateBuildingPositionAndAppearance(uiPos: Vec3): void {
         const worldPos = this.camera.screenToWorld(uiPos); //this.getWorldPositionFromUI(uiPos);
         if (worldPos) {
             this.node.setWorldPosition(worldPos);
+            if (this.detectCollision(worldPos)) {
+                if(this.contactCount === 0) {
+                    SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 0, 0, 125));
+                }
+                this.contactCount = 1;
+                console.log("Collision detected");
+            }
+            else {
+                if(this.contactCount === 1) {
+                    SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 125));
+                }
+                this.contactCount = 0;
+            }
         }
     }
 
