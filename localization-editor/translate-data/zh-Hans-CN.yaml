@@ -752,63 +752,63 @@ items:
     _variants: []
   4N2C3X9A1B8L6Q7E0P5M7D4:
     key: 4N2C3X9A1B8L6Q7E0P5M7D4
-    value: Buy
+    value: 购买
     type: 4
     isVariant: false
     associations: []
     _variants: []
   P8L0W2T5R9H6A3K1M7Q4N8C:
     key: P8L0W2T5R9H6A3K1M7Q4N8C
-    value: Sell
+    value: 出售
     type: 4
     isVariant: false
     associations: []
     _variants: []
   Q6B1A8G2M9K4X0N7T3W5R2P:
     key: Q6B1A8G2M9K4X0N7T3W5R2P
-    value: Buy with coins
+    value: 金币购买
     type: 4
     isVariant: false
     associations: []
     _variants: []
   M3P9X6B1L8A2N5H7C0T4Q2R:
     key: M3P9X6B1L8A2N5H7C0T4Q2R
-    value: Exchange
+    value: 兑 换
     type: 4
     isVariant: false
     associations: []
     _variants: []
   K7D3N9B4L2H6A1M5X0C8P3Q:
     key: K7D3N9B4L2H6A1M5X0C8P3Q
-    value: Stars x
+    value: 星星x
     type: 4
     isVariant: false
     associations: []
     _variants: []
   N4A6K3P9T1B2L7C0H5Q8R2M:
     key: N4A6K3P9T1B2L7C0H5Q8R2M
-    value: Coins x
+    value: 金币x
     type: 4
     isVariant: false
     associations: []
     _variants: []
   Q7C4R1L6T3B9K8A5M2X0P3N:
     key: Q7C4R1L6T3B9K8A5M2X0P3N
-    value: Build
+    value: 建造
     type: 4
     isVariant: false
     associations: []
     _variants: []
   P5B8R0N7C3X2A1L6Q9T4K2M:
     key: P5B8R0N7C3X2A1L6Q9T4K2M
-    value: Bakery
+    value: 面包坊
     type: 4
     isVariant: false
     associations: []
     _variants: []
   4H5jN1pT2K9lQ3gF6bY8M0:
     key: 4H5jN1pT2K9lQ3gF6bY8M0
-    value: Wheat Flour
+    value: 小麦粉
     type: 4
     isVariant: false
     associations: []
