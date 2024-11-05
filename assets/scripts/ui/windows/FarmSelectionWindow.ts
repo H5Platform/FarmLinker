@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ScrollView, instantiate, Prefab, Sprite, Button, UITransform, Vec3, SpriteFrame, Vec2, EventTouch } from 'cc';
+import { _decorator, Component, Node, ScrollView, instantiate, Prefab, Sprite, Button, UITransform, Vec3, SpriteFrame, Vec2, EventTouch, Canvas } from 'cc';
 import { WindowBase } from '../base/WindowBase';
 import { PlayerController } from '../../controllers/PlayerController';
 import { InventoryComponent, InventoryItem, ItemType } from '../../components/InventoryComponent';
@@ -118,7 +118,8 @@ export class FarmSelectionWindow extends WindowBase {
 
         //set selection node active true
         this.selectionNode!.active = true;
-        this.selectionNode!.setWorldPosition(new Vec3(this.clickLocation.x,this.clickLocation.y,0));
+       // this.selectionNode!.setWorldPosition(new Vec3(this.clickLocation.x,this.clickLocation.y,0));
+        this.updateSelectionNodePosition();
         this.updateFarmSelectionViewVisibilityByType(this.currentSelectionType);
         if (this.currentSelectionType === FarmSelectionType.PLOT) {
             
@@ -158,6 +159,44 @@ export class FarmSelectionWindow extends WindowBase {
         super.hide();
         this.callback = null;
         this.removeEventListeners();
+    }
+
+    private updateSelectionNodePosition(): void {
+        // Get canvas dimensions
+        const canvas = this.gameController.UICanvas;
+        const canvasTransform = canvas.getComponent(UITransform);
+        const screenWidth = canvasTransform.width;
+        const screenHeight = canvasTransform.height;
+
+        // Get selection node dimensions
+        const selectionTransform = this.selectionNode.getComponent(UITransform);
+        const selectionWidth = selectionTransform.width;
+        const selectionHeight = selectionTransform.height;
+
+        // Calculate X position (keep original logic)
+        const spaceRight = screenWidth - this.clickLocation.x;
+        let posX = spaceRight >= selectionWidth ? 
+            this.clickLocation.x + selectionWidth/2 : 
+            this.clickLocation.x - selectionWidth/2;
+
+        // Calculate Y position using screen coordinates
+        let posY = this.clickLocation.y - selectionHeight/2; // Default to showing below click
+
+        // Convert the potential positions to screen coordinates
+        const bottomEdgeScreen = posY - selectionHeight/2;
+        const topEdgeScreen = posY + selectionHeight/2;
+
+        // Check if the selection would go outside screen bounds
+        if (bottomEdgeScreen < 0) {
+            // Would go below screen, move up
+            posY = selectionHeight/2;
+        } else if (topEdgeScreen > screenHeight) {
+            // Would go above screen, move down
+            posY = screenHeight - selectionHeight/2;
+        }
+
+        // Set final position
+        this.selectionNode.setWorldPosition(new Vec3(posX, posY, 0));
     }
 
     private updateFarmSelectionViewVisibilityByType(type:FarmSelectionType): void {
