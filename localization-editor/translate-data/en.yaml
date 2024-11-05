@@ -1,991 +1,771 @@
-locale: index
+locale: en
 items:
   73TSsS40JAy5p8379S3FAB:
     key: 73TSsS40JAy5p8379S3FAB
-    value: ""
+    value: Account
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 91zGxFCuZGjpdh2He8l9cs
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 91zGxFCuZGjpdh2He8l9cs
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
+    associations: []
     _variants: []
   56YE6ZYIRAroN+ljg5T7FD:
     key: 56YE6ZYIRAroN+ljg5T7FD
-    value: ""
+    value: Password
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 7bDGc9kw5NyKoBr/lSdWhR
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 7bDGc9kw5NyKoBr/lSdWhR
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
+    associations: []
     _variants: []
   68KC/QIKREmKRVeRVhYq2w:
     key: 68KC/QIKREmKRVeRVhYq2w
-    value: ""
+    value: Login
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 50aIO4K6BLoK5gJvLxWO7D
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 50aIO4K6BLoK5gJvLxWO7D
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: a58SVn3cZDeYG4Tm85Gfym
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
+    associations: []
     _variants: []
   874gNkhr1Ai62qqAdKLOth:
     key: 874gNkhr1Ai62qqAdKLOth
-    value: ""
+    value: Prosperity
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: b3FQFexx5IzrF0/UaDzSIA
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: b3FQFexx5IzrF0/UaDzSIA
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: 15Wl3zAxdGIJhK7Jk9g3lz
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
-      - nodeUuid: cf2IoZX69GYLVOBWck9cVd
+    associations: []
     _variants: []
   63xNiycqdBjagXa6p/2+6B:
     key: 63xNiycqdBjagXa6p/2+6B
-    value: ""
+    value: Hint
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 52861034-09cf-47d2-998f-c7995d6dc19f
-        nodeUuid: 0bfQSmYzRMkZTjZMiIyOTm
-        reference: 52861034-09cf-47d2-998f-c7995d6dc19f
-      - sceneUuid: 52861034-09cf-47d2-998f-c7995d6dc19f
-        nodeUuid: 0bfQSmYzRMkZTjZMiIyOTm
-        reference: 52861034-09cf-47d2-998f-c7995d6dc19f
+    associations: []
     _variants: []
   9evMHjRm9IXZdYS17DA/zt:
     key: 9evMHjRm9IXZdYS17DA/zt
-    value: ""
+    value: Confirm
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 52861034-09cf-47d2-998f-c7995d6dc19f
-        nodeUuid: d3ADGWr9lFeoxHz0S11Ymb
-        reference: 52861034-09cf-47d2-998f-c7995d6dc19f
+    associations: []
     _variants: []
   87chjY045IWbBFtnt0+c8t:
     key: 87chjY045IWbBFtnt0+c8t
-    value: ""
+    value: Are you sure you want to spend x stars to buy x farm coins?
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: fbZjr4eAZI+YZswz5h6Gy+
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: fbZjr4eAZI+YZswz5h6Gy+
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-    _variants: []
-  61fNWu7lxLKpZwkOFzh/GD:
-    key: 61fNWu7lxLKpZwkOFzh/GD
-    value: ""
-    type: 2
-    isVariant: false
-    associations:
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: e7W86+FV9AypTnTnmj1TI/
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: e7W86+FV9AypTnTnmj1TI/
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
+    associations: []
     _variants: []
   944AcGN0hNaKYlY0FlgMhb:
     key: 944AcGN0hNaKYlY0FlgMhb
-    value: ""
+    value: Are you sure you want to spend x farm coins to buy x gold coins?
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: abALVxUJxAWYY92j+jH5fo
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: abALVxUJxAWYY92j+jH5fo
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-    _variants: []
-  56VSUAOBdP7LizjJrdn1tJ:
-    key: 56VSUAOBdP7LizjJrdn1tJ
-    value: ""
-    type: 2
-    isVariant: false
-    associations:
-      - sceneUuid: d52b3407-4a94-4a3e-94de-d882d6c30315
-        nodeUuid: c18MNzYURLHIpxnJB1u+bw
-        reference: d52b3407-4a94-4a3e-94de-d882d6c30315
-      - sceneUuid: d52b3407-4a94-4a3e-94de-d882d6c30315
-        nodeUuid: c18MNzYURLHIpxnJB1u+bw
-        reference: d52b3407-4a94-4a3e-94de-d882d6c30315
-      - nodeUuid: 33wYg4IQ5LrKxqM/IIcxed
-      - nodeUuid: 33wYg4IQ5LrKxqM/IIcxed
-      - nodeUuid: b75MBg551IWbRl8vJ0a+kd
-      - nodeUuid: b75MBg551IWbRl8vJ0a+kd
-      - nodeUuid: 80OWUYeb5EFJ9qapYUfS51
-      - nodeUuid: 80OWUYeb5EFJ9qapYUfS51
-      - nodeUuid: 14bid9mwJBFp0s5snJvVZO
-      - nodeUuid: 14bid9mwJBFp0s5snJvVZO
-      - nodeUuid: 4ecBvjoFdEM4CDEYjJ7wy5
-      - nodeUuid: 4ecBvjoFdEM4CDEYjJ7wy5
-      - nodeUuid: c6El1ul6RNYZVRDnWvDZRG
-      - nodeUuid: c6El1ul6RNYZVRDnWvDZRG
-      - nodeUuid: 141RiOPGdJaaHGzcEfl6t1
-      - nodeUuid: 141RiOPGdJaaHGzcEfl6t1
-      - nodeUuid: 18HFlz+m1HRZXEmtWftvx8
-      - nodeUuid: 18HFlz+m1HRZXEmtWftvx8
-      - nodeUuid: 6b3yc3frlG44r6A4WUhOpz
-      - nodeUuid: 6b3yc3frlG44r6A4WUhOpz
-      - nodeUuid: e37lSg0x5NGYlo4bRPv4VL
-      - nodeUuid: e37lSg0x5NGYlo4bRPv4VL
-      - nodeUuid: f763V00YRK6ZXkHugpabbs
-      - nodeUuid: f763V00YRK6ZXkHugpabbs
-      - nodeUuid: 0cgC20Q8RIjLx5symc2bSz
-      - nodeUuid: 0cgC20Q8RIjLx5symc2bSz
-      - nodeUuid: 3e4UoFqYBHerBQFWvafhgl
-      - nodeUuid: 3e4UoFqYBHerBQFWvafhgl
-      - nodeUuid: 971NPtiNhC5qyrCYxlbS6W
-      - nodeUuid: 971NPtiNhC5qyrCYxlbS6W
-      - nodeUuid: 21opQgMOhMw7FQZ5PIE+kN
-      - nodeUuid: 21opQgMOhMw7FQZ5PIE+kN
-      - nodeUuid: f23IkYFZJMSo1ljTauAQ6R
-      - nodeUuid: f23IkYFZJMSo1ljTauAQ6R
-      - nodeUuid: 99O/3FqT9DD4viXgg49jMr
+    associations: []
     _variants: []
   25HjoD39ZJHJIQ9UhOZgzD:
     key: 25HjoD39ZJHJIQ9UhOZgzD
-    value: ""
+    value: Record
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: f7zJUur/ZNOJI+4k3byAQG
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: f7zJUur/ZNOJI+4k3byAQG
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
+    associations: []
     _variants: []
   b5XBbY6tlM1qn9lG0VblFx:
     key: b5XBbY6tlM1qn9lG0VblFx
-    value: ""
+    value: Produce
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: 92/XyV2rlEcbymj9UlAGbl
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: 92/XyV2rlEcbymj9UlAGbl
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
+    associations: []
     _variants: []
   e1JlHJZ/BC7Ls72koL0mYk:
     key: e1JlHJZ/BC7Ls72koL0mYk
-    value: ""
+    value: Claim
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: fddaiUzqFNsqNorJ1RtE0t
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: fddaiUzqFNsqNorJ1RtE0t
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
+    associations: []
     _variants: []
   64BLa+QmBAVbRCxu0xVK6U:
     key: 64BLa+QmBAVbRCxu0xVK6U
-    value: ""
+    value: Remaining x minutes
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: f3I/yBgUNIk6VEN4ppACej
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: f3I/yBgUNIk6VEN4ppACej
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
+    associations: []
     _variants: []
   2eCpgyLyhLJorqTeKGPbzV:
     key: 2eCpgyLyhLJorqTeKGPbzV
-    value: ""
+    value: Shop
     type: 2
-    isVariant: false
-    associations:
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: cdJrciLWJL8pJYTgFZ1xO3
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: cdJrciLWJL8pJYTgFZ1xO3
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-    _variants: []
-  F5L8H1K2P7C9R4A0N3W6Q7D:
-    key: F5L8H1K2P7C9R4A0N3W6Q7D
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  W0R8K3T5P2N7A1M4Q6L9C2B:
-    key: W0R8K3T5P2N7A1M4Q6L9C2B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  4R1L6T3B9K8A51230P3NQ7C:
-    key: 4R1L6T3B9K8A51230P3NQ7C
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  R1L6T3B9K8A51Q7CP3N4230:
-    key: R1L6T3B9K8A51Q7CP3N4230
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  L6T3B9K8A5123Q7C0P3N4R1:
-    key: L6T3B9K8A5123Q7C0P3N4R1
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  230P3NQ7C4R1L6T3B9K8A51:
-    key: 230P3NQ7C4R1L6T3B9K8A51
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3B9K8A51230P3NQ7C4R1L6T:
-    key: 3B9K8A51230P3NQ7C4R1L6T
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  9K8A51230P3NQ7C4R1L6T3B:
-    key: 9K8A51230P3NQ7C4R1L6T3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  K2T4M9P3R7A1L8Q6N0X5C2B:
-    key: K2T4M9P3R7A1L8Q6N0X5C2B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  F7A3P1K6R2B9N4L8X0T5C3Q:
-    key: F7A3P1K6R2B9N4L8X0T5C3Q
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  M9C0K2N8P1T4L3A6R5Q7B3X:
-    key: M9C0K2N8P1T4L3A6R5Q7B3X
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  T6N4B0L1P7C9R3A8Q5X2K3M:
-    key: T6N4B0L1P7C9R3A8Q5X2K3M
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  W3P1N7L6T4C9A0R2M8Q5K3B:
-    key: W3P1N7L6T4C9A0R2M8Q5K3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  L8A3C0P4N7Q9R1T2M5X6K2B:
-    key: L8A3C0P4N7Q9R1T2M5X6K2B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Q1N4T6B2M9C0P8R3L5A7K3X:
-    key: Q1N4T6B2M9C0P8R3L5A7K3X
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  R5C1N9A3T8P2L7K4Q0X6M3B:
-    key: R5C1N9A3T8P2L7K4Q0X6M3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  K8R0N7B1T3P6L2A9Q4M5X3C:
-    key: K8R0N7B1T3P6L2A9Q4M5X3C
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  P1T3R8C4N2L9A7M0Q5K6X3B:
-    key: P1T3R8C4N2L9A7M0Q5K6X3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  B7L1P4R6A9N0C3Q8T2M5K3X:
-    key: B7L1P4R6A9N0C3Q8T2M5K3X
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  R2N8T4A1P7L6K3M0C9Q5X3B:
-    key: R2N8T4A1P7L6K3M0C9Q5X3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Q3B7N6T1A0R9L2P8M4C5K3X:
-    key: Q3B7N6T1A0R9L2P8M4C5K3X
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  L6P3N7R1C2T9A0K8M4Q5X3B:
-    key: L6P3N7R1C2T9A0K8M4Q5X3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8f7lZK4Q1uN0r5y1s3JvBp:
-    key: 8f7lZK4Q1uN0r5y1s3JvBp
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  E1r3nV5t8H2lK6w4X9cQmA:
-    key: E1r3nV5t8H2lK6w4X9cQmA
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  4pLj6T2s8nVbY1r3Qx5k9D:
-    key: 4pLj6T2s8nVbY1r3Qx5k9D
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  W3x7nY9cQ1u5tL2k6V4pM8:
-    key: W3x7nY9cQ1u5tL2k6V4pM8
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  2tJv8H1nL3r6K5p9sQy4mE:
-    key: 2tJv8H1nL3r6K5p9sQy4mE
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Q1k4H3tL5y6V9n2p8x7mD2:
-    key: Q1k4H3tL5y6V9n2p8x7mD2
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  9m2tL1y5W7p8r6nV3k4Qx3:
-    key: 9m2tL1y5W7p8r6nV3k4Qx3
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Y5p1tL6n3V4k9r8x7Q2mHw:
-    key: Y5p1tL6n3V4k9r8x7Q2mHw
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  6nV9r2tL1m3p8k4y7xQ5H7:
-    key: 6nV9r2tL1m3p8k4y7xQ5H7
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3B7F2gL0hQ5M9nD6xZ8W3a:
-    key: 3B7F2gL0hQ5M9nD6xZ8W3a
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  k4T1zX7p9R8qA3J6fM2wB5:
-    key: k4T1zX7p9R8qA3J6fM2wB5
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8D3y0G2eK6vR9jF7kW1bT4:
-    key: 8D3y0G2eK6vR9jF7kW1bT4
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  s5J0aH8dE2qR6L4bC3mY9Z:
-    key: s5J0aH8dE2qR6L4bC3mY9Z
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  P1s8Q4jU0nK7wT3bD6yF5H:
-    key: P1s8Q4jU0nK7wT3bD6yF5H
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  R9z8L1nK0cT4Q5gY7hM2J6:
-    key: R9z8L1nK0cT4Q5gY7hM2J6
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  2W5hC8kD1tL7P4nQ3jF0zR:
-    key: 2W5hC8kD1tL7P4nQ3jF0zR
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  x4N9pJ2mY3bH8Q1gT6wC5Z:
-    key: x4N9pJ2mY3bH8Q1gT6wC5Z
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  6J2rY5vK1bD9M4pH3qC8nW:
-    key: 6J2rY5vK1bD9M4pH3qC8nW
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  T0g8H3kZ1dQ6mF5jR2wY7L:
-    key: T0g8H3kZ1dQ6mF5jR2wY7L
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  7X1pD4cM9zK6hQ3wT5bY0G:
-    key: 7X1pD4cM9zK6hQ3wT5bY0G
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3L8nF0gD5tR7kP9yB1mZ4J:
-    key: 3L8nF0gD5tR7kP9yB1mZ4J
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8B1tC7xL2nY3F5jH4qK0R6:
-    key: 8B1tC7xL2nY3F5jH4qK0R6
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  A5d9K0gF1mH8rQ3tY7nC4Z:
-    key: A5d9K0gF1mH8rQ3tY7nC4Z
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  j9N4yH5kR2dL1gX6bT8qP0:
-    key: j9N4yH5kR2dL1gX6bT8qP0
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  2V6mK8pD4jQ5nT1wB3Y9hR:
-    key: 2V6mK8pD4jQ5nT1wB3Y9hR
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  7H1rZ9qT4mX2nF5bC8gJ0K:
-    key: 7H1rZ9qT4mX2nF5bC8gJ0K
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  5Q8jW4gN1dT9mY2hK3pR0B:
-    key: 5Q8jW4gN1dT9mY2hK3pR0B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  4D3nQ1gF7bL2yK0mJ6hX8R:
-    key: 4D3nQ1gF7bL2yK0mJ6hX8R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  0R5mC9tH8kX1nJ3gQ7yL4B:
-    key: 0R5mC9tH8kX1nJ3gQ7yL4B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Z7c8K2wD4yQ5hM1nT9rF0P:
-    key: Z7c8K2wD4yQ5hM1nT9rF0P
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8T0jN3pY5bK6F4gR2mH1C9:
-    key: 8T0jN3pY5bK6F4gR2mH1C9
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  9J1xK4jT8cH0qY5nW3bR2M:
-    key: 9J1xK4jT8cH0qY5nW3bR2M
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3H6pG1jN9dL0mQ5kF2yT4K:
-    key: 3H6pG1jN9dL0mQ5kF2yT4K
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  Q4g9D8nZ1tH3R2yC7bF6K0:
-    key: Q4g9D8nZ1tH3R2yC7bF6K0
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  5L1yJ0mT8qF6nK3gB9dW2R:
-    key: 5L1yJ0mT8qF6nK3gB9dW2R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  1F9tK3jY2qD8hW5mC4nR0P:
-    key: 1F9tK3jY2qD8hW5mC4nR0P
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  6M2nT1dQ4gR9bJ5kY8hC3Z:
-    key: 6M2nT1dQ4gR9bJ5kY8hC3Z
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  7K0dY8mF9bJ6qT4wH2gC3R:
-    key: 7K0dY8mF9bJ6qT4wH2gC3R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  1W2nX5pF3qD8gH0kM4jR9C:
-    key: 1W2nX5pF3qD8gH0kM4jR9C
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8L3fY0mJ2nT1gK6hD4bQ9R:
-    key: 8L3fY0mJ2nT1gK6hD4bQ9R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  6D1kP9jT4nF8mC2gY3bH0R:
-    key: 6D1kP9jT4nF8mC2gY3bH0R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  0H5tG9mJ1dF4nK8qC2yW3X:
-    key: 0H5tG9mJ1dF4nK8qC2yW3X
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3H2jL1nQ5dG4kR7mY8bT9F:
-    key: 3H2jL1nQ5dG4kR7mY8bT9F
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8Y3kQ0dF1jR6mT4nP5hW7C:
-    key: 8Y3kQ0dF1jR6mT4nP5hW7C
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  7J0gL5mK9qH2F8yD4bT1R3:
-    key: 7J0gL5mK9qH2F8yD4bT1R3
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  5T1dQ2bY4gK9mD8hC0nJ6R:
-    key: 5T1dQ2bY4gK9mD8hC0nJ6R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3H8nB1xQ5dK7jW0tL9yZ2s:
-    key: 3H8nB1xQ5dK7jW0tL9yZ2s
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  pD7rT4Y0wG6kJ2hX1mN9bK:
-    key: pD7rT4Y0wG6kJ2hX1mN9bK
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  5gZ8Q2tS1pL4yR6mF0cJ3H:
-    key: 5gZ8Q2tS1pL4yR6mF0cJ3H
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  1F9hC6tK8nB2rY0mP5jQ4W:
-    key: 1F9hC6tK8nB2rY0mP5jQ4W
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  xJ2pK7D0mG1yL4hY9cT6bR:
-    key: xJ2pK7D0mG1yL4hY9cT6bR
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  0gM9T4hY3nF1bJ8rP5kL2D:
-    key: 0gM9T4hY3nF1bJ8rP5kL2D
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  K4nH7yD0gC1bT9xM2pF6R8:
-    key: K4nH7yD0gC1bT9xM2pF6R8
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  7R6jX1gK3cP8dH2wF5mY0B:
-    key: 7R6jX1gK3cP8dH2wF5mY0B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  9T1wH5mR6kJ0gD2nY8bC4Q:
-    key: 9T1wH5mR6kJ0gD2nY8bC4Q
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8Y3fK2pT9bM1dG7rW0jL5H:
-    key: 8Y3fK2pT9bM1dG7rW0jL5H
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  5L2nT8yR3kD1hF6pM4gJ0Z:
-    key: 5L2nT8yR3kD1hF6pM4gJ0Z
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  zK9hC3bY8mR0dP6tF5wJ2Q:
-    key: zK9hC3bY8mR0dP6tF5wJ2Q
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  1Y4gD7nH2jM5tL9kW0xF3B:
-    key: 1Y4gD7nH2jM5tL9kW0xF3B
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  8C0kT1bH5nF7yP3dQ6jM4R:
-    key: 8C0kT1bH5nF7yP3dQ6jM4R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  4W6jF1mY9kT2bG0hN5qL8D:
-    key: 4W6jF1mY9kT2bG0hN5qL8D
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  3J2gY7pK1dH6wT0bR5nF4C:
-    key: 3J2gY7pK1dH6wT0bR5nF4C
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  R5hW0mN8jK3gL7tY6D2bP1:
-    key: R5hW0mN8jK3gL7tY6D2bP1
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  0D9jK4tM7nB2hY5wF1gC8R:
-    key: 0D9jK4tM7nB2hY5wF1gC8R
-    value: ""
-    type: 4
-    isVariant: false
-    associations: []
-    _variants: []
-  6L2nF1hY0kG9mD3rT4pB8X:
-    key: 6L2nF1hY0kG9mD3rT4pB8X
-    value: ""
-    type: 4
     isVariant: false
     associations: []
     _variants: []
   4N2C3X9A1B8L6Q7E0P5M7D4:
     key: 4N2C3X9A1B8L6Q7E0P5M7D4
-    value: ""
+    value: Buy
     type: 4
     isVariant: false
     associations: []
     _variants: []
   P8L0W2T5R9H6A3K1M7Q4N8C:
     key: P8L0W2T5R9H6A3K1M7Q4N8C
-    value: ""
+    value: Sell
     type: 4
     isVariant: false
     associations: []
     _variants: []
   Q6B1A8G2M9K4X0N7T3W5R2P:
     key: Q6B1A8G2M9K4X0N7T3W5R2P
-    value: ""
+    value: Buy with coins
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  F5L8H1K2P7C9R4A0N3W6Q7D:
+    key: F5L8H1K2P7C9R4A0N3W6Q7D
+    value: Buy with farm currency
     type: 4
     isVariant: false
     associations: []
     _variants: []
   M3P9X6B1L8A2N5H7C0T4Q2R:
     key: M3P9X6B1L8A2N5H7C0T4Q2R
-    value: ""
+    value: Exchange
     type: 4
     isVariant: false
     associations: []
     _variants: []
   K7D3N9B4L2H6A1M5X0C8P3Q:
     key: K7D3N9B4L2H6A1M5X0C8P3Q
-    value: ""
+    value: Stars x
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W0R8K3T5P2N7A1M4Q6L9C2B:
+    key: W0R8K3T5P2N7A1M4Q6L9C2B
+    value: Farm currency x
     type: 4
     isVariant: false
     associations: []
     _variants: []
   N4A6K3P9T1B2L7C0H5Q8R2M:
     key: N4A6K3P9T1B2L7C0H5Q8R2M
-    value: ""
+    value: Coins x
     type: 4
     isVariant: false
     associations: []
     _variants: []
   Q7C4R1L6T3B9K8A5M2X0P3N:
     key: Q7C4R1L6T3B9K8A5M2X0P3N
-    value: ""
+    value: Build
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4R1L6T3B9K8A51230P3NQ7C:
+    key: 4R1L6T3B9K8A51230P3NQ7C
+    value: Settings
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R1L6T3B9K8A51Q7CP3N4230:
+    key: R1L6T3B9K8A51Q7CP3N4230
+    value: Music
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L6T3B9K8A5123Q7C0P3N4R1:
+    key: L6T3B9K8A5123Q7C0P3N4R1
+    value: Sound
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  230P3NQ7C4R1L6T3B9K8A51:
+    key: 230P3NQ7C4R1L6T3B9K8A51
+    value: Language
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3B9K8A51230P3NQ7C4R1L6T:
+    key: 3B9K8A51230P3NQ7C4R1L6T
+    value: Chinese
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9K8A51230P3NQ7C4R1L6T3B:
+    key: 9K8A51230P3NQ7C4R1L6T3B
+    value: English
     type: 4
     isVariant: false
     associations: []
     _variants: []
   P5B8R0N7C3X2A1L6Q9T4K2M:
     key: P5B8R0N7C3X2A1L6Q9T4K2M
-    value: ""
+    value: Bakery
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K2T4M9P3R7A1L8Q6N0X5C2B:
+    key: K2T4M9P3R7A1L8Q6N0X5C2B
+    value: Workshop
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  F7A3P1K6R2B9N4L8X0T5C3Q:
+    key: F7A3P1K6R2B9N4L8X0T5C3Q
+    value: Farmhouse
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  M9C0K2N8P1T4L3A6R5Q7B3X:
+    key: M9C0K2N8P1T4L3A6R5Q7B3X
+    value: Country Fast Food
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  T6N4B0L1P7C9R3A8Q5X2K3M:
+    key: T6N4B0L1P7C9R3A8Q5X2K3M
+    value: Dairy Factory
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W3P1N7L6T4C9A0R2M8Q5K3B:
+    key: W3P1N7L6T4C9A0R2M8Q5K3B
+    value: Jam Factory
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L8A3C0P4N7Q9R1T2M5X6K2B:
+    key: L8A3C0P4N7Q9R1T2M5X6K2B
+    value: Dirt Road
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q1N4T6B2M9C0P8R3L5A7K3X:
+    key: Q1N4T6B2M9C0P8R3L5A7K3X
+    value: Cobblestone Road
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R5C1N9A3T8P2L7K4Q0X6M3B:
+    key: R5C1N9A3T8P2L7K4Q0X6M3B
+    value: Asphalt Road
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K8R0N7B1T3P6L2A9Q4M5X3C:
+    key: K8R0N7B1T3P6L2A9Q4M5X3C
+    value: Wooden Bridge
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P1T3R8C4N2L9A7M0Q5K6X3B:
+    key: P1T3R8C4N2L9A7M0Q5K6X3B
+    value: Stone Bridge
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  B7L1P4R6A9N0C3Q8T2M5K3X:
+    key: B7L1P4R6A9N0C3Q8T2M5K3X
+    value: Suspension Bridge
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R2N8T4A1P7L6K3M0C9Q5X3B:
+    key: R2N8T4A1P7L6K3M0C9Q5X3B
+    value: Basic Irrigation Canal
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q3B7N6T1A0R9L2P8M4C5K3X:
+    key: Q3B7N6T1A0R9L2P8M4C5K3X
+    value: Sprinkler System
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L6P3N7R1C2T9A0K8M4Q5X3B:
+    key: L6P3N7R1C2T9A0K8M4Q5X3B
+    value: Drip Irrigation System
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8f7lZK4Q1uN0r5y1s3JvBp:
+    key: 8f7lZK4Q1uN0r5y1s3JvBp
+    value: Small Warehouse
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  E1r3nV5t8H2lK6w4X9cQmA:
+    key: E1r3nV5t8H2lK6w4X9cQmA
+    value: Medium Warehouse
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4pLj6T2s8nVbY1r3Qx5k9D:
+    key: 4pLj6T2s8nVbY1r3Qx5k9D
+    value: Large Granary
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W3x7nY9cQ1u5tL2k6V4pM8:
+    key: W3x7nY9cQ1u5tL2k6V4pM8
+    value: Observation Deck
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2tJv8H1nL3r6K5p9sQy4mE:
+    key: 2tJv8H1nL3r6K5p9sQy4mE
+    value: Farm Path
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q1k4H3tL5y6V9n2p8x7mD2:
+    key: Q1k4H3tL5y6V9n2p8x7mD2
+    value: Eco Lodge
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9m2tL1y5W7p8r6nV3k4Qx3:
+    key: 9m2tL1y5W7p8r6nV3k4Qx3
+    value: Wheat
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Y5p1tL6n3V4k9r8x7Q2mHw:
+    key: Y5p1tL6n3V4k9r8x7Q2mHw
+    value: Lettuce
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6nV9r2tL1m3p8k4y7xQ5H7:
+    key: 6nV9r2tL1m3p8k4y7xQ5H7
+    value: Carrot
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3B7F2gL0hQ5M9nD6xZ8W3a:
+    key: 3B7F2gL0hQ5M9nD6xZ8W3a
+    value: Tomato
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  k4T1zX7p9R8qA3J6fM2wB5:
+    key: k4T1zX7p9R8qA3J6fM2wB5
+    value: Corn
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8D3y0G2eK6vR9jF7kW1bT4:
+    key: 8D3y0G2eK6vR9jF7kW1bT4
+    value: Potato
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  s5J0aH8dE2qR6L4bC3mY9Z:
+    key: s5J0aH8dE2qR6L4bC3mY9Z
+    value: Strawberry
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P1s8Q4jU0nK7wT3bD6yF5H:
+    key: P1s8Q4jU0nK7wT3bD6yF5H
+    value: Pumpkin
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R9z8L1nK0cT4Q5gY7hM2J6:
+    key: R9z8L1nK0cT4Q5gY7hM2J6
+    value: Grape
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2W5hC8kD1tL7P4nQ3jF0zR:
+    key: 2W5hC8kD1tL7P4nQ3jF0zR
+    value: Wheat seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  x4N9pJ2mY3bH8Q1gT6wC5Z:
+    key: x4N9pJ2mY3bH8Q1gT6wC5Z
+    value: Lettuce seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6J2rY5vK1bD9M4pH3qC8nW:
+    key: 6J2rY5vK1bD9M4pH3qC8nW
+    value: Carrot seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  T0g8H3kZ1dQ6mF5jR2wY7L:
+    key: T0g8H3kZ1dQ6mF5jR2wY7L
+    value: Tomato seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7X1pD4cM9zK6hQ3wT5bY0G:
+    key: 7X1pD4cM9zK6hQ3wT5bY0G
+    value: Corn seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3L8nF0gD5tR7kP9yB1mZ4J:
+    key: 3L8nF0gD5tR7kP9yB1mZ4J
+    value: Potato seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8B1tC7xL2nY3F5jH4qK0R6:
+    key: 8B1tC7xL2nY3F5jH4qK0R6
+    value: Strawberry seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  A5d9K0gF1mH8rQ3tY7nC4Z:
+    key: A5d9K0gF1mH8rQ3tY7nC4Z
+    value: Pumpkin seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  j9N4yH5kR2dL1gX6bT8qP0:
+    key: j9N4yH5kR2dL1gX6bT8qP0
+    value: Grape seeds
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2V6mK8pD4jQ5nT1wB3Y9hR:
+    key: 2V6mK8pD4jQ5nT1wB3Y9hR
+    value: Chicken
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7H1rZ9qT4mX2nF5bC8gJ0K:
+    key: 7H1rZ9qT4mX2nF5bC8gJ0K
+    value: Duck
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5Q8jW4gN1dT9mY2hK3pR0B:
+    key: 5Q8jW4gN1dT9mY2hK3pR0B
+    value: Sheep
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4D3nQ1gF7bL2yK0mJ6hX8R:
+    key: 4D3nQ1gF7bL2yK0mJ6hX8R
+    value: Pig
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0R5mC9tH8kX1nJ3gQ7yL4B:
+    key: 0R5mC9tH8kX1nJ3gQ7yL4B
+    value: Cow
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Z7c8K2wD4yQ5hM1nT9rF0P:
+    key: Z7c8K2wD4yQ5hM1nT9rF0P
+    value: Dairy Cow
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8T0jN3pY5bK6F4gR2mH1C9:
+    key: 8T0jN3pY5bK6F4gR2mH1C9
+    value: Horse
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9J1xK4jT8cH0qY5nW3bR2M:
+    key: 9J1xK4jT8cH0qY5nW3bR2M
+    value: Chick
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H6pG1jN9dL0mQ5kF2yT4K:
+    key: 3H6pG1jN9dL0mQ5kF2yT4K
+    value: Duckling
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q4g9D8nZ1tH3R2yC7bF6K0:
+    key: Q4g9D8nZ1tH3R2yC7bF6K0
+    value: Lamb
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5L1yJ0mT8qF6nK3gB9dW2R:
+    key: 5L1yJ0mT8qF6nK3gB9dW2R
+    value: Piglet
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1F9tK3jY2qD8hW5mC4nR0P:
+    key: 1F9tK3jY2qD8hW5mC4nR0P
+    value: Calf
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6M2nT1dQ4gR9bJ5kY8hC3Z:
+    key: 6M2nT1dQ4gR9bJ5kY8hC3Z
+    value: Dairy Calf
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7K0dY8mF9bJ6qT4wH2gC3R:
+    key: 7K0dY8mF9bJ6qT4wH2gC3R
+    value: Pony
     type: 4
     isVariant: false
     associations: []
     _variants: []
   4H5jN1pT2K9lQ3gF6bY8M0:
     key: 4H5jN1pT2K9lQ3gF6bY8M0
-    value: ""
+    value: Wheat Flour
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1W2nX5pF3qD8gH0kM4jR9C:
+    key: 1W2nX5pF3qD8gH0kM4jR9C
+    value: Bread
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8L3fY0mJ2nT1gK6hD4bQ9R:
+    key: 8L3fY0mJ2nT1gK6hD4bQ9R
+    value: Baguette
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6D1kP9jT4nF8mC2gY3bH0R:
+    key: 6D1kP9jT4nF8mC2gY3bH0R
+    value: Milk Bread
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0H5tG9mJ1dF4nK8qC2yW3X:
+    key: 0H5tG9mJ1dF4nK8qC2yW3X
+    value: Cake
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H2jL1nQ5dG4kR7mY8bT9F:
+    key: 3H2jL1nQ5dG4kR7mY8bT9F
+    value: Yarn Ball
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8Y3kQ0dF1jR6mT4nP5hW7C:
+    key: 8Y3kQ0dF1jR6mT4nP5hW7C
+    value: Sweater
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7J0gL5mK9qH2F8yD4bT1R3:
+    key: 7J0gL5mK9qH2F8yD4bT1R3
+    value: Wool Blanket
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5T1dQ2bY4gK9mD8hC0nJ6R:
+    key: 5T1dQ2bY4gK9mD8hC0nJ6R
+    value: "清蒸胡萝卜: Steamed Carrots"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H8nB1xQ5dK7jW0tL9yZ2s:
+    key: 3H8nB1xQ5dK7jW0tL9yZ2s
+    value: Corn Cake
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  pD7rT4Y0wG6kJ2hX1mN9bK:
+    key: pD7rT4Y0wG6kJ2hX1mN9bK
+    value: "番茄炒蛋: Tomato and Egg Stir-Fry"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5gZ8Q2tS1pL4yR6mF0cJ3H:
+    key: 5gZ8Q2tS1pL4yR6mF0cJ3H
+    value: "胡萝卜土豆泥: Carrot and Potato Mash"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1F9hC6tK8nB2rY0mP5jQ4W:
+    key: 1F9hC6tK8nB2rY0mP5jQ4W
+    value: "蔬菜披萨: Vegetable Pizza"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  xJ2pK7D0mG1yL4hY9cT6bR:
+    key: xJ2pK7D0mG1yL4hY9cT6bR
+    value: Beef Burger
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0gM9T4hY3nF1bJ8rP5kL2D:
+    key: 0gM9T4hY3nF1bJ8rP5kL2D
+    value: "烤猪肋排: Grilled Pork Ribs"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K4nH7yD0gC1bT9xM2pF6R8:
+    key: K4nH7yD0gC1bT9xM2pF6R8
+    value: "双肉火锅: Double Meat Hotpot"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7R6jX1gK3cP8dH2wF5mY0B:
+    key: 7R6jX1gK3cP8dH2wF5mY0B
+    value: Pudding
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9T1wH5mR6kJ0gD2nY8bC4Q:
+    key: 9T1wH5mR6kJ0gD2nY8bC4Q
+    value: Yogurt
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8Y3fK2pT9bM1dG7rW0jL5H:
+    key: 8Y3fK2pT9bM1dG7rW0jL5H
+    value: Cheese
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5L2nT8yR3kD1hF6pM4gJ0Z:
+    key: 5L2nT8yR3kD1hF6pM4gJ0Z
+    value: "草莓奶昔: Strawberry Milkshake"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  zK9hC3bY8mR0dP6tF5wJ2Q:
+    key: zK9hC3bY8mR0dP6tF5wJ2Q
+    value: "草莓果酱: Strawberry Jam"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1Y4gD7nH2jM5tL9kW0xF3B:
+    key: 1Y4gD7nH2jM5tL9kW0xF3B
+    value: Grape Jam
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8C0kT1bH5nF7yP3dQ6jM4R:
+    key: 8C0kT1bH5nF7yP3dQ6jM4R
+    value: Egg
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4W6jF1mY9kT2bG0hN5qL8D:
+    key: 4W6jF1mY9kT2bG0hN5qL8D
+    value: Duck Egg
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3J2gY7pK1dH6wT0bR5nF4C:
+    key: 3J2gY7pK1dH6wT0bR5nF4C
+    value: Wool
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R5hW0mN8jK3gL7tY6D2bP1:
+    key: R5hW0mN8jK3gL7tY6D2bP1
+    value: Pork
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0D9jK4tM7nB2hY5wF1gC8R:
+    key: 0D9jK4tM7nB2hY5wF1gC8R
+    value: Beef
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6L2nF1hY0kG9mD3rT4pB8X:
+    key: 6L2nF1hY0kG9mD3rT4pB8X
+    value: Milk
     type: 4
     isVariant: false
     associations: []
     _variants: []
 languageConfig:
-  bcp47Tag: index
-  translateFinished: 66
-  translateTotal: 0
+  bcp47Tag: en
+  translateFinished: 61
+  translateTotal: 205
   compileFinished: 0
-  compileTotal: 0
+  compileTotal: 109

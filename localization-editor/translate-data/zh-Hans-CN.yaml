@@ -2,33 +2,21 @@ locale: zh-Hans-CN
 items:
   73TSsS40JAy5p8379S3FAB:
     key: 73TSsS40JAy5p8379S3FAB
-    value: 金币购买
+    value: 账号
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 91zGxFCuZGjpdh2He8l9cs
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 91zGxFCuZGjpdh2He8l9cs
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
+    associations: []
     _variants: []
   56YE6ZYIRAroN+ljg5T7FD:
     key: 56YE6ZYIRAroN+ljg5T7FD
-    value: 金币x
+    value: 密码
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 7bDGc9kw5NyKoBr/lSdWhR
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: 7bDGc9kw5NyKoBr/lSdWhR
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
+    associations: []
     _variants: []
   68KC/QIKREmKRVeRVhYq2w:
     key: 68KC/QIKREmKRVeRVhYq2w
-    value: 农场币 x
+    value: 登录
     type: 2
     isVariant: false
     associations:
@@ -41,33 +29,21 @@ items:
     _variants: []
   874gNkhr1Ai62qqAdKLOth:
     key: 874gNkhr1Ai62qqAdKLOth
-    value: 兑 换
+    value: 繁荣
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: b3FQFexx5IzrF0/UaDzSIA
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-      - sceneUuid: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
-        nodeUuid: b3FQFexx5IzrF0/UaDzSIA
-        reference: fe574c72-711f-46fe-a9cd-9b2c97da8f5b
+    associations: []
     _variants: []
   63xNiycqdBjagXa6p/2+6B:
     key: 63xNiycqdBjagXa6p/2+6B
-    value: 建造
+    value: 提示
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 52861034-09cf-47d2-998f-c7995d6dc19f
-        nodeUuid: 0bfQSmYzRMkZTjZMiIyOTm
-        reference: 52861034-09cf-47d2-998f-c7995d6dc19f
-      - sceneUuid: 52861034-09cf-47d2-998f-c7995d6dc19f
-        nodeUuid: 0bfQSmYzRMkZTjZMiIyOTm
-        reference: 52861034-09cf-47d2-998f-c7995d6dc19f
+    associations: []
     _variants: []
   9evMHjRm9IXZdYS17DA/zt:
     key: 9evMHjRm9IXZdYS17DA/zt
-    value: 面包坊
+    value: 确定
     type: 2
     isVariant: false
     associations:
@@ -80,33 +56,21 @@ items:
     _variants: []
   87chjY045IWbBFtnt0+c8t:
     key: 87chjY045IWbBFtnt0+c8t
-    value: 面包坊
+    value: 确定要花费星星x，来购买农场币x吗？
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: fbZjr4eAZI+YZswz5h6Gy+
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: fbZjr4eAZI+YZswz5h6Gy+
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
+    associations: []
     _variants: []
   61fNWu7lxLKpZwkOFzh/GD:
     key: 61fNWu7lxLKpZwkOFzh/GD
     value: 小麦粉
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: e7W86+FV9AypTnTnmj1TI/
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
-        nodeUuid: e7W86+FV9AypTnTnmj1TI/
-        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
+    associations: []
     _variants: []
   944AcGN0hNaKYlY0FlgMhb:
     key: 944AcGN0hNaKYlY0FlgMhb
-    value: 领 取
+    value: 确定要花费农场币x，来购买金币x吗？
     type: 2
     isVariant: false
     associations:
@@ -132,7 +96,7 @@ items:
     _variants: []
   25HjoD39ZJHJIQ9UhOZgzD:
     key: 25HjoD39ZJHJIQ9UhOZgzD
-    value: 充值
+    value: 记录
     type: 2
     isVariant: false
     associations:
@@ -145,20 +109,14 @@ items:
     _variants: []
   b5XBbY6tlM1qn9lG0VblFx:
     key: b5XBbY6tlM1qn9lG0VblFx
-    value: 星星x
+    value: 制作
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: 92/XyV2rlEcbymj9UlAGbl
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-      - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
-        nodeUuid: 92/XyV2rlEcbymj9UlAGbl
-        reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
+    associations: []
     _variants: []
   e1JlHJZ/BC7Ls72koL0mYk:
     key: e1JlHJZ/BC7Ls72koL0mYk
-    value: 商店
+    value: 领取
     type: 2
     isVariant: false
     associations:
@@ -171,33 +129,693 @@ items:
     _variants: []
   64BLa+QmBAVbRCxu0xVK6U:
     key: 64BLa+QmBAVbRCxu0xVK6U
-    value: 购买
+    value: 剩余x分钟
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: f3I/yBgUNIk6VEN4ppACej
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: f3I/yBgUNIk6VEN4ppACej
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
+    associations: []
     _variants: []
   2eCpgyLyhLJorqTeKGPbzV:
     key: 2eCpgyLyhLJorqTeKGPbzV
-    value: 出售
+    value: 商店
     type: 2
     isVariant: false
-    associations:
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: cdJrciLWJL8pJYTgFZ1xO3
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
-      - sceneUuid: 2d871125-f425-45c1-ace9-e39e796a4f8d
-        nodeUuid: cdJrciLWJL8pJYTgFZ1xO3
-        reference: 2d871125-f425-45c1-ace9-e39e796a4f8d
+    associations: []
+    _variants: []
+  F5L8H1K2P7C9R4A0N3W6Q7D:
+    key: F5L8H1K2P7C9R4A0N3W6Q7D
+    value: 农场币购买
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W0R8K3T5P2N7A1M4Q6L9C2B:
+    key: W0R8K3T5P2N7A1M4Q6L9C2B
+    value: 农场币x
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4R1L6T3B9K8A51230P3NQ7C:
+    key: 4R1L6T3B9K8A51230P3NQ7C
+    value: 设置
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R1L6T3B9K8A51Q7CP3N4230:
+    key: R1L6T3B9K8A51Q7CP3N4230
+    value: 音乐
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L6T3B9K8A5123Q7C0P3N4R1:
+    key: L6T3B9K8A5123Q7C0P3N4R1
+    value: 音效
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  230P3NQ7C4R1L6T3B9K8A51:
+    key: 230P3NQ7C4R1L6T3B9K8A51
+    value: 语言
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3B9K8A51230P3NQ7C4R1L6T:
+    key: 3B9K8A51230P3NQ7C4R1L6T
+    value: 中文
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9K8A51230P3NQ7C4R1L6T3B:
+    key: 9K8A51230P3NQ7C4R1L6T3B
+    value: 英文
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K2T4M9P3R7A1L8Q6N0X5C2B:
+    key: K2T4M9P3R7A1L8Q6N0X5C2B
+    value: 手工坊
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  F7A3P1K6R2B9N4L8X0T5C3Q:
+    key: F7A3P1K6R2B9N4L8X0T5C3Q
+    value: 农家乐
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  M9C0K2N8P1T4L3A6R5Q7B3X:
+    key: M9C0K2N8P1T4L3A6R5Q7B3X
+    value: 乡村快餐
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  T6N4B0L1P7C9R3A8Q5X2K3M:
+    key: T6N4B0L1P7C9R3A8Q5X2K3M
+    value: 奶制品厂
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W3P1N7L6T4C9A0R2M8Q5K3B:
+    key: W3P1N7L6T4C9A0R2M8Q5K3B
+    value: 果酱工厂
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L8A3C0P4N7Q9R1T2M5X6K2B:
+    key: L8A3C0P4N7Q9R1T2M5X6K2B
+    value: 土路
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q1N4T6B2M9C0P8R3L5A7K3X:
+    key: Q1N4T6B2M9C0P8R3L5A7K3X
+    value: 石板路
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R5C1N9A3T8P2L7K4Q0X6M3B:
+    key: R5C1N9A3T8P2L7K4Q0X6M3B
+    value: 柏油路
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K8R0N7B1T3P6L2A9Q4M5X3C:
+    key: K8R0N7B1T3P6L2A9Q4M5X3C
+    value: 木桥
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P1T3R8C4N2L9A7M0Q5K6X3B:
+    key: P1T3R8C4N2L9A7M0Q5K6X3B
+    value: 石桥
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  B7L1P4R6A9N0C3Q8T2M5K3X:
+    key: B7L1P4R6A9N0C3Q8T2M5K3X
+    value: 悬索桥
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R2N8T4A1P7L6K3M0C9Q5X3B:
+    key: R2N8T4A1P7L6K3M0C9Q5X3B
+    value: 基础灌溉渠
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q3B7N6T1A0R9L2P8M4C5K3X:
+    key: Q3B7N6T1A0R9L2P8M4C5K3X
+    value: 喷灌系统
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  L6P3N7R1C2T9A0K8M4Q5X3B:
+    key: L6P3N7R1C2T9A0K8M4Q5X3B
+    value: 滴灌系统
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8f7lZK4Q1uN0r5y1s3JvBp:
+    key: 8f7lZK4Q1uN0r5y1s3JvBp
+    value: 小型仓库
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  E1r3nV5t8H2lK6w4X9cQmA:
+    key: E1r3nV5t8H2lK6w4X9cQmA
+    value: 中型仓库
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4pLj6T2s8nVbY1r3Qx5k9D:
+    key: 4pLj6T2s8nVbY1r3Qx5k9D
+    value: 大型粮仓
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  W3x7nY9cQ1u5tL2k6V4pM8:
+    key: W3x7nY9cQ1u5tL2k6V4pM8
+    value: 观景台
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2tJv8H1nL3r6K5p9sQy4mE:
+    key: 2tJv8H1nL3r6K5p9sQy4mE
+    value: 农场小径
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q1k4H3tL5y6V9n2p8x7mD2:
+    key: Q1k4H3tL5y6V9n2p8x7mD2
+    value: 生态旅馆
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9m2tL1y5W7p8r6nV3k4Qx3:
+    key: 9m2tL1y5W7p8r6nV3k4Qx3
+    value: 小麦
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Y5p1tL6n3V4k9r8x7Q2mHw:
+    key: Y5p1tL6n3V4k9r8x7Q2mHw
+    value: 生菜
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6nV9r2tL1m3p8k4y7xQ5H7:
+    key: 6nV9r2tL1m3p8k4y7xQ5H7
+    value: 胡萝卜
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3B7F2gL0hQ5M9nD6xZ8W3a:
+    key: 3B7F2gL0hQ5M9nD6xZ8W3a
+    value: 番茄
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  k4T1zX7p9R8qA3J6fM2wB5:
+    key: k4T1zX7p9R8qA3J6fM2wB5
+    value: 玉米
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8D3y0G2eK6vR9jF7kW1bT4:
+    key: 8D3y0G2eK6vR9jF7kW1bT4
+    value: 土豆
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  s5J0aH8dE2qR6L4bC3mY9Z:
+    key: s5J0aH8dE2qR6L4bC3mY9Z
+    value: 草莓
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P1s8Q4jU0nK7wT3bD6yF5H:
+    key: P1s8Q4jU0nK7wT3bD6yF5H
+    value: 南瓜
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R9z8L1nK0cT4Q5gY7hM2J6:
+    key: R9z8L1nK0cT4Q5gY7hM2J6
+    value: 葡萄
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2W5hC8kD1tL7P4nQ3jF0zR:
+    key: 2W5hC8kD1tL7P4nQ3jF0zR
+    value: 小麦种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  x4N9pJ2mY3bH8Q1gT6wC5Z:
+    key: x4N9pJ2mY3bH8Q1gT6wC5Z
+    value: 生菜种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6J2rY5vK1bD9M4pH3qC8nW:
+    key: 6J2rY5vK1bD9M4pH3qC8nW
+    value: 胡萝卜种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  T0g8H3kZ1dQ6mF5jR2wY7L:
+    key: T0g8H3kZ1dQ6mF5jR2wY7L
+    value: 番茄种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7X1pD4cM9zK6hQ3wT5bY0G:
+    key: 7X1pD4cM9zK6hQ3wT5bY0G
+    value: 玉米种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3L8nF0gD5tR7kP9yB1mZ4J:
+    key: 3L8nF0gD5tR7kP9yB1mZ4J
+    value: 土豆种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8B1tC7xL2nY3F5jH4qK0R6:
+    key: 8B1tC7xL2nY3F5jH4qK0R6
+    value: 草莓种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  A5d9K0gF1mH8rQ3tY7nC4Z:
+    key: A5d9K0gF1mH8rQ3tY7nC4Z
+    value: 南瓜种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  j9N4yH5kR2dL1gX6bT8qP0:
+    key: j9N4yH5kR2dL1gX6bT8qP0
+    value: 葡萄种子
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2V6mK8pD4jQ5nT1wB3Y9hR:
+    key: 2V6mK8pD4jQ5nT1wB3Y9hR
+    value: 鸡
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7H1rZ9qT4mX2nF5bC8gJ0K:
+    key: 7H1rZ9qT4mX2nF5bC8gJ0K
+    value: 鸭
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5Q8jW4gN1dT9mY2hK3pR0B:
+    key: 5Q8jW4gN1dT9mY2hK3pR0B
+    value: 羊
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4D3nQ1gF7bL2yK0mJ6hX8R:
+    key: 4D3nQ1gF7bL2yK0mJ6hX8R
+    value: 猪
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0R5mC9tH8kX1nJ3gQ7yL4B:
+    key: 0R5mC9tH8kX1nJ3gQ7yL4B
+    value: 牛
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Z7c8K2wD4yQ5hM1nT9rF0P:
+    key: Z7c8K2wD4yQ5hM1nT9rF0P
+    value: 奶牛
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8T0jN3pY5bK6F4gR2mH1C9:
+    key: 8T0jN3pY5bK6F4gR2mH1C9
+    value: 马
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9J1xK4jT8cH0qY5nW3bR2M:
+    key: 9J1xK4jT8cH0qY5nW3bR2M
+    value: 鸡宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H6pG1jN9dL0mQ5kF2yT4K:
+    key: 3H6pG1jN9dL0mQ5kF2yT4K
+    value: 鸭宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q4g9D8nZ1tH3R2yC7bF6K0:
+    key: Q4g9D8nZ1tH3R2yC7bF6K0
+    value: 羊宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5L1yJ0mT8qF6nK3gB9dW2R:
+    key: 5L1yJ0mT8qF6nK3gB9dW2R
+    value: 猪宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1F9tK3jY2qD8hW5mC4nR0P:
+    key: 1F9tK3jY2qD8hW5mC4nR0P
+    value: 牛宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6M2nT1dQ4gR9bJ5kY8hC3Z:
+    key: 6M2nT1dQ4gR9bJ5kY8hC3Z
+    value: 奶牛宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7K0dY8mF9bJ6qT4wH2gC3R:
+    key: 7K0dY8mF9bJ6qT4wH2gC3R
+    value: 马宝宝
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1W2nX5pF3qD8gH0kM4jR9C:
+    key: 1W2nX5pF3qD8gH0kM4jR9C
+    value: 面包
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8L3fY0mJ2nT1gK6hD4bQ9R:
+    key: 8L3fY0mJ2nT1gK6hD4bQ9R
+    value: 法式长棍
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6D1kP9jT4nF8mC2gY3bH0R:
+    key: 6D1kP9jT4nF8mC2gY3bH0R
+    value: 牛奶面包
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0H5tG9mJ1dF4nK8qC2yW3X:
+    key: 0H5tG9mJ1dF4nK8qC2yW3X
+    value: 蛋糕
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H2jL1nQ5dG4kR7mY8bT9F:
+    key: 3H2jL1nQ5dG4kR7mY8bT9F
+    value: 毛线球
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8Y3kQ0dF1jR6mT4nP5hW7C:
+    key: 8Y3kQ0dF1jR6mT4nP5hW7C
+    value: 毛衣
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7J0gL5mK9qH2F8yD4bT1R3:
+    key: 7J0gL5mK9qH2F8yD4bT1R3
+    value: 羊毛毯
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5T1dQ2bY4gK9mD8hC0nJ6R:
+    key: 5T1dQ2bY4gK9mD8hC0nJ6R
+    value: 清蒸胡萝卜
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3H8nB1xQ5dK7jW0tL9yZ2s:
+    key: 3H8nB1xQ5dK7jW0tL9yZ2s
+    value: 玉米饼
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  pD7rT4Y0wG6kJ2hX1mN9bK:
+    key: pD7rT4Y0wG6kJ2hX1mN9bK
+    value: 番茄炒蛋
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5gZ8Q2tS1pL4yR6mF0cJ3H:
+    key: 5gZ8Q2tS1pL4yR6mF0cJ3H
+    value: 胡萝卜土豆泥
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1F9hC6tK8nB2rY0mP5jQ4W:
+    key: 1F9hC6tK8nB2rY0mP5jQ4W
+    value: 蔬菜披萨
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  xJ2pK7D0mG1yL4hY9cT6bR:
+    key: xJ2pK7D0mG1yL4hY9cT6bR
+    value: 牛肉汉堡
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0gM9T4hY3nF1bJ8rP5kL2D:
+    key: 0gM9T4hY3nF1bJ8rP5kL2D
+    value: 烤猪肋排
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K4nH7yD0gC1bT9xM2pF6R8:
+    key: K4nH7yD0gC1bT9xM2pF6R8
+    value: 双肉火锅
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7R6jX1gK3cP8dH2wF5mY0B:
+    key: 7R6jX1gK3cP8dH2wF5mY0B
+    value: 布丁
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  9T1wH5mR6kJ0gD2nY8bC4Q:
+    key: 9T1wH5mR6kJ0gD2nY8bC4Q
+    value: 酸奶
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8Y3fK2pT9bM1dG7rW0jL5H:
+    key: 8Y3fK2pT9bM1dG7rW0jL5H
+    value: 奶酪
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  5L2nT8yR3kD1hF6pM4gJ0Z:
+    key: 5L2nT8yR3kD1hF6pM4gJ0Z
+    value: 草莓奶昔
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  zK9hC3bY8mR0dP6tF5wJ2Q:
+    key: zK9hC3bY8mR0dP6tF5wJ2Q
+    value: 草莓果酱
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1Y4gD7nH2jM5tL9kW0xF3B:
+    key: 1Y4gD7nH2jM5tL9kW0xF3B
+    value: 葡萄果酱
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8C0kT1bH5nF7yP3dQ6jM4R:
+    key: 8C0kT1bH5nF7yP3dQ6jM4R
+    value: 鸡蛋
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4W6jF1mY9kT2bG0hN5qL8D:
+    key: 4W6jF1mY9kT2bG0hN5qL8D
+    value: 鸭蛋
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3J2gY7pK1dH6wT0bR5nF4C:
+    key: 3J2gY7pK1dH6wT0bR5nF4C
+    value: 羊毛
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  R5hW0mN8jK3gL7tY6D2bP1:
+    key: R5hW0mN8jK3gL7tY6D2bP1
+    value: 猪肉
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  0D9jK4tM7nB2hY5wF1gC8R:
+    key: 0D9jK4tM7nB2hY5wF1gC8R
+    value: 牛肉
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6L2nF1hY0kG9mD3rT4pB8X:
+    key: 6L2nF1hY0kG9mD3rT4pB8X
+    value: 牛奶
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4N2C3X9A1B8L6Q7E0P5M7D4:
+    key: 4N2C3X9A1B8L6Q7E0P5M7D4
+    value: Buy
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P8L0W2T5R9H6A3K1M7Q4N8C:
+    key: P8L0W2T5R9H6A3K1M7Q4N8C
+    value: Sell
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q6B1A8G2M9K4X0N7T3W5R2P:
+    key: Q6B1A8G2M9K4X0N7T3W5R2P
+    value: Buy with coins
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  M3P9X6B1L8A2N5H7C0T4Q2R:
+    key: M3P9X6B1L8A2N5H7C0T4Q2R
+    value: Exchange
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  K7D3N9B4L2H6A1M5X0C8P3Q:
+    key: K7D3N9B4L2H6A1M5X0C8P3Q
+    value: Stars x
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  N4A6K3P9T1B2L7C0H5Q8R2M:
+    key: N4A6K3P9T1B2L7C0H5Q8R2M
+    value: Coins x
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Q7C4R1L6T3B9K8A5M2X0P3N:
+    key: Q7C4R1L6T3B9K8A5M2X0P3N
+    value: Build
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P5B8R0N7C3X2A1L6Q9T4K2M:
+    key: P5B8R0N7C3X2A1L6Q9T4K2M
+    value: Bakery
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  4H5jN1pT2K9lQ3gF6bY8M0:
+    key: 4H5jN1pT2K9lQ3gF6bY8M0
+    value: Wheat Flour
+    type: 4
+    isVariant: false
+    associations: []
     _variants: []
 languageConfig:
   bcp47Tag: zh-Hans-CN
-  translateFinished: 42
-  translateTotal: 42
+  translateFinished: 66
+  translateTotal: 66
   compileFinished: 0
-  compileTotal: 15
+  compileTotal: 111
