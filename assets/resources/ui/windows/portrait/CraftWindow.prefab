@@ -754,7 +754,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 112,
+      "width": 139.97265625,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1138,7 +1138,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 5.631999999999998,
       "y": 127,
       "z": 0
     },
@@ -1179,7 +1179,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 320,
+      "width": 398.85400000000004,
       "height": 60
     },
     "_anchorPoint": {
@@ -1218,8 +1218,8 @@
     "_string": "面包坊",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 38,
-    "_fontSize": 38,
+    "_actualFontSize": 36,
+    "_fontSize": 36,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 1,

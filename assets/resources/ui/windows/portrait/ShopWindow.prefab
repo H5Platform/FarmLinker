@@ -570,7 +570,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
+      "width": 149.970703125,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -5986,6 +5986,12 @@
       },
       {
         "__id__": 287
+      },
+      {
+        "__id__": 289
+      },
+      {
+        "__id__": 291
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -6029,6 +6035,50 @@
     },
     "targetInfo": {
       "__id__": 288
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "d3lLrG+UNIlbx7YKu6vstf"
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 282
+    },
+    "sourceInfo": null,
+    "propertyPath": [
+      "coinDisplay"
+    ],
+    "target": {
+      "__id__": 209
+    },
+    "targetInfo": {
+      "__id__": 290
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "b3x1tSbPpKupGPOLUNB5yk"
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 282
+    },
+    "sourceInfo": null,
+    "propertyPath": [
+      "diamondDisplay"
+    ],
+    "target": {
+      "__id__": 232
+    },
+    "targetInfo": {
+      "__id__": 292
     }
   },
   {

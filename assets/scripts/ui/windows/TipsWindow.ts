@@ -15,12 +15,6 @@ export class TipsWindow extends WindowBase {
     @property(Label)
     private lblMessage: Label | null = null;
 
-    @property(Node)
-    private nodeOk: Node | null = null;
-
-    @property(Node)
-    private nodeOkCancel: Node | null = null;
-
     private mode: TipsMode = TipsMode.OK;
     private okCallback: (() => void) | null = null;
     private cancelCallback: (() => void) | null = null;
@@ -44,8 +38,8 @@ export class TipsWindow extends WindowBase {
     }
 
     private setupEventListeners(): void {
-        const currentNode = this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
-        const btnOk = currentNode?.getChildByName('btnOk')?.getComponent(Button);
+        const currentNode = this.node;//this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
+        const btnOk = currentNode?.getChildByName('btnConfirm')?.getComponent(Button);
         const btnCancel = currentNode?.getChildByName('btnCancel')?.getComponent(Button);
 
         if (btnOk) {
@@ -57,10 +51,6 @@ export class TipsWindow extends WindowBase {
     }
 
     private updateUI(message: string): void {
-
-        //set active
-        this.nodeOk.active = this.mode === TipsMode.OK;
-        this.nodeOkCancel.active = this.mode === TipsMode.OK_CANCEL;
         
         if (this.lblMessage) {
             this.lblMessage.string = message;
@@ -87,8 +77,8 @@ export class TipsWindow extends WindowBase {
     }
 
     private removeEventListeners(): void {
-        const currentNode = this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
-        const btnOk = currentNode?.getChildByName('btnOk')?.getComponent(Button);
+        const currentNode = this.node;//this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
+        const btnOk = currentNode?.getChildByName('btnConfirm')?.getComponent(Button);
         const btnCancel = currentNode?.getChildByName('btnCancel')?.getComponent(Button);
 
         if (btnOk) {
