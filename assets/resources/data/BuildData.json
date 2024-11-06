@@ -3,7 +3,7 @@
     {
       "id": "100101",
       "name": "Build_Bakery",
-      "description": "面包坊",
+      "description": "P5B8R0N7C3X2A1L6Q9T4K2M",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Bakery",
@@ -14,7 +14,7 @@
     {
       "id": "100102",
       "name": "Build_Manual",
-      "description": "手工坊",
+      "description": "K2T4M9P3R7A1L8Q6N0X5C2B",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Manual",
@@ -25,7 +25,7 @@
     {
       "id": "100103",
       "name": "Build_Vegetable",
-      "description": "农家乐",
+      "description": "F7A3P1K6R2B9N4L8X0T5C3Q",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Vegetable",
@@ -36,7 +36,7 @@
     {
       "id": "100104",
       "name": "Build_Hamburger",
-      "description": "乡村快餐",
+      "description": "M9C0K2N8P1T4L3A6R5Q7B3X",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Hamburger",
@@ -47,7 +47,7 @@
     {
       "id": "100105",
       "name": "Build_Dairy",
-      "description": "奶制品厂",
+      "description": "T6N4B0L1P7C9R3A8Q5X2K3M",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Dairy",
@@ -58,7 +58,7 @@
     {
       "id": "100106",
       "name": "Build_Jam",
-      "description": "果酱工厂",
+      "description": "W3P1N7L6T4C9A0R2M8Q5K3B",
       "item_type": "1",
       "level_need": "1",
       "texture": "Build_Jam",
@@ -69,7 +69,7 @@
     {
       "id": "200101",
       "name": "Facil_Road01",
-      "description": "土路",
+      "description": "L8A3C0P4N7Q9R1T2M5X6K2B",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Road01",
@@ -80,7 +80,7 @@
     {
       "id": "200102",
       "name": "Facil_Road02",
-      "description": "石板路",
+      "description": "Q1N4T6B2M9C0P8R3L5A7K3X",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Road02",
@@ -91,7 +91,7 @@
     {
       "id": "200103",
       "name": "Facil_Road03",
-      "description": "柏油路",
+      "description": "R5C1N9A3T8P2L7K4Q0X6M3B",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Road03",
@@ -102,7 +102,7 @@
     {
       "id": "200111",
       "name": "Facil_Bridge01",
-      "description": "木桥",
+      "description": "K8R0N7B1T3P6L2A9Q4M5X3C",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Bridge01",
@@ -113,7 +113,7 @@
     {
       "id": "200112",
       "name": "Facil_Bridge02",
-      "description": "石桥",
+      "description": "P1T3R8C4N2L9A7M0Q5K6X3B",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Bridge02",
@@ -124,7 +124,7 @@
     {
       "id": "200113",
       "name": "Facil_Bridge03",
-      "description": "悬索桥",
+      "description": "B7L1P4R6A9N0C3Q8T2M5K3X",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Bridge03",
@@ -135,7 +135,7 @@
     {
       "id": "200121",
       "name": "Facil_Irrigation01",
-      "description": "基础灌溉渠",
+      "description": "R2N8T4A1P7L6K3M0C9Q5X3B",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Irrigation01",
@@ -146,7 +146,7 @@
     {
       "id": "200122",
       "name": "Facil_Irrigation02",
-      "description": "喷灌系统",
+      "description": "Q3B7N6T1A0R9L2P8M4C5K3X",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Irrigation02",
@@ -157,7 +157,7 @@
     {
       "id": "200123",
       "name": "Facil_Irrigation03",
-      "description": "滴灌系统",
+      "description": "L6P3N7R1C2T9A0K8M4Q5X3B",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Irrigation03",
@@ -168,7 +168,7 @@
     {
       "id": "200131",
       "name": "Facil_Warehouse01",
-      "description": "小型仓库",
+      "description": "8f7lZK4Q1uN0r5y1s3JvBp",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Warehouse01",
@@ -179,7 +179,7 @@
     {
       "id": "200132",
       "name": "Facil_Warehouse02",
-      "description": "中型仓库",
+      "description": "E1r3nV5t8H2lK6w4X9cQmA",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Warehouse02",
@@ -190,7 +190,7 @@
     {
       "id": "200133",
       "name": "Facil_Warehouse03",
-      "description": "大型粮仓",
+      "description": "4pLj6T2s8nVbY1r3Qx5k9D",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Warehouse03",
@@ -201,7 +201,7 @@
     {
       "id": "200141",
       "name": "Facil_Observation",
-      "description": "观景台",
+      "description": "W3x7nY9cQ1u5tL2k6V4pM8",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Observation",
@@ -212,7 +212,7 @@
     {
       "id": "200142",
       "name": "Facil_Trail",
-      "description": "农场小径",
+      "description": "2tJv8H1nL3r6K5p9sQy4mE",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Trail",
@@ -223,7 +223,7 @@
     {
       "id": "200143",
       "name": "Facil_Ecological",
-      "description": "生态旅馆",
+      "description": "Q1k4H3tL5y6V9n2p8x7mD2",
       "item_type": "2",
       "level_need": "1",
       "texture": "Facil_Ecological",

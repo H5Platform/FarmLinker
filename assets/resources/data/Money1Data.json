@@ -1,0 +1,76 @@
+{
+  "list": [
+    {
+      "id": "001",
+      "description": "坑位1",
+      "pay_money": "1",
+      "get_money": "1"
+    },
+    {
+      "id": "002",
+      "description": "坑位2",
+      "pay_money": "5",
+      "get_money": "5"
+    },
+    {
+      "id": "003",
+      "description": "坑位3",
+      "pay_money": "10",
+      "get_money": "10"
+    },
+    {
+      "id": "004",
+      "description": "坑位4",
+      "pay_money": "20",
+      "get_money": "20"
+    },
+    {
+      "id": "005",
+      "description": "坑位5",
+      "pay_money": "30",
+      "get_money": "30"
+    },
+    {
+      "id": "006",
+      "description": "坑位6",
+      "pay_money": "40",
+      "get_money": "40"
+    },
+    {
+      "id": "007",
+      "description": "坑位7",
+      "pay_money": "50",
+      "get_money": "50"
+    },
+    {
+      "id": "008",
+      "description": "坑位8",
+      "pay_money": "60",
+      "get_money": "60"
+    },
+    {
+      "id": "009",
+      "description": "坑位9",
+      "pay_money": "70",
+      "get_money": "70"
+    },
+    {
+      "id": "010",
+      "description": "坑位10",
+      "pay_money": "80",
+      "get_money": "80"
+    },
+    {
+      "id": "011",
+      "description": "坑位10",
+      "pay_money": "90",
+      "get_money": "90"
+    },
+    {
+      "id": "012",
+      "description": "坑位10",
+      "pay_money": "100",
+      "get_money": "100"
+    }
+  ]
+}

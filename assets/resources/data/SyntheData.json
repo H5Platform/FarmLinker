@@ -3,7 +3,7 @@
     {
       "id": "100101",
       "name": "Synthe_Wheatmeal",
-      "description": "小麦粉_合成",
+      "description": "4H5jN1pT2K9lQ3gF6bY8M0",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500101",
@@ -17,7 +17,7 @@
     {
       "id": "100102",
       "name": "Synthe_bread",
-      "description": "面包_合成",
+      "description": "1W2nX5pF3qD8gH0kM4jR9C",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500102",
@@ -31,7 +31,7 @@
     {
       "id": "100103",
       "name": "Synthe_Frenchloaf",
-      "description": "法式长棍",
+      "description": "8L3fY0mJ2nT1gK6hD4bQ9R",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500103",
@@ -47,7 +47,7 @@
     {
       "id": "100104",
       "name": "Synthe_Frenchloaf",
-      "description": "法式长棍",
+      "description": "8L3fY0mJ2nT1gK6hD4bQ9R",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500103",
@@ -63,7 +63,7 @@
     {
       "id": "100105",
       "name": "Synthe_MilkBread",
-      "description": "牛奶面包",
+      "description": "6D1kP9jT4nF8mC2gY3bH0R",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500104",
@@ -81,7 +81,7 @@
     {
       "id": "100106",
       "name": "Synthe_MilkBread",
-      "description": "牛奶面包",
+      "description": "6D1kP9jT4nF8mC2gY3bH0R",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500104",
@@ -99,7 +99,7 @@
     {
       "id": "100107",
       "name": "Synthe_Cake",
-      "description": "蛋糕",
+      "description": "0H5tG9mJ1dF4nK8qC2yW3X",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500105",
@@ -117,7 +117,7 @@
     {
       "id": "100108",
       "name": "Synthe_Cake",
-      "description": "蛋糕",
+      "description": "0H5tG9mJ1dF4nK8qC2yW3X",
       "build": "100101",
       "time_min": "0.1",
       "synthe_item_id": "500105",
@@ -135,7 +135,7 @@
     {
       "id": "100111",
       "name": "Synthe_Woolen",
-      "description": "毛线球",
+      "description": "3H2jL1nQ5dG4kR7mY8bT9F",
       "build": "100102",
       "time_min": "0.1",
       "synthe_item_id": "500111",
@@ -149,7 +149,7 @@
     {
       "id": "100112",
       "name": "Synthe_Sweater",
-      "description": "毛衣",
+      "description": "8Y3kQ0dF1jR6mT4nP5hW7C",
       "build": "100102",
       "time_min": "0.1",
       "synthe_item_id": "500112",
@@ -163,7 +163,7 @@
     {
       "id": "100113",
       "name": "Synthe_Blanket",
-      "description": "羊毛毯",
+      "description": "7J0gL5mK9qH2F8yD4bT1R3",
       "build": "100102",
       "time_min": "0.1",
       "synthe_item_id": "500113",
@@ -177,7 +177,7 @@
     {
       "id": "100121",
       "name": "Synthe_CarrotCook",
-      "description": "清蒸胡萝卜",
+      "description": "5T1dQ2bY4gK9mD8hC0nJ6R",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500121",
@@ -191,7 +191,7 @@
     {
       "id": "100122",
       "name": "Synthe_CornCook",
-      "description": "玉米饼",
+      "description": "3H8nB1xQ5dK7jW0tL9yZ2s",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500122",
@@ -205,7 +205,7 @@
     {
       "id": "100123",
       "name": "Synthe_TomatoEgg",
-      "description": "番茄炒蛋",
+      "description": "pD7rT4Y0wG6kJ2hX1mN9bK",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500123",
@@ -221,7 +221,7 @@
     {
       "id": "100124",
       "name": "Synthe_TomatoEgg",
-      "description": "番茄炒蛋",
+      "description": "pD7rT4Y0wG6kJ2hX1mN9bK",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500123",
@@ -237,7 +237,7 @@
     {
       "id": "100125",
       "name": "Synthe_CarrotPotato",
-      "description": "胡萝卜土豆泥",
+      "description": "5gZ8Q2tS1pL4yR6mF0cJ3H",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500124",
@@ -253,7 +253,7 @@
     {
       "id": "100126",
       "name": "Synthe_VegetablePizza",
-      "description": "蔬菜披萨",
+      "description": "1F9hC6tK8nB2rY0mP5jQ4W",
       "build": "100103",
       "time_min": "0.1",
       "synthe_item_id": "500125",
@@ -275,7 +275,7 @@
     {
       "id": "100131",
       "name": "Synthe_BeefBurger",
-      "description": "牛肉汉堡",
+      "description": "xJ2pK7D0mG1yL4hY9cT6bR",
       "build": "100104",
       "time_min": "0.1",
       "synthe_item_id": "500131",
@@ -293,7 +293,7 @@
     {
       "id": "100132",
       "name": "Synthe_GrilledPorkRibs",
-      "description": "烤猪肋排",
+      "description": "0gM9T4hY3nF1bJ8rP5kL2D",
       "build": "100104",
       "time_min": "0.1",
       "synthe_item_id": "500132",
@@ -309,7 +309,7 @@
     {
       "id": "100133",
       "name": "Synthe_MeatHotPot",
-      "description": "双肉火锅",
+      "description": "K4nH7yD0gC1bT9xM2pF6R8",
       "build": "100104",
       "time_min": "0.1",
       "synthe_item_id": "500133",
@@ -331,7 +331,7 @@
     {
       "id": "100141",
       "name": "Synthe_Pudding",
-      "description": "布丁",
+      "description": "7R6jX1gK3cP8dH2wF5mY0B",
       "build": "100105",
       "time_min": "0.1",
       "synthe_item_id": "500141",
@@ -347,7 +347,7 @@
     {
       "id": "100142",
       "name": "Synthe_Pudding",
-      "description": "布丁",
+      "description": "7R6jX1gK3cP8dH2wF5mY0B",
       "build": "100105",
       "time_min": "0.1",
       "synthe_item_id": "500141",
@@ -363,7 +363,7 @@
     {
       "id": "100143",
       "name": "Synthe_Yogurt",
-      "description": "酸奶",
+      "description": "9T1wH5mR6kJ0gD2nY8bC4Q",
       "build": "100105",
       "time_min": "0.1",
       "synthe_item_id": "500142",
@@ -377,7 +377,7 @@
     {
       "id": "100144",
       "name": "Synthe_Cheese",
-      "description": "奶酪",
+      "description": "8Y3fK2pT9bM1dG7rW0jL5H",
       "build": "100105",
       "time_min": "0.1",
       "synthe_item_id": "500143",
@@ -391,7 +391,7 @@
     {
       "id": "100145",
       "name": "Synthe_StrawberryMilk",
-      "description": "草莓奶昔",
+      "description": "5L2nT8yR3kD1hF6pM4gJ0Z",
       "build": "100105",
       "time_min": "0.1",
       "synthe_item_id": "500144",
@@ -407,7 +407,7 @@
     {
       "id": "100151",
       "name": "Synthe_StrawberryJam",
-      "description": "草莓果酱_合成",
+      "description": "zK9hC3bY8mR0dP6tF5wJ2Q",
       "build": "100106",
       "time_min": "0.1",
       "synthe_item_id": "500151",
@@ -421,7 +421,7 @@
     {
       "id": "100152",
       "name": "Synthe_GrapeJelly",
-      "description": "葡萄果酱_合成",
+      "description": "1Y4gD7nH2jM5tL9kW0xF3B",
       "build": "100106",
       "time_min": "0.1",
       "synthe_item_id": "500152",

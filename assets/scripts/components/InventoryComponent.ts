@@ -44,7 +44,7 @@ export class InventoryItem {
         this.itemType = jsonItemData.item_type;
         this.expGain = parseInt(jsonItemData.exp_get);
         this.buyPrice = parseInt(jsonItemData.buy_price);
-        this.sellPrice = jsonItemData.sell_price === "" ? 0 : parseInt(jsonItemData.sell_price);
+        this.sellPrice = parseInt(jsonItemData.sell_price);
         this.iconName = jsonItemData.png;
         this.quantity = num;
         this.detailId = jsonItemData.detail_id;

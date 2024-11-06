@@ -3,7 +3,7 @@
     {
       "id": "1011",
       "name": "CropsWheat_01",
-      "description": "小麦_幼苗",
+      "description": "9m2tL1y5W7p8r6nV3k4Qx3",
       "farm_type": "1",
       "crop_type": "1",
       "time_min": "0.1",
@@ -16,7 +16,7 @@
     {
       "id": "1012",
       "name": "Cropswheat_02",
-      "description": "小麦_成熟",
+      "description": "9m2tL1y5W7p8r6nV3k4Qx3",
       "farm_type": "1",
       "crop_type": "1",
       "time_min": "0",
@@ -29,7 +29,7 @@
     {
       "id": "1021",
       "name": "CropsLettuce_01",
-      "description": "生菜_幼苗",
+      "description": "Y5p1tL6n3V4k9r8x7Q2mHw",
       "farm_type": "1",
       "crop_type": "2",
       "time_min": "0.1",
@@ -42,7 +42,7 @@
     {
       "id": "1022",
       "name": "CropsLettuce_02",
-      "description": "生菜_成熟",
+      "description": "Y5p1tL6n3V4k9r8x7Q2mHw",
       "farm_type": "1",
       "crop_type": "2",
       "time_min": "0",
@@ -55,7 +55,7 @@
     {
       "id": "1031",
       "name": "CropsCarrot_01",
-      "description": "胡萝卜_幼苗",
+      "description": "6nV9r2tL1m3p8k4y7xQ5H7",
       "farm_type": "1",
       "crop_type": "3",
       "time_min": "0.1",
@@ -68,7 +68,7 @@
     {
       "id": "1032",
       "name": "CropsCarrot_02",
-      "description": "胡萝卜_成熟",
+      "description": "6nV9r2tL1m3p8k4y7xQ5H7",
       "farm_type": "1",
       "crop_type": "3",
       "time_min": "0",
@@ -81,7 +81,7 @@
     {
       "id": "1041",
       "name": "CropsTomato_01",
-      "description": "番茄_幼苗",
+      "description": "3B7F2gL0hQ5M9nD6xZ8W3a",
       "farm_type": "1",
       "crop_type": "4",
       "time_min": "0.1",
@@ -94,7 +94,7 @@
     {
       "id": "1042",
       "name": "CropsTomato_02",
-      "description": "番茄_成熟",
+      "description": "3B7F2gL0hQ5M9nD6xZ8W3a",
       "farm_type": "1",
       "crop_type": "4",
       "time_min": "0",
@@ -107,7 +107,7 @@
     {
       "id": "1051",
       "name": "CropsCorn_01",
-      "description": "玉米_幼苗",
+      "description": "k4T1zX7p9R8qA3J6fM2wB5",
       "farm_type": "1",
       "crop_type": "5",
       "time_min": "0.1",
@@ -120,7 +120,7 @@
     {
       "id": "1052",
       "name": "CropsCorn_02",
-      "description": "玉米_成熟",
+      "description": "k4T1zX7p9R8qA3J6fM2wB5",
       "farm_type": "1",
       "crop_type": "5",
       "time_min": "0",
@@ -133,7 +133,7 @@
     {
       "id": "1061",
       "name": "CropsPotato_01",
-      "description": "土豆_幼苗",
+      "description": "8D3y0G2eK6vR9jF7kW1bT4",
       "farm_type": "1",
       "crop_type": "6",
       "time_min": "0.1",
@@ -146,7 +146,7 @@
     {
       "id": "1062",
       "name": "CropsPotato_02",
-      "description": "土豆_成熟",
+      "description": "8D3y0G2eK6vR9jF7kW1bT4",
       "farm_type": "1",
       "crop_type": "6",
       "time_min": "0",
@@ -159,7 +159,7 @@
     {
       "id": "1071",
       "name": "CropsStrawberry_01",
-      "description": "草莓_幼苗",
+      "description": "s5J0aH8dE2qR6L4bC3mY9Z",
       "farm_type": "1",
       "crop_type": "7",
       "time_min": "0.1",
@@ -172,7 +172,7 @@
     {
       "id": "1072",
       "name": "CropsStrawberry_02",
-      "description": "草莓_成熟",
+      "description": "s5J0aH8dE2qR6L4bC3mY9Z",
       "farm_type": "1",
       "crop_type": "7",
       "time_min": "0",
@@ -185,7 +185,7 @@
     {
       "id": "1081",
       "name": "CropsPumpkin_01",
-      "description": "南瓜_幼苗",
+      "description": "P1s8Q4jU0nK7wT3bD6yF5H",
       "farm_type": "1",
       "crop_type": "8",
       "time_min": "0.1",
@@ -198,7 +198,7 @@
     {
       "id": "1082",
       "name": "CropsPumpkin_02",
-      "description": "南瓜_成熟",
+      "description": "P1s8Q4jU0nK7wT3bD6yF5H",
       "farm_type": "1",
       "crop_type": "8",
       "time_min": "0",
@@ -211,7 +211,7 @@
     {
       "id": "1091",
       "name": "CropsGrape_01",
-      "description": "葡萄_幼苗",
+      "description": "R9z8L1nK0cT4Q5gY7hM2J6",
       "farm_type": "1",
       "crop_type": "9",
       "time_min": "0.1",
@@ -224,7 +224,7 @@
     {
       "id": "1092",
       "name": "CropsGrape_02",
-      "description": "葡萄_成熟",
+      "description": "R9z8L1nK0cT4Q5gY7hM2J6",
       "farm_type": "1",
       "crop_type": "9",
       "time_min": "0",

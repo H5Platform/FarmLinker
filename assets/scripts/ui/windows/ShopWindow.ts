@@ -235,7 +235,7 @@ export class ShopWindow extends WindowBase {
         
         // Set label text
         label.string = l10n.t(item.description);//isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
-        price.string = isBuyMode ? `${item.buy_price}` : `${item.sell_price}`;
+        price.string = isBuyMode ? `${item.buy_price}` : `${item.sellPrice}`;
         const inventoryItem = this.inventoryComponent?.getItem(item.id) || null;
         if (!isBuyMode && inventoryItem && inventoryItem.quantity > 1) {
             labelNum.node.active = true;
