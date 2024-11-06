@@ -451,7 +451,8 @@ items:
     key: L6T3B9K8A5123Q7C0P3N4R1
     value: ""
     type: 4
-    isVariant: fa associations: []
+    isVariant: false
+    associations: []
     _variants: []
   3B9K8A51230P3NQ7C4R1L6T:
     key: 3B9K8A51230P3NQ7C4R1L6T
@@ -1299,14 +1300,6 @@ items:
     type: 4
     isVariant: false
     associations: []
-    _variants: []
-languageConfig:
-  bcp47Tag: index
-  translateFinished: 66
-  translateTotal: 0
-  compileFinished: 0
-  compileTotal: 0
- associations: []
     _variants: []
 languageConfig:
   bcp47Tag: index
