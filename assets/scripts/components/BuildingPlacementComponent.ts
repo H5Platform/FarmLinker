@@ -168,7 +168,7 @@ export class BuildingPlacementComponent extends Component {
     public async placeBuilding(callback: (result: NetworkAddBuildingResult) => void): Promise<void> {
         console.log("Place building");
         SpriteHelper.setSpriteColor(this.buildingSprite, new Color(255, 255, 255, 255));
-
+        const worldPos = this.node.getWorldPosition();
         const buildingComponent = this.node.addComponent(Building);
 
         const buildingContainer = Director.instance.getScene().getChildByPath(SharedDefines.PATH_BUILDINGS);
@@ -183,7 +183,11 @@ export class BuildingPlacementComponent extends Component {
         //get game controller
         const gameController = Director.instance.getScene().getComponentInChildren(GameController);
         //convert world pos to design pos   
-        const designPos = new Vec2(this.node.getWorldPosition().x / gameController.ScreenScale.x, this.node.getWorldPosition().y / gameController.ScreenScale.y);
+        //const designPos = new Vec2(this.node.getWorldPosition().x / gameController.ScreenScale.x, this.node.getWorldPosition().y / gameController.ScreenScale.y);
+        const designPos = UIHelper.convertPositionBetweenCanvas(worldPos, this.uiCanvas, this.gameplayCanvas);
+        this.node.setWorldPosition(designPos);
+        //console.log(`designPos = ${designPos}`);
+        
         const result = await NetworkManager.instance.addBuilding(this.buildData.id, designPos.x, designPos.y, buildingContainer.name);
         console.log("add building result", result);
         if (result.success) {

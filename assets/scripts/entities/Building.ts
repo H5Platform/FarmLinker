@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, UITransform, BoxCollider2D, Size } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, EventTarget, UITransform, BoxCollider2D, Size, Layers } from 'cc';
 import { ResourceManager } from '../managers/ResourceManager';
 import { BuildingType, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { PlayerState } from '../entities/PlayerState';
@@ -50,6 +50,7 @@ export class Building extends Component {
     private spriteCache: Map<string, SpriteFrame> = new Map();
 
     public initialize(buildingData: any): void {
+        this.node.layer = Layers.nameToLayer("Building") + 1;
         this.arrowContainer = this.node.getChildByName("Arrows");
         this.arrowContainer.active = false;
         this.sprite = this.getComponent(Sprite);

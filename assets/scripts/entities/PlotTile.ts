@@ -144,6 +144,8 @@ export class PlotTile extends SceneEntity implements IDropZone {
         if (this.cooldownComponent.isOnCooldown('select')) {
             return; // if cooldown is on, ignore this select
         }
+        const uiCanvas = this.gameController.UICanvas;
+        const gameplayCanvas = this.gameController.GameplayCanvas;
         console.log(`select plot tile , name = ${this.node.name} , occupied = ${this.isOccupied}`);
         if (this.isOccupied) {
              if(this.occupiedCrop.canHarvest()){
@@ -151,7 +153,8 @@ export class PlotTile extends SceneEntity implements IDropZone {
                  return;
              }
             else{
-                WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,this.node.getWorldPosition(),this.onSelectionWindowItemClicked.bind(this));
+                const worldPos = UIHelper.convertPositionBetweenCanvas(this.node.getWorldPosition(),gameplayCanvas.node,uiCanvas.node);
+                WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT_COMMAND,this.node,worldPos,this.onSelectionWindowItemClicked.bind(this));
                 console.log('select plot command , name = ' + this.node.name);
             }
         }
@@ -160,8 +163,6 @@ export class PlotTile extends SceneEntity implements IDropZone {
                 return;
             }
             this.dragDropComponent = dragComponent;
-            const uiCanvas = this.gameController.UICanvas;
-            const gameplayCanvas = this.gameController.GameplayCanvas;
             const worldPos = UIHelper.convertPositionBetweenCanvas(this.node.getWorldPosition(),gameplayCanvas.node,uiCanvas.node);
 
             WindowManager.instance.show(SharedDefines.WINDOW_SELECTION_NAME,FarmSelectionType.PLOT,this.node,worldPos,this.onSelectionWindowItemClicked.bind(this));
