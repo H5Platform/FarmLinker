@@ -28,7 +28,6 @@ export class TipsWindow extends WindowBase {
         
         if (args.length >= 2) {
             const message = args[0] as string;
-            this.mode = args[1] as TipsMode;
             this.okCallback = args[2] as (() => void) | null;
             this.cancelCallback = args[3] as (() => void) | null;
 

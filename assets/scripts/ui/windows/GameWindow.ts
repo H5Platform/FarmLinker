@@ -315,7 +315,8 @@ export class GameWindow extends WindowBase {
     private onBtnAddCoinClicked(): void {
         //DashFunManager.instance.requestPayment("金币*100","购买金币",PayItemType.Coin,1);
        // this.playerController?.playerState.addCoin(100);
-       WindowManager.instance.show(SharedDefines.WINDOW_COIN_NAME);
+
+        WindowManager.instance.show(SharedDefines.WINDOW_COIN_NAME);
     }
 
     private onBtnAddDiamondClicked(): void {
