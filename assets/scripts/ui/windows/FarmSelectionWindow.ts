@@ -136,7 +136,7 @@ export class FarmSelectionWindow extends WindowBase {
 
         this.scheduleOnce(()=>{
             this.setupEventListeners();
-        },1);
+        },0.5);
     }
 
     private setupEventListeners(): void {
@@ -230,6 +230,7 @@ export class FarmSelectionWindow extends WindowBase {
         }
         //get world position of touch
         const worldPosition = event.getUILocation();
+        
         if((this.btnCropCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnCropCare.node)) || (this.btnAnimalCare.node.activeInHierarchy && UIHelper.isPointInUINode(worldPosition, this.btnAnimalCare.node))){
             this.onCare();
         }

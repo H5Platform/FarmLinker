@@ -41,19 +41,21 @@ export class InputComponent extends Component {
     private touchEndHandler(event: EventTouch): void {
         const touchEndTime = Date.now();
         const touchEndPosition = event.getLocation();
-        if (this.onTouchEnd) this.onTouchEnd(event);
-        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_END, event);
 
         // 判断是否为点击事件
         const touchDuration = touchEndTime - this.touchStartTime;
         const touchDistance = Vec2.distance(this.touchStartPosition, touchEndPosition);
         
         if (touchDuration <= InputComponent.CLICK_THRESHOLD * 1000 && touchDistance < 10) {
+            console.log("InputComponent: onClick");
             if (this.onClick) {
                 this.onClick(event);
             }
             this.eventTarget.emit(SharedDefines.EVENT_CLICK, event);
         }
+
+        if (this.onTouchEnd) this.onTouchEnd(event);
+        this.eventTarget.emit(SharedDefines.EVENT_TOUCH_END, event);
     }
 
     private touchCancelHandler(event: EventTouch): void {
