@@ -199,7 +199,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     protected updateTotalGrowthTime(): void {
-        let baseTime = this.growthStages.reduce((total, data) => total + parseInt(data.time_min), 0);
+        let baseTime = this.growthStages.reduce((total, data) => total + parseFloat(data.time_min) * SharedDefines.TIME_MINUTE, 0);
         let careReduction = SharedDefines.CARE_TIME_RATIO_REDUCE * this.careCount;
         let treatReduction = SharedDefines.TREAT_TIME_RATIO_REDUCE * this.treatCount;
         this.totalGrowthTime = baseTime * (1 - (careReduction + treatReduction));
@@ -219,7 +219,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             expectedStageIndex = this.growthStages.length - 1;
         } else {
             for (let i = 0; i < this.growthStages.length; i++) {
-                accumulatedTime += parseInt(this.growthStages[i].time_min);
+                accumulatedTime += parseFloat(this.growthStages[i].time_min) * SharedDefines.TIME_MINUTE;
                 if (elapsedTime >= accumulatedTime) {
                     expectedStageIndex = i;
                 }

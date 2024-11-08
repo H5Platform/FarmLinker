@@ -66,10 +66,10 @@ export class Animal extends GrowthableEntity {
     protected setupData(animalData: any): void {
         this.id = animalData.id;
         this.description = animalData.description;
-        this.growthTime = parseInt(animalData.time_min) * SharedDefines.TIME_MINUTE;
+        this.growthTime = parseFloat(animalData.time_min) * SharedDefines.TIME_MINUTE;
         this.harvestItemId = animalData.harvest_item_id;
         this.farmType = animalData.farm_type;
-        this.timeMin = parseInt(animalData.time_min);
+        this.timeMin = parseFloat(animalData.time_min);
         this.levelNeed = parseInt(animalData.level_need);
     }
 
