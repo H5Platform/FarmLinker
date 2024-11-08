@@ -275,6 +275,8 @@ export class Fence extends SceneEntity implements IDropZone{
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
             let worldPos = animal.node.getWorldPosition();
+            const designPos = UIHelper.convertPositionBetweenCanvas(worldPos, this.gameController.UICanvas.node, this.gameController.GameplayCanvas.node);
+            animal.node.setWorldPosition(designPos);
             //this.node.addChild(animal.node);
             
 
@@ -287,13 +289,14 @@ export class Fence extends SceneEntity implements IDropZone{
                 
                 animal.initializeWithSceneItem(result.data as SceneItem,true);
                 if(this.addAnimal(animal)){
-                    animal.node.setWorldPosition(worldPos);
+                    animal.node.setWorldPosition(designPos);
                     this.eventTarget.emit(SharedDefines.EVENT_FENCE_ANIMAL_ADDED,animal);
                 }
             });
 
             //convert world pos to design pos
-            const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
+            //const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
+            
             NetworkManager.instance.plant(
                 animal.id,
                 SceneItemType.Animal,
