@@ -383,7 +383,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 96.029296875,
+      "width": 108,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -469,7 +469,6 @@
     "__type__": "30d83qzRfZHLYMFn4KA9PG4",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 11
     },
@@ -698,8 +697,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 858,
-      "height": 360
+      "width": 870,
+      "height": 380
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -960,7 +959,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -223.302,
+      "y": -134.879,
       "z": 0
     },
     "_lrot": {
@@ -1092,10 +1091,10 @@
     "_string": "确定",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 32,
-    "_fontSize": 32,
+    "_actualFontSize": 40,
+    "_fontSize": 40,
     "_fontFamily": "Arial",
-    "_lineHeight": 40,
+    "_lineHeight": 50,
     "_overflow": 1,
     "_enableWrapText": false,
     "_font": null,
@@ -1139,7 +1138,6 @@
     "__type__": "30d83qzRfZHLYMFn4KA9PG4",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 38
     },
@@ -1182,8 +1180,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 168,
-      "height": 70
+      "width": 250,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1224,7 +1222,7 @@
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
