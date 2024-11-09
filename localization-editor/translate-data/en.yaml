@@ -44,14 +44,14 @@ items:
     _variants: []
   87chjY045IWbBFtnt0+c8t:
     key: 87chjY045IWbBFtnt0+c8t
-    value: Are you sure you want to spend x stars to buy x farm coins?
+    value: Are you sure you want to spend {0} stars to buy {1} farm coins?
     type: 2
     isVariant: false
     associations: []
     _variants: []
   944AcGN0hNaKYlY0FlgMhb:
     key: 944AcGN0hNaKYlY0FlgMhb
-    value: Are you sure you want to spend x farm coins to buy x gold coins?
+    value: Are you sure you want to spend {0} farm coins to buy {1} gold coins?
     type: 2
     isVariant: false
     associations: []
@@ -765,7 +765,7 @@ items:
     _variants: []
 languageConfig:
   bcp47Tag: en
-  translateFinished: 61
-  translateTotal: 205
+  translateFinished: 69
+  translateTotal: 213
   compileFinished: 0
   compileTotal: 109

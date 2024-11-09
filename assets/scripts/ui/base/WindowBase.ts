@@ -8,7 +8,7 @@ export class WindowBase extends Component {
     
 
     @property(Node)
-    private animationNode: Node | null = null;
+    protected animationNode: Node | null = null;
 
     private playingTween: Tween<Node> | null = null;
 

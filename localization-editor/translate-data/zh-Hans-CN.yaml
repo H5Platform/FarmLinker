@@ -56,7 +56,7 @@ items:
     _variants: []
   87chjY045IWbBFtnt0+c8t:
     key: 87chjY045IWbBFtnt0+c8t
-    value: 确定要花费星星x，来购买农场币x吗？
+    value: 确定要花费星星{0}，来购买农场币{1}吗？
     type: 2
     isVariant: false
     associations: []
@@ -70,7 +70,7 @@ items:
     _variants: []
   944AcGN0hNaKYlY0FlgMhb:
     key: 944AcGN0hNaKYlY0FlgMhb
-    value: 确定要花费农场币x，来购买金币x吗？
+    value: 确定要花费农场币{0}，来购买金币{1}吗？
     type: 2
     isVariant: false
     associations:
@@ -815,7 +815,7 @@ items:
     _variants: []
 languageConfig:
   bcp47Tag: zh-Hans-CN
-  translateFinished: 66
-  translateTotal: 66
+  translateFinished: 74
+  translateTotal: 74
   compileFinished: 0
   compileTotal: 111

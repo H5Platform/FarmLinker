@@ -37,7 +37,7 @@ export class TipsWindow extends WindowBase {
     }
 
     private setupEventListeners(): void {
-        const currentNode = this.node;//this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
+        const currentNode = this.animationNode;//this.mode === TipsMode.OK ? this.nodeOk : this.nodeOkCancel;
         const btnOk = currentNode?.getChildByName('btnConfirm')?.getComponent(Button);
         const btnCancel = currentNode?.getChildByName('btnCancel')?.getComponent(Button);
 

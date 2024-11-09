@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform, macro } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -83,10 +83,17 @@ export class GameController extends Component {
 
     async start() {
         console.log(`start start ...`);
+        // Force portrait orientation
+        view.setOrientation(macro.ORIENTATION_PORTRAIT);
         await this.preloadJsonDatas();
         this.setupEventListeners();
        // this.login();
 
+        //set gameplayCanvas uiTransform content size to 1920*1080
+        const uiTransform = this.gameplayCanvas.node.getComponent(UITransform);
+        if(uiTransform) {
+            uiTransform.setContentSize(1920, 1080);
+        }
         //calculate screen scale
         const screenSize = this.gameplayCanvas.node.getComponent(UITransform).contentSize;
         console.log(`screenSize:${screenSize}`);
