@@ -270,7 +270,7 @@ export class Fence extends SceneEntity implements IDropZone{
         return false;
     }
 
-    public onDrop(draggable: IDraggable): void {
+    public async onDrop(draggable: IDraggable): Promise<void> {
 
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
@@ -287,6 +287,9 @@ export class Fence extends SceneEntity implements IDropZone{
                     return;
                 }
                 
+                //remove animal from inventory
+                this.playerController.inventoryComponent.removeItem(animal.SourceInventoryItem.id,1);
+
                 animal.initializeWithSceneItem(result.data as SceneItem,true);
                 if(this.addAnimal(animal)){
                     animal.node.setWorldPosition(designPos);
@@ -297,7 +300,7 @@ export class Fence extends SceneEntity implements IDropZone{
             //convert world pos to design pos
             //const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
             
-            NetworkManager.instance.plant(
+            await NetworkManager.instance.plant(
                 animal.id,
                 SceneItemType.Animal,
                 designPos.x,
