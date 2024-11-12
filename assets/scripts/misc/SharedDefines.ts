@@ -375,7 +375,7 @@ export class SharedDefines {
 
     public static readonly INIT_PLOT_NUM: number = 5;
 
-    public static readonly COOLDOWN_SELECTION_TIME: number = 0.5;
+    public static readonly COOLDOWN_SELECTION_TIME: number = 1;
     public static readonly COOLDOWN_KEY_CARE: string = 'care';
     public static readonly COOLDOWN_KEY_TREAT: string = 'treat';
     public static readonly COOLDOWN_KEY_CLEANSE: string = 'cleanse';

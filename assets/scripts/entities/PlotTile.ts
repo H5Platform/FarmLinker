@@ -315,6 +315,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
     }
 
     public onDrop(draggable: IDraggable): void {
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         if (draggable instanceof Crop) {
             console.log('drop crop , name = ' + this.node.name);
             
