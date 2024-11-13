@@ -285,7 +285,7 @@ export class FarmFactoryWindow extends WindowBase {
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
         console.log(`data.time_min:`,data.time_min);
-        this.updateRemainingTime(txtRemainingTime,btnStart,data.time_min * SharedDefines.TIME_MINUTE);
+        this.updateRemainingTime(txtRemainingTime,btnStart, parseFloat(data.time_min) * SharedDefines.TIME_MINUTE);
         btnStart.node.active = false;
         btnSynthesisEnd.node.active = false;
         txtRemainingTime.node.active = true;

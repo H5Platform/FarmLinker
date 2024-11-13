@@ -54,7 +54,7 @@ export class Crop extends GrowthableEntity {
 
     protected setupData(cropData: any): void {
         this.id = cropData.id;
-        this.growthTime = cropData.time_min * SharedDefines.TIME_MINUTE;
+        this.growthTime = parseFloat(cropData.time_min) * SharedDefines.TIME_MINUTE;
         this.harvestItemId = cropData.harvest_item_id;
         this.levelNeed = cropData.level_need;
     }

@@ -187,7 +187,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         const remainingTime = this.calculateRemainingTime();
         this.currentGrowthStageIndex = this.calculateCurrentStage(remainingTime);
         this.setupData(this.growthStages[this.currentGrowthStageIndex]);
-        this.growthTime = remainingTime * SharedDefines.TIME_MINUTE;
+        this.growthTime = remainingTime ;
         //log growth time
         console.log(`growth time: ${this.growthTime}`);
 
@@ -203,11 +203,12 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         let careReduction = SharedDefines.CARE_TIME_RATIO_REDUCE * this.careCount;
         let treatReduction = SharedDefines.TREAT_TIME_RATIO_REDUCE * this.treatCount;
         this.totalGrowthTime = baseTime * (1 - (careReduction + treatReduction));
+        console.log(`[GrowthableEntity:updateTotalGrowthTime] totalGrowthTime = ${this.totalGrowthTime}`);
     }
 
     protected calculateRemainingTime(): number {
         const currentTime = Date.now() / 1000;
-        const elapsedTime = (currentTime - this.growthStartTime) / 60;
+        const elapsedTime = currentTime - this.growthStartTime;
         return Math.max(0, this.totalGrowthTime - elapsedTime);
     }
 
@@ -295,7 +296,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             } else {
                 this.cooldownComponent?.startCooldown(
                     'growth',
-                    remainingTime * SharedDefines.TIME_MINUTE,
+                    remainingTime,
                     () => this.grow()
                 );
             }
