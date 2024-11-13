@@ -314,8 +314,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
         return !this.isOccupied && draggable instanceof Crop;
     }
 
-    public onDrop(draggable: IDraggable): void {
-        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+    public async onDrop(draggable: IDraggable): Promise<void> {
         if (draggable instanceof Crop) {
             console.log('drop crop , name = ' + this.node.name);
             
@@ -330,21 +329,24 @@ export class PlotTile extends SceneEntity implements IDropZone {
                 crop.initializeWithSceneItem(result.data as SceneItem,this.isPlayerOwner);
                 this.plant(crop);
                 this.currentDraggable = null;
+                
             });
             const worldPos = this.node.getWorldPosition();
             const worldScale = this.node.getWorldScale();
             //convert world pos to design pos
             const designPos = new Vec2(worldPos.x / worldScale.x, worldPos.y / worldScale.y);
             this.currentDraggable = draggable;
-            NetworkManager.instance.plant(
+            await NetworkManager.instance.plant(
                 crop.id,
                 SceneItemType.Crop,
                 designPos.x,
                 designPos.y,
                 this.node.name
             );
-            
+            this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {
+            });
         }
+
     }
 
     public plant(crop : Crop): void {
@@ -357,6 +359,8 @@ export class PlotTile extends SceneEntity implements IDropZone {
         this.occupy(crop);
         console.log(`plant crop 2, name = ${crop.node.name}`);
         crop.startGrowing();
+        //remove crop from inventory
+        this.playerController.inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
         //this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
         NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_PLANT, this.plant);
 
