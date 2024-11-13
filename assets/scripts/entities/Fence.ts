@@ -272,6 +272,7 @@ export class Fence extends SceneEntity implements IDropZone{
 
     public async onDrop(draggable: IDraggable): Promise<void> {
 
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
             let worldPos = animal.node.getWorldPosition();
@@ -308,7 +309,7 @@ export class Fence extends SceneEntity implements IDropZone{
                 this.node.name,
             );
 
-            this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+            
         }
     }
     //#endregion

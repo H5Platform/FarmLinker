@@ -49,7 +49,7 @@ export class FarmFactoryWindow extends WindowBase {
     public show(...args: any[]): void {
         super.show(...args);
         this.currentBuilding = args[0] as Building;
-        this.lbTitle.string = this.currentBuilding.BuildingData.description;
+        this.lbTitle.string = l10n.t(this.currentBuilding.BuildingData.description);
         console.log(`FarmFactoryWindow show buildingId: ${this.currentBuilding.id}`);
         
         this.getSceneSyntheDataListFromServer(this.currentBuilding.SceneItem.id, this.currentBuilding.id);
