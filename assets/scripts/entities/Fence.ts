@@ -1,6 +1,6 @@
 // Fence.ts
 
-import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget } from 'cc';
+import { _decorator, Component, Node, Vec2, Rect, UITransform, Vec3, instantiate, Director,EventTarget, PolygonCollider2D, PhysicsSystem2D } from 'cc';
 import { Animal } from './Animal';
 import { ResourceManager } from '../managers/ResourceManager';
 import { CommandType, FarmSelectionType, NetworkCareResult, NetworkCleanseResult, NetworkTreatResult, SceneItem, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -120,13 +120,28 @@ export class Fence extends SceneEntity implements IDropZone{
     }
 
     public isPointInside(point: Vec2): boolean {
-        const uiTransform = this.getComponent(UITransform);
-        if (!uiTransform) return false;
+        const polygon = this.node.getComponent(PolygonCollider2D);
+        if (polygon) {
+            const result = PhysicsSystem2D.instance.testPoint(point);
+            console.log(`result = ${result}`);
+            let isInside = false;
+            for(const collider of result){
+                if(collider.node == this.node){
+                    isInside = true;
+                    break;
+                }
+            }
+            return isInside;
+        }
+        return false;
 
-        const worldPos = this.node.getWorldPosition();
-        const size = uiTransform.contentSize;
-        const rect = new Rect(worldPos.x - size.width / 2, worldPos.y - size.height / 2, size.width, size.height);
-        return rect.contains(point);
+        // const uiTransform = this.getComponent(UITransform);
+        // if (!uiTransform) return false;
+
+        // const worldPos = this.node.getWorldPosition();
+        // const size = uiTransform.contentSize;
+        // const rect = new Rect(worldPos.x - size.width / 2, worldPos.y - size.height / 2, size.width, size.height);
+        // return rect.contains(point);
     }
 
     public select(dragComponent: DragDropComponent, touchPos: Vec2, fromFriend: boolean = false): void {

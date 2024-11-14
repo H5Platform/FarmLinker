@@ -28,8 +28,8 @@ export class TipsWindow extends WindowBase {
         
         if (args.length >= 2) {
             const message = args[0] as string;
-            this.okCallback = args[2] as (() => void) | null;
-            this.cancelCallback = args[3] as (() => void) | null;
+            this.okCallback = args[1] as (() => void) | null;
+            this.cancelCallback = args[2] as (() => void) | null;
 
             this.updateUI(message);
             this.setupEventListeners();

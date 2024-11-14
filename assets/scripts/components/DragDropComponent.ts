@@ -140,6 +140,7 @@ export class DragDropComponent extends Component {
             }
             if (acceptedDropZone) {
                 let worldPos = acceptedDropZone.getNode().getWorldPosition();
+                console.log(`acceptedDropZone = ${acceptedDropZone.getNode().name}`);
                 const draggableNode = this.currentDraggingObject.getNode();
                 //set draggable node layer to origin layer
                 draggableNode.layer = this.originDragNodeLayer;
