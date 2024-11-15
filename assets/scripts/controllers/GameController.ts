@@ -425,7 +425,7 @@ export class GameController extends Component {
        // const plotTile = this.plotTiles?.find(tile => tile.node.name === item.parent_node_name);
         if(plotTile){
             console.log(`Planting crop for item ${item.id}`);
-            plotTile.plant(crop);
+            plotTile.plant(crop,false);
         }
         else{
             console.error(`Plot tile ${item.parent_node_name} not found`);

@@ -349,7 +349,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
 
     }
 
-    public plant(crop : Crop): void {
+    public plant(crop : Crop,useInventory: boolean = true): void {
         if(crop.node.parent){
             crop.node.removeFromParent();
         }
@@ -359,8 +359,10 @@ export class PlotTile extends SceneEntity implements IDropZone {
         this.occupy(crop);
         console.log(`plant crop 2, name = ${crop.node.name}`);
         crop.startGrowing();
-        //remove crop from inventory
-        this.playerController.inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
+        if(useInventory){
+            //remove crop from inventory
+            this.playerController.inventoryComponent.removeItem(crop.SourceInventoryItem.id,1);
+        }
         //this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => { });
         NetworkManager.instance.eventTarget.off(NetworkManager.EVENT_PLANT, this.plant);
 
