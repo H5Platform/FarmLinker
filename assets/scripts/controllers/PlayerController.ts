@@ -36,7 +36,7 @@ export class PlayerController extends Component {
     public get inputComponent(): InputComponent | null {
         return this._inputComponent;
     }
-    
+
     //getter visitmode
     public get visitMode(): boolean {
         return this._visitMode;
@@ -49,14 +49,14 @@ export class PlayerController extends Component {
         this.eventTarget.emit(SharedDefines.EVENT_VISIT_MODE_CHANGE, value);
     }
     private _visitMode: boolean = false;
-    
-    
+
+
     private _inputComponent: InputComponent | null = null;
     private _inventoryComponent: InventoryComponent;
-    private _camera : Camera;
+    private _camera: Camera;
     private currentBuildingPlacement: BuildingPlacementComponent | null = null;
     private dragDropComponent: DragDropComponent | null = null;
-    
+
 
     //getter playerstate
     public get playerState(): PlayerState {
@@ -90,15 +90,16 @@ export class PlayerController extends Component {
         this._interactionMode = value;
     }
     private _interactionMode: InteractionMode = InteractionMode.CameraDrag;
+    private _isHandlingClick: boolean = false;
 
-    protected onLoad(): void {
-        this._playerState = new PlayerState(`0`,1,0,this.initialMoney,0);
+    protected async onLoad() {
+        this._playerState = new PlayerState(`0`, 1, 0, this.initialMoney, 0);
         this._inventoryComponent = this.node.getComponent(InventoryComponent);
 
         if (!this._camera) {
             this._camera = director.getScene().getComponentInChildren(Camera);
         }
-        
+
         const inputNode = Director.instance.getScene().getChildByPath(SharedDefines.PATH_INPUT_NODE);
         if (inputNode) {
             this._inputComponent = inputNode.getComponent(InputComponent);
@@ -107,14 +108,14 @@ export class PlayerController extends Component {
             this._inputComponent.onTouchMove = this.handleTouchMove.bind(this);
             this._inputComponent.onTouchEnd = this.handleTouchEnd.bind(this);
         }
-        else{
+        else {
             console.error('No InputNode found');
             return;
         }
         this.dragDropComponent = inputNode.addComponent(DragDropComponent);
         const fence = Director.instance.getScene().getComponentInChildren(Fence);
         this.dragDropComponent.registerDropZone(fence);
-        
+
         const canvas = director.getScene().getChildByPath(SharedDefines.PATH_GAMEPLAY_CANVAS);
         this.backgroundNode = canvas?.getChildByPath('Gameplay/BG');
         if (this.backgroundNode) {
@@ -126,7 +127,7 @@ export class PlayerController extends Component {
     }
 
     start() {
-        if(NetworkManager.instance.SimulateNetwork){
+        if (NetworkManager.instance.SimulateNetwork) {
             //for initial money
             this._playerState.addGold(this.initialMoney);
             this._playerState.level = this.initialLevel;
@@ -142,7 +143,7 @@ export class PlayerController extends Component {
     }
 
     update(deltaTime: number) {
-        
+
     }
 
     private handleTouchStart(event: EventTouch): void {
@@ -156,12 +157,12 @@ export class PlayerController extends Component {
     private handleTouchMove(event: EventTouch): void {
         if (this.interactionMode === InteractionMode.CameraDrag) {
             this.moveCamera(event.getDelta());
-        } 
+        }
     }
 
     private handleTouchEnd(event: EventTouch): void {
         if (this.interactionMode === InteractionMode.CameraDrag) {
-            
+
             // In any case, reset to camera drag mode
             this.interactionMode = InteractionMode.CameraDrag;
         }
@@ -192,61 +193,71 @@ export class PlayerController extends Component {
         this._camera.node.setPosition(newPosition);
     }
 
-    private handleClick(event: EventTouch): void {
-        //if dragging, return
-        if (this.dragDropComponent && this.dragDropComponent.IsDragging) {
-            return; 
+    private async handleClick(event: EventTouch): Promise<void> {
+        if (this._isHandlingClick) {
+            return;
         }
-        const colliders = this.getCollidersByClickPosition(event.getLocation());
-        if (colliders) {
-            const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
-            //plot layer
-            const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
-            const buildingLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_BUILDING_NAME);
-            for (const collider of colliders) {
+        try {
+            this._isHandlingClick = true;
+            //if dragging, return
+            if (this.dragDropComponent && this.dragDropComponent.IsDragging) {
+                return;
+            }
+            const colliders = this.getCollidersByClickPosition(event.getLocation());
+            if (colliders) {
+                const fenceLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_FENCE_NAME);
+                //plot layer
+                const plotLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_PLOTTILE_NAME);
+                const buildingLayer = 1 << Layers.nameToLayer(SharedDefines.LAYER_BUILDING_NAME);
+                for (const collider of colliders) {
 
-                //get layer of collider
-                
-                if (collider.node.layer & fenceLayer) {
-                    const fenceComponent = collider.node.getComponent(Fence);
-                    if (fenceComponent) {
-                        if((!this.visitMode && fenceComponent.IsPlayerOwner) || (this.visitMode && !fenceComponent.IsPlayerOwner)){
-                            const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
-                            fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
+                    //get layer of collider
+
+                    if (collider.node.layer & fenceLayer) {
+                        const fenceComponent = collider.node.getComponent(Fence);
+                        if (fenceComponent) {
+                            if ((!this.visitMode && fenceComponent.IsPlayerOwner) || (this.visitMode && !fenceComponent.IsPlayerOwner)) {
+                                const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
+                                fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
+                            }
+                        }
+                        else {
+                            console.error('Fence node does not have Fence component');
+                            return;
+                        }
+                        //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
+                    }
+                    else if (collider.node.layer & plotLayer) {
+                        const plotTile = collider.node.getComponent(PlotTile);
+                        if (plotTile) {
+                            //log visitMode and plotTile.IsPlayerOwner
+                            console.log(`visitMode:${this.visitMode}, plotTile.IsPlayerOwner:${plotTile.IsPlayerOwner}`);
+                            if ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner)) {
+                                this.dragDropComponent.registerDropZone(plotTile);
+                                plotTile.select(this.dragDropComponent);
+                            }
+                        } else {
+                            console.error('PlotTile node does not have PlotTile component');
+                            return;
                         }
                     }
-                    else{
-                        console.error('Fence node does not have Fence component');
-                        return;
-                    }
-                    //this.showSelectionWindow(FarmSelectionType.FENCE,collider.node,event.getLocation());
-                }
-                else if(collider.node.layer & plotLayer){
-                    const plotTile = collider.node.getComponent(PlotTile);
-                    if (plotTile) {
-                        //log visitMode and plotTile.IsPlayerOwner
-                        console.log(`visitMode:${this.visitMode}, plotTile.IsPlayerOwner:${plotTile.IsPlayerOwner}`);
-                        if((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner)){
-                            this.dragDropComponent.registerDropZone(plotTile);
-                            plotTile.select(this.dragDropComponent);
+                    else if (collider.node.layer & buildingLayer && !this.visitMode) {
+                        const building = collider.node.getComponent(Building);
+                        if (building && building.isFactory) {
+                            await WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME, building);
                         }
-                    }else{
-                        console.error('PlotTile node does not have PlotTile component');
-                        return;
-                    }
-                }
-                else if(collider.node.layer & buildingLayer && !this.visitMode){
-                    const building = collider.node.getComponent(Building);
-                    if(building && building.isFactory){
-                        WindowManager.instance.show(SharedDefines.WINDOW_FARM_FACTORY_NAME,building);
                     }
                 }
             }
         }
+        finally {
+            this._isHandlingClick = false;
+        }
+
 
     }
 
-    private getCollidersByClickPosition(position: Vec2):readonly Collider2D[] | null {
+    private getCollidersByClickPosition(position: Vec2): readonly Collider2D[] | null {
         if (!this._camera) {
             console.error('Camera not set. Cannot perform touch detection.');
             return;
@@ -254,7 +265,7 @@ export class PlayerController extends Component {
         const touchLocation = position;
         const worldPosition = this._camera.screenToWorld(new Vec3(touchLocation.x, touchLocation.y, 0));
 
-        
+
 
         const result = PhysicsSystem2D.instance.testPoint(new Vec2(worldPosition.x, worldPosition.y));
 
@@ -267,7 +278,7 @@ export class PlayerController extends Component {
             //     console.log('Hit a fence');
             //     // 处理击中篱笆的逻辑
             // }
-            
+
         } else {
             console.log('Did not hit any object');
         }
@@ -277,7 +288,7 @@ export class PlayerController extends Component {
 
     //#region building placement
 
-    public startBuildingPlacement(buildData: any,placementContainer:Node): void {
+    public startBuildingPlacement(buildData: any, placementContainer: Node): void {
         if (this.interactionMode !== InteractionMode.CameraDrag) return;
 
         this.interactionMode = InteractionMode.BuildingPlacement;
@@ -286,12 +297,12 @@ export class PlayerController extends Component {
             const canvas = Director.instance.getScene().getChildByName("Canvas");
             canvas.addChild(buildingNode);
         }
-        else{
+        else {
             placementContainer.addChild(buildingNode);
         }
         this.currentBuildingPlacement = buildingNode.addComponent(BuildingPlacementComponent);
         this.currentBuildingPlacement.initialize(buildData, BuildingManager.instance);
-        
+
 
         // 设置触摸事件处理
         if (this._inputComponent) {
@@ -303,12 +314,12 @@ export class PlayerController extends Component {
     }
 
     public tryPlacementBuilding(): boolean {
-        if (!this.currentBuildingPlacement ) {
+        if (!this.currentBuildingPlacement) {
             return false;
         }
         if (this.currentBuildingPlacement.canPlaceBuilding()) {
             this.currentBuildingPlacement.placeBuilding((result) => {
-                if(result.success){
+                if (result.success) {
                     //add gold and diamond
                     this._playerState.gold = result.data.coin;
                     this._playerState.diamond = result.data.diamond;
@@ -317,7 +328,7 @@ export class PlayerController extends Component {
                 this.endBuildingPlacement();
                 this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, true);
             });
-            
+
             return true;
         }
         return false;
