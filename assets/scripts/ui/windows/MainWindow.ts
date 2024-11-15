@@ -68,7 +68,7 @@ export class MainWindow extends WindowBase {
                 await NetworkManager.instance.requestUpdateAvatarUrl(userProfile.avatarUrl);
             }
             // Add your start game logic here
-            WindowManager.instance.show("GameWindow");
+            await WindowManager.instance.show("GameWindow");
             this.hide();
         }
         else{

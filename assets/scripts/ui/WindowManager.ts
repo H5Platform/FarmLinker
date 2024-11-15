@@ -27,6 +27,8 @@ export class WindowManager extends Component {
     @property(Node)
     private windowsContainer: Node | null = null;
 
+    private isLoadingWindow: boolean = false;
+
     protected onLoad(): void {
         WindowManager._instance = this;
     }
@@ -46,43 +48,54 @@ export class WindowManager extends Component {
     }
 
     public async show(name: string,...args: any[]): Promise<void> {
-        let windowBase = this.windowMap.get(name);
-
-        if (!windowBase) {
-            const orientationStr = this.currentOrientation === WindowOrientation.LANDSCAPE ? "landscape" : "portrait";
-            // Load the prefab
-            const prefabPath = `ui/windows/${orientationStr}/${name}`;
-            const prefab = await ResourceManager.instance.loadPrefab(prefabPath);
-            if (!prefab) {
-                console.error(`Failed to load prefab: ${name}`);
-                return;
-            }
-
-            // Instantiate the prefab
-            const windowNode = instantiate(prefab);
-            if (!this.windowsContainer) {
-                console.error('Windows container is not set');
-                return;
-            }
-            this.windowsContainer.addChild(windowNode);
-
-            // Get WindowBase component
-            windowBase = windowNode.getComponent(WindowBase);
-            if (!windowBase) {
-                console.error(`WindowBase component not found on prefab: ${name}`);
-                return;
-            }
-            // Initialize the window
-            windowBase.initialize(this.currentOrientation);
-
-            // Store the window node in the map
-            this.windowMap.set(name, windowBase);
+        if(this.isLoadingWindow){
+            return;
         }
-
-        // Show the window
-        windowBase.show(...args);
-         // Ensure the window is on top
-         windowBase.node.setSiblingIndex(windowBase.node.parent!.children.length - 1);
+        try
+        {
+            this.isLoadingWindow = true;
+            let windowBase = this.windowMap.get(name);
+    
+            if (!windowBase) {
+                const orientationStr = this.currentOrientation === WindowOrientation.LANDSCAPE ? "landscape" : "portrait";
+                // Load the prefab
+                const prefabPath = `ui/windows/${orientationStr}/${name}`;
+                const prefab = await ResourceManager.instance.loadPrefab(prefabPath);
+                if (!prefab) {
+                    console.error(`Failed to load prefab: ${name}`);
+                    return;
+                }
+    
+                // Instantiate the prefab
+                const windowNode = instantiate(prefab);
+                if (!this.windowsContainer) {
+                    console.error('Windows container is not set');
+                    return;
+                }
+                this.windowsContainer.addChild(windowNode);
+    
+                // Get WindowBase component
+                windowBase = windowNode.getComponent(WindowBase);
+                if (!windowBase) {
+                    console.error(`WindowBase component not found on prefab: ${name}`);
+                    return;
+                }
+                // Initialize the window
+                windowBase.initialize(this.currentOrientation);
+    
+                // Store the window node in the map
+                this.windowMap.set(name, windowBase);
+            }
+    
+            // Show the window
+            windowBase.show(...args);
+             // Ensure the window is on top
+             windowBase.node.setSiblingIndex(windowBase.node.parent!.children.length - 1);
+        }
+        finally
+        {
+            this.isLoadingWindow = false;
+        }
     }
 
     //get window by name

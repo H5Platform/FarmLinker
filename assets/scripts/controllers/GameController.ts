@@ -49,6 +49,8 @@ export class GameController extends Component {
     private friendGameplayContainer: Node| null = null;
     @property(Node)
     private buildingContainer: Node| null = null;
+    @property(NetworkManager)
+    private networkManager: NetworkManager| null = null;
     private playerFence: Fence| null = null;
     private friendFence: Fence| null = null;
 
@@ -78,7 +80,7 @@ export class GameController extends Component {
         this.setFriendGameViewVisibility(false);
         
         this.initializePlayerController();
-        
+        this.setupEventListeners();
     }
 
     async start() {
@@ -109,7 +111,7 @@ export class GameController extends Component {
 
     protected onDestroy(): void {
         this.eventTarget.removeAll(this);
-        NetworkManager.instance.eventTarget.removeAll(this);
+        this.networkManager.eventTarget.removeAll(this);
     }
 
     public async preloadJsonDatas(): Promise<void> 
@@ -184,20 +186,10 @@ export class GameController extends Component {
 
     private setupEventListeners(): void {
         console.log(`setupEventListeners start ...`);
-        //this.playerFence.eventTarget.on(SharedDefines.EVENT_FENCE_ANIMAL_ADDED, this.onFenceAnimalAdded.bind(this));
 
-        const networkManager = NetworkManager.instance;
-        //networkManager.eventTarget.on(NetworkManager.EVENT_LOGIN_SUCCESS, this.onLoginSuccess.bind(this));
-        networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
-        networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
+        this.networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
+        this.networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
        
-        //#region care and treat (DEPRECATED)
-        // networkManager.eventTarget.on(NetworkManager.EVENT_CARE, this.onCared.bind(this));
-        // //care firend
-        // networkManager.eventTarget.on(NetworkManager.EVENT_CARE_FRIEND, this.onCared.bind(this));
-        // networkManager.eventTarget.on(NetworkManager.EVENT_TREAT, this.onTreated.bind(this));
-        // networkManager.eventTarget.on(NetworkManager.EVENT_TREAT_FRIEND, this.onTreated.bind(this));
-        //#endregion
         console.log(`setupEventListeners end ...`);
     }
 
