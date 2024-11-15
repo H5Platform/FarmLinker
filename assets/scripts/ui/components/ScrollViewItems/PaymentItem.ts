@@ -91,6 +91,7 @@ export class PaymentItem extends ScrollViewItem {
     }
 
     private async exchangeCoin(payIndex: number,costDiamond: number): Promise<void> {
+        console.log(`exchangeCoin payIndex: ${payIndex}, costDiamond: ${costDiamond}`);
         if(this.playerState.diamond < costDiamond){
             // this.playerState.addDiamond(-costDiamond);
             // this.playerState.addGold(this.amount);
@@ -98,7 +99,8 @@ export class PaymentItem extends ScrollViewItem {
             return;
         }
 
-        const result = await NetworkManager.instance.requestExchangeCoin(this.payIndex);
+        const result = await NetworkManager.instance.requestExchangeCoin(payIndex);
+        console.log(`exchangeCoin result: ${JSON.stringify(result)}`);
         if(result && result.success){
             this.playerState.addDiamond(-result.data.costDiamond);
             this.playerState.addGold(result.data.coinAmount);
