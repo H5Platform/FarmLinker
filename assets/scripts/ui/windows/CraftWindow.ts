@@ -161,10 +161,10 @@ export class CraftWindow extends WindowBase {
         console.log(`Build item clicked: ${buildData.name}`);
 
         const buildingManager = BuildingManager.instance;
-        if (buildingManager.hasBuildingOfType(buildData.id)) {
-            // 跳转到已有建筑
-            buildingManager.focusOnBuilding(buildData.id);
-        } else {
+        // if (buildingManager.hasBuildingOfType(buildData.id)) {
+        //     // 跳转到已有建筑
+        //     buildingManager.focusOnBuilding(buildData.id);
+        // } else {
             //check if player has enough coins
             if(this.playerController.playerState.gold >= buildData.cost_coin){
                 // 开始新建筑放置
@@ -175,7 +175,7 @@ export class CraftWindow extends WindowBase {
                 //TODO 弹出对话框提示玩家没有足够的硬币
                 console.log("Not enough coins");
             }
-        }
+        // }
 
     }
 

@@ -88,7 +88,7 @@ export class GameController extends Component {
         // Force portrait orientation
         view.setOrientation(macro.ORIENTATION_PORTRAIT);
         await this.preloadJsonDatas();
-        this.setupEventListeners();
+        //this.setupEventListeners();
        // this.login();
 
         //set gameplayCanvas uiTransform content size to 1920*1080

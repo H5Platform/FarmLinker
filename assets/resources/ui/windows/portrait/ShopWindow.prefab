@@ -446,7 +446,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
+      "width": 149.970703125,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -4992,8 +4992,8 @@
     "_spacingY": 10,
     "_verticalDirection": 1,
     "_horizontalDirection": 0,
-    "_constraint": 2,
-    "_constraintNum": 5,
+    "_constraint": 0,
+    "_constraintNum": 3,
     "_affectedByScale": false,
     "_isAlign": false,
     "_id": ""

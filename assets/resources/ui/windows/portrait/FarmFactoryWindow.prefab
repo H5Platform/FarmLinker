@@ -618,7 +618,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 180,
+      "width": 186.73828125,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -778,7 +778,7 @@
       "__id__": 11
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 31
@@ -3598,7 +3598,7 @@
     "__prefab": {
       "__id__": 135
     },
-    "_key": "944AcGN0hNaKYlY0FlgMhb",
+    "_key": "e1JlHJZ/BC7Ls72koL0mYk",
     "_count": 0,
     "_id": ""
   },
