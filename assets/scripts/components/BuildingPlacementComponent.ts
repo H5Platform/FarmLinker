@@ -112,8 +112,8 @@ export class BuildingPlacementComponent extends Component {
         
         const worldPos = UIHelper.convertPositionBetweenCanvas(uiPos, this.uiCanvas, this.gameplayCanvas);
         let rect = new Rect(this.collider.worldAABB);
-        rect.width *= 0.7;
-        rect.height *= 0.7;
+        rect.width *= 0.9;
+        rect.height *= 0.9;
         rect.x = worldPos.x - rect.width / 2;
         rect.y = worldPos.y - rect.height / 2;
         const result = PhysicsSystem2D.instance.testAABB(rect);
