@@ -26,9 +26,10 @@ export class GradeDataManager {
         const jsonAsset = await ResourceManager.instance.loadAsset(SharedDefines.JSON_GRADE_DATA, JsonAsset) as any;
         if (jsonAsset && jsonAsset.json) {
             const gradeDataList: GradeData[] = jsonAsset.json.list;
-            gradeDataList.forEach(gradeData => {
-                this.gradeDataMap.set(gradeData.level, gradeData);
-            });
+            for(let i = 0; i < gradeDataList.length; i++){
+                const gradeData = gradeDataList[i];
+                this.gradeDataMap.set(i+1, gradeData);
+            }
         }
     }
 
@@ -38,6 +39,7 @@ export class GradeDataManager {
 
     public getExpNeededForLevel(level: number): number {
         const gradeData = this.getGradeData(level);
+        console.log('gradeData', gradeData);
         return gradeData ? gradeData.exp_need : 0;
     }
 }

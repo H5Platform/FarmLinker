@@ -274,7 +274,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
+      "width": 398,
       "height": 48
     },
     "_anchorPoint": {
@@ -441,8 +441,8 @@
       "__id__": 7
     },
     "_mode": 0,
-    "_totalLength": 300,
-    "_progress": 0,
+    "_totalLength": 398,
+    "_progress": 1,
     "_reverse": false,
     "_id": ""
   },

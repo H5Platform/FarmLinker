@@ -44,6 +44,7 @@ export class Fence extends SceneEntity implements IDropZone{
     }
 
     public initialize(isPlayerOwner: boolean): void {
+        this.node.removeAllChildren();
         this.init('fence',isPlayerOwner);
     }
 

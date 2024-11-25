@@ -324,6 +324,9 @@ export class GameController extends Component {
             return;
         }
         const buildingContainer = gameplayContainer.getChildByName("Buildings");
+        if(buildingContainer){
+            buildingContainer.removeAllChildren();
+        }
         let fence = isPlayerOwner ? this.playerFence : this.friendFence;
         if(!fence){
             fence = gameplayContainer.getComponentInChildren(Fence);
@@ -338,9 +341,16 @@ export class GameController extends Component {
                 this.friendFence = fence;
             }
         }
-
+        if(fence && !isPlayerOwner){
+            fence.node.removeAllChildren();
+        }
         fence.initialize(isPlayerOwner);
         let plotTiles = isPlayerOwner ? this.playerPlotTiles : this.friendPlotTiles;
+        if(plotTiles && !isPlayerOwner){
+            plotTiles.forEach(plotTile => {
+                plotTile.node.removeAllChildren();
+            });
+        }
         if(!plotTiles || plotTiles.length == 0){
             plotTiles = gameplayContainer.getComponentsInChildren(PlotTile);
             if(!plotTiles){

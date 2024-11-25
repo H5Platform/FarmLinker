@@ -283,7 +283,9 @@ export class GameWindow extends WindowBase {
             const currentExp = playerState.experience;
             console.log('currentExp: ' + currentExp);
             const expNeededForNextLevel = this.getExpNeededForNextLevel(playerState.level);
-            this.progressExp.progress = currentExp / expNeededForNextLevel;
+            this.progressExp.progress = currentExp * 1.0 / expNeededForNextLevel;
+            //log currentExp and expNeededForNextLevel and progress
+            console.log('currentExp: ' + currentExp + ', expNeededForNextLevel: ' + expNeededForNextLevel + ', progress: ' + this.progressExp.progress);
         }
 
         if (this.coinDisplay) {
