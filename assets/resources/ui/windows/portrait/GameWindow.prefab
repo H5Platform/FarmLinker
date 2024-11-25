@@ -2768,8 +2768,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -595.011,
-      "y": 26.450999999999997,
+      "x": -604.026,
+      "y": 26.451000000000004,
       "z": 0
     },
     "_lrot": {
@@ -2809,7 +2809,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 44,
+      "width": 94.029296875,
       "height": 54.4
     },
     "_anchorPoint": {
@@ -2846,7 +2846,7 @@
       "a": 255
     },
     "_string": "繁荣",
-    "_horizontalAlign": 0,
+    "_horizontalAlign": 2,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
     "_fontSize": 20,
@@ -2905,9 +2905,9 @@
     },
     "_alignFlags": 9,
     "_target": null,
-    "_left": 342.98900000000003,
+    "_left": 308.95935156250005,
     "_right": 0,
-    "_top": 21.349,
+    "_top": 21.348999999999997,
     "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
@@ -2986,8 +2986,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -465.38300000000004,
-      "y": 26.450999999999997,
+      "x": -457.918,
+      "y": 26.451000000000004,
       "z": 0
     },
     "_lrot": {
@@ -3123,9 +3123,9 @@
     },
     "_alignFlags": 9,
     "_target": null,
-    "_left": 394.617,
+    "_left": 402.082,
     "_right": 0,
-    "_top": 23.349,
+    "_top": 23.348999999999997,
     "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,

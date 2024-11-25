@@ -230,10 +230,11 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     public async updateSprite(pngPath: string): Promise<void> {
-
+        console.log(`updateSprite start..., pngPath = ${pngPath}`);
         if (this.sprite) {
             if(this.sceneItem?.state === SceneItemState.Dead){
-                this.sprite.spriteFrame = this.deadSpriteFrame;
+                //this.sprite.spriteFrame = this.deadSpriteFrame;
+                this.updateDeadSprite();
             }
             else{
                 return ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
@@ -247,17 +248,23 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     }
 
     public startGrowing(): void {
-        console.log(`start growing `);
+        console.log(`start growing currentGrowthStageIndex = ${this.currentGrowthStageIndex} , growthStages.length = ${this.growthStages.length}`);
+        if(this.currentGrowthStageIndex < this.growthStages.length){
+            this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
+        }
         if (this.sceneItem) {
             if (this.sceneItem.state === SceneItemState.Complete) {
                 this.onGrowthComplete();
             } else if (this.sceneItem.state === SceneItemState.InProgress) {
                 this.continueGrowing(this.sceneItem);
             }
+            else if(this.sceneItem.state === SceneItemState.Dead){
+                this.setDeadState();
+            }
         } else {
             this.growState = GrowState.GROWING;
             
-            this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
+            
             this.requestNextGrowth();
         }
     }
@@ -505,11 +512,29 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         }
     }
 
-    protected setDeadState(): void {
-        console.log(`setDeadState start ...`);
+    protected updateDeadSprite(): void {
+        console.log(`updateDeadSprite start..., currentGrowthStageIndex = ${this.currentGrowthStageIndex} , growthStages.length = ${this.growthStages.length}`);
+
         if (this.sprite && this.deadSpriteFrame) {
             this.sprite.spriteFrame = this.deadSpriteFrame;
         }
+    }
+
+    protected setDeadState(): void {
+        console.log(`setDeadState start ...`);
+        // if (this.sprite && this.deadSpriteFrame) {
+        //     this.sprite.spriteFrame = this.deadSpriteFrame;
+        // }
+        if(this.currentGrowthStageIndex < this.growthStages.length){
+            // this.updateSprite(`${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`);
+            const pngPath = `${this.baseSpritePath}${this.growthStages[this.currentGrowthStageIndex].png}`;
+             ResourceManager.instance.loadAsset(pngPath + '/spriteFrame', SpriteFrame).then((texture) => {
+             if (texture) {
+                 this.sprite.spriteFrame = texture as SpriteFrame;
+                 }
+             });
+        }
+        this.updateDeadSprite();
         this.isSick = false;
         this.updateSickState();
         this.growState = GrowState.NONE;

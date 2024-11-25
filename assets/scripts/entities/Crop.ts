@@ -21,6 +21,11 @@ export class Crop extends GrowthableEntity {
     })
     public cropType: CropType = CropType.CORN;
 
+    @property(Node)
+    public sickNode: Node = null;
+    @property(Node)
+    public deadNode: Node = null;
+
     private cropDatas: any[] = [];
     private cropDataIndex: number = 0;
 
@@ -50,6 +55,7 @@ export class Crop extends GrowthableEntity {
         }
         this.cropType = parseInt(cropData.crop_type) as CropType;
         this.growthStages = CropDataManager.instance.filterCropDataByCropType(this.cropType.toString());
+        console.log(`growthStages.length = ${this.growthStages.length}`);
     }
 
     protected setupData(cropData: any): void {
@@ -202,5 +208,21 @@ export class Crop extends GrowthableEntity {
             console.log("Cleanse failed");
         }
         return null;
+    }
+
+    protected updateSickState(): void {
+        console.log(`updateSickState start..., isSick = ${this.isSick}`);
+        if(this.sickNode){
+            this.sickNode.active = this.isSick;
+        }
+        if(this.deadNode){
+            this.deadNode.active = this.sceneItem?.state === SceneItemState.Dead;
+        }
+    }
+
+    protected updateDeadSprite(): void {
+        if(this.deadNode){
+            this.deadNode.active = true;
+        }
     }
 }
