@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform, macro } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform, macro, Camera } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
 import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
@@ -31,6 +31,8 @@ export class GameController extends Component {
     }
     @property(Canvas)
     private gameplayCanvas: Canvas| null = null;
+    @property(Camera)
+    private gameplayCamera: Camera| null = null;
 
     
     //getter for uiCanvas
@@ -39,6 +41,8 @@ export class GameController extends Component {
     }
     @property(Canvas)
     private uiCanvas: Canvas| null = null;
+    @property(Camera)
+    private uiCamera: Camera| null = null;
 
     @property(Prefab)
     private playerControllerPrefab: Prefab| null = null;
@@ -71,6 +75,11 @@ export class GameController extends Component {
     }
 
     private screenScale:Vec2 = new Vec2(1,1);
+    //getter for gameplayToUICameraRatio
+    public get GameplayToUICameraRatio(): number {
+        return this.gameplayToUICameraRatio;
+    }
+    private gameplayToUICameraRatio:number = 1;
 
     public eventTarget: EventTarget = new EventTarget();
 
@@ -103,6 +112,8 @@ export class GameController extends Component {
         this.screenScale.x = screenSize.width / designSize.width;
         this.screenScale.y = screenSize.height / designSize.height;
         console.log(`screenScale:${this.screenScale}`);
+        //calculate gameplayToUICameraRatio
+        this.gameplayToUICameraRatio = this.uiCamera.orthoHeight / this.gameplayCamera.orthoHeight;
     }
 
     update(deltaTime: number) {

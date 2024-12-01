@@ -625,7 +625,7 @@ items:
     _variants: []
   5T1dQ2bY4gK9mD8hC0nJ6R:
     key: 5T1dQ2bY4gK9mD8hC0nJ6R
-    value: "清蒸胡萝卜: Steamed Carrots"
+    value: Steamed Carrots
     type: 4
     isVariant: false
     associations: []
@@ -639,21 +639,21 @@ items:
     _variants: []
   pD7rT4Y0wG6kJ2hX1mN9bK:
     key: pD7rT4Y0wG6kJ2hX1mN9bK
-    value: "番茄炒蛋: Tomato and Egg Stir-Fry"
+    value: Tomato and Egg Stir-Fry
     type: 4
     isVariant: false
     associations: []
     _variants: []
   5gZ8Q2tS1pL4yR6mF0cJ3H:
     key: 5gZ8Q2tS1pL4yR6mF0cJ3H
-    value: "胡萝卜土豆泥: Carrot and Potato Mash"
+    value: Carrot and Potato Mash
     type: 4
     isVariant: false
     associations: []
     _variants: []
   1F9hC6tK8nB2rY0mP5jQ4W:
     key: 1F9hC6tK8nB2rY0mP5jQ4W
-    value: "蔬菜披萨: Vegetable Pizza"
+    value: Vegetable Pizza
     type: 4
     isVariant: false
     associations: []
@@ -667,14 +667,14 @@ items:
     _variants: []
   0gM9T4hY3nF1bJ8rP5kL2D:
     key: 0gM9T4hY3nF1bJ8rP5kL2D
-    value: "烤猪肋排: Grilled Pork Ribs"
+    value: Grilled Pork Ribs
     type: 4
     isVariant: false
     associations: []
     _variants: []
   K4nH7yD0gC1bT9xM2pF6R8:
     key: K4nH7yD0gC1bT9xM2pF6R8
-    value: "双肉火锅: Double Meat Hotpot"
+    value: Double Meat Hotpot
     type: 4
     isVariant: false
     associations: []
@@ -702,14 +702,14 @@ items:
     _variants: []
   5L2nT8yR3kD1hF6pM4gJ0Z:
     key: 5L2nT8yR3kD1hF6pM4gJ0Z
-    value: "草莓奶昔: Strawberry Milkshake"
+    value: Strawberry Milkshake
     type: 4
     isVariant: false
     associations: []
     _variants: []
   zK9hC3bY8mR0dP6tF5wJ2Q:
     key: zK9hC3bY8mR0dP6tF5wJ2Q
-    value: "草莓果酱: Strawberry Jam"
+    value: Strawberry Jam
     type: 4
     isVariant: false
     associations: []

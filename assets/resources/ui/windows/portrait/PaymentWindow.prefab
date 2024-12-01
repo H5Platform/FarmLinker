@@ -867,7 +867,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 2.384999999999991,
-      "y": 13.05099999999993,
+      "y": 4.506640855773327,
       "z": 0
     },
     "_lrot": {
@@ -927,7 +927,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 5,
+      "y": 1.72655001753634,
       "z": 0
     },
     "_lrot": {
@@ -984,7 +984,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 49.90499999999997,
+      "y": 162.26289719808267,
       "z": 0
     },
     "_lrot": {
@@ -1049,7 +1049,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -5.483,
+      "x": 1.0010000000000003,
       "y": -20,
       "z": 0
     },
@@ -2598,7 +2598,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 905.4290000000001,
+      "width": 918.397,
       "height": 170.864
     },
     "_anchorPoint": {
@@ -2832,7 +2832,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1797.94,
-      "height": 99.80999999999995
+      "height": 324.52579439616534
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2929,14 +2929,14 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 20,
-    "_bottom": 30,
+    "_top": 0.020205898101655875,
+    "_bottom": 0.03030884715248381,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
     "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
+    "_isAbsTop": false,
+    "_isAbsBottom": false,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
     "_originalWidth": 240,
@@ -2977,7 +2977,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1797.94,
-      "height": 149.80999999999995
+      "height": 341.79129457152874
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3037,14 +3037,14 @@
     "_target": null,
     "_left": 35.41499999999995,
     "_right": 30.645000000000113,
-    "_top": 133.56900000000007,
-    "_bottom": 159.67099999999994,
+    "_top": 0.10410272397802119,
+    "_bottom": 0.12444643622617976,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
     "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
+    "_isAbsTop": false,
+    "_isAbsBottom": false,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
     "_originalWidth": 970.7139999999999,
