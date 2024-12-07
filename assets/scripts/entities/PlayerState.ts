@@ -2,6 +2,7 @@
 
 import { EventTarget } from 'cc';
 import { SharedDefines } from '../misc/SharedDefines';
+import { GradeDataManager } from '../managers/GradeDataManager';
 
 export class PlayerState {
     private _id: string = '';
@@ -143,7 +144,7 @@ export class PlayerState {
         console.log(`PlayerState: checkLevelUp  level: ${this.level} experience: ${this.experience}`);
         const expNeededForNextLevel = this.getExpNeededForNextLevel();
         if (this.experience >= expNeededForNextLevel) {
-            this.experience -= expNeededForNextLevel;
+            //this.experience -= expNeededForNextLevel;
             this.level += 1;
             console.log(`PlayerState: checkLevelUp  levelup: ${this.level} experience: ${this.experience}`);
             this.checkLevelUp(); // prevent too many levels
@@ -152,6 +153,8 @@ export class PlayerState {
 
     private getExpNeededForNextLevel(): number {
         // TEST ONLY
-        return Math.floor(100 * Math.pow(1.5, this._level - 1));
+       // return Math.floor(100 * Math.pow(1.5, this._level - 1));
+       const expNeededForNextLevel = GradeDataManager.instance.getExpNeededForLevel(this.level + 1);
+       return expNeededForNextLevel;
     }
 }

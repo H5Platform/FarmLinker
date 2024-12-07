@@ -34,6 +34,10 @@ export class GradeDataManager {
     }
 
     public getGradeData(level: number): GradeData | undefined {
+        //if level is not in the map, return the last grade data
+        if (!this.gradeDataMap.has(level)) {
+            return this.gradeDataMap.get(this.gradeDataMap.size);
+        }
         return this.gradeDataMap.get(level);
     }
 
