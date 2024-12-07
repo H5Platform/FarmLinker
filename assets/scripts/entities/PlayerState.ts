@@ -27,7 +27,7 @@ export class PlayerState {
     public get experience(): number { return this._experience; }
     public get gold(): number { return this._gold; }
     public get diamond(): number { return this._diamond; }
-    public get prosperity(): number { return this._prosperity; }
+    public get prosperity(): number { return this._prosperity == null || this._prosperity == undefined ? 0 : this._prosperity; }
     public get headUrl(): string { return this._headUrl; }
     public set headUrl(value: string) { this._headUrl = value; }
     public eventTarget: EventTarget;

@@ -303,10 +303,12 @@ export class FarmFactoryWindow extends WindowBase {
                     this.inventoryComponent.removeItem(item.id);
                 }
             });
+            this.refreshData();
 
         }else{
             console.log(`Synthesis start failed`);
         }
+
     }
 
     private async onBtnSynthesisEndClick( data: any,itemNode:Node): Promise<void> {

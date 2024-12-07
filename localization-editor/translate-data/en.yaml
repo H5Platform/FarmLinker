@@ -569,7 +569,7 @@ items:
     _variants: []
   4H5jN1pT2K9lQ3gF6bY8M0:
     key: 4H5jN1pT2K9lQ3gF6bY8M0
-    value: Wheat Flour
+    value: Wheatmeal
     type: 4
     isVariant: false
     associations: []
@@ -639,14 +639,14 @@ items:
     _variants: []
   pD7rT4Y0wG6kJ2hX1mN9bK:
     key: pD7rT4Y0wG6kJ2hX1mN9bK
-    value: Tomato and Egg Stir-Fry
+    value: Tomato Egg
     type: 4
     isVariant: false
     associations: []
     _variants: []
   5gZ8Q2tS1pL4yR6mF0cJ3H:
     key: 5gZ8Q2tS1pL4yR6mF0cJ3H
-    value: Carrot and Potato Mash
+    value: Carrot Mash
     type: 4
     isVariant: false
     associations: []
@@ -667,14 +667,14 @@ items:
     _variants: []
   0gM9T4hY3nF1bJ8rP5kL2D:
     key: 0gM9T4hY3nF1bJ8rP5kL2D
-    value: Grilled Pork Ribs
+    value: Grilled Rib
     type: 4
     isVariant: false
     associations: []
     _variants: []
   K4nH7yD0gC1bT9xM2pF6R8:
     key: K4nH7yD0gC1bT9xM2pF6R8
-    value: Double Meat Hotpot
+    value: Meat Hotpot
     type: 4
     isVariant: false
     associations: []
@@ -702,7 +702,7 @@ items:
     _variants: []
   5L2nT8yR3kD1hF6pM4gJ0Z:
     key: 5L2nT8yR3kD1hF6pM4gJ0Z
-    value: Strawberry Milkshake
+    value: Strawberry Shake
     type: 4
     isVariant: false
     associations: []
