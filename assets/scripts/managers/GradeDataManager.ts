@@ -41,6 +41,10 @@ export class GradeDataManager {
         return this.gradeDataMap.get(level);
     }
 
+    public getMaxLevel(): number {
+        return this.gradeDataMap.size;
+    }
+
     public getExpNeededForLevel(level: number): number {
         const gradeData = this.getGradeData(level);
         console.log('gradeData', gradeData);

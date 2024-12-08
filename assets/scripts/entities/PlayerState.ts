@@ -142,11 +142,16 @@ export class PlayerState {
 
     private checkLevelUp(): void {
         console.log(`PlayerState: checkLevelUp  level: ${this.level} experience: ${this.experience}`);
+        const maxLevel = GradeDataManager.instance.getMaxLevel();
+        if (this.level >= maxLevel) {
+            return;
+        }
         const expNeededForNextLevel = this.getExpNeededForNextLevel();
         if (this.experience >= expNeededForNextLevel) {
             //this.experience -= expNeededForNextLevel;
             this.level += 1;
             console.log(`PlayerState: checkLevelUp  levelup: ${this.level} experience: ${this.experience}`);
+
             this.checkLevelUp(); // prevent too many levels
         }
     }

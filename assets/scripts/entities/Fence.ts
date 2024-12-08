@@ -299,7 +299,9 @@ export class Fence extends SceneEntity implements IDropZone{
 
             NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
                 if(!result.success ){
-            
+                    if(animal.node){
+                        animal.node.removeFromParent();
+                    }
                     console.log('animal plant failed , name = ' + animal.node.name);
                     return;
                 }
@@ -317,13 +319,17 @@ export class Fence extends SceneEntity implements IDropZone{
             //convert world pos to design pos
             //const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
             
-            await NetworkManager.instance.plant(
+            const result = await NetworkManager.instance.plant(
                 animal.id,
                 SceneItemType.Animal,
                 designPos.x,
                 designPos.y,
                 this.node.name,
             );
+            //result is not success, then remove the animal
+            if(!result){
+                animal.node.removeFromParent();
+            }
 
             
         }

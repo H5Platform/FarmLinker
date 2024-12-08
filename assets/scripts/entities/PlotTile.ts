@@ -337,14 +337,17 @@ export class PlotTile extends SceneEntity implements IDropZone {
             //convert world pos to design pos
             const designPos = new Vec2(worldPos.x / worldScale.x, worldPos.y / worldScale.y);
             this.currentDraggable = draggable;
-            await NetworkManager.instance.plant(
+            const result = await NetworkManager.instance.plant(
                 crop.id,
                 SceneItemType.Crop,
                 designPos.x,
                 designPos.y,
                 this.node.name
             );
-            
+            //result is not success, then remove the crop
+            if(!result){
+                crop.node.removeFromParent();
+            }
         }
 
     }

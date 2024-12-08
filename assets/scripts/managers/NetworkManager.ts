@@ -842,7 +842,7 @@ export class NetworkManager extends Component {
     }
 
     private handleError(error: any): void {
-        console.error('Network error:', error);
+        console.error(`Network error: ${error.message}`);
         // 这里可以添加更多的错误处理逻辑，比如显示错误提示等
     }
 
