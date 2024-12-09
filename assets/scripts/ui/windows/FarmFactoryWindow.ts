@@ -10,6 +10,7 @@ import { ItemDataManager } from '../../managers/ItemDataManager';
 import { NetworkManager } from '../../managers/NetworkManager';
 import { Building } from '../../entities/Building';
 import { l10n } from 'db://localization-editor/l10n';
+import { CooldownComponent } from '../../components/CooldownComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('FarmFactoryWindow')
@@ -32,12 +33,15 @@ export class FarmFactoryWindow extends WindowBase {
     @property(ScrollView)
     private scrollView: ScrollView = null;
 
+    private isBtnStartClickEnable: boolean = true;
     private currentBuilding: Building = null;
     private inventoryComponent: InventoryComponent = null;
+    private cooldownComponent: CooldownComponent = null;
 
     //override
     public initialize(): void {
         super.initialize();
+        this.cooldownComponent = this.getComponent(CooldownComponent);
         this.btnClose.node.on(Button.EventType.CLICK, this.onBtnCloseClick, this);
         this.btnUpgrade.node.on(Button.EventType.CLICK, this.onBtnUpgradeClick, this);
 
@@ -130,7 +134,7 @@ export class FarmFactoryWindow extends WindowBase {
         const endTime = new Date(item.endTime);
         const remainingTime = Math.max(0, (endTime.getTime() - Date.now()) / 1000);
         console.log(`setupInProgressStatus:remainingTime:${remainingTime}`);
-        this.updateRemainingTime(txtRemainingTime,btnSynthesisEnd, remainingTime);
+        this.updateRemainingTime(item.id,txtRemainingTime,btnSynthesisEnd, remainingTime);
     }
 
     private populateAvailableItems(syntheDatas: any[],sceneSyntheDataList: NetworkSyntheResultData[]): void {
@@ -238,7 +242,8 @@ export class FarmFactoryWindow extends WindowBase {
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
         const hasEnoughItems = this.checkInventory(data);
-        btnStart.node.active = hasEnoughItems && state != SyntheState.Complete;
+       // console.log(`setupItemButtons: id = ${data.id} , hasEnoughItems:${hasEnoughItems} , state:${state}`);
+        btnStart.node.active = hasEnoughItems && state == SyntheState.None;
         btnStart.node.on(Button.EventType.CLICK, ()=>{this.onBtnStartClick(data, itemNode)} );
         btnSynthesisEnd.node.active = state == SyntheState.InProgress;
         btnSynthesisEnd.node.on(Button.EventType.CLICK, ()=>{this.onBtnSynthesisEndClick(data,itemNode)} );
@@ -279,19 +284,24 @@ export class FarmFactoryWindow extends WindowBase {
     }
 
     private async onBtnStartClick( data: any, itemNode: Node ): Promise<void> {
+        if(!this.isBtnStartClickEnable){
+            return;
+        }
+        this.isBtnStartClickEnable = false;
         // Handle button click event
         console.log(`Crafting ${data.name} with formula ${data.formula_1} , itemNode name: ${itemNode.name}`);
         const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
         const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
         const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
         console.log(`data.time_min:`,data.time_min);
-        this.updateRemainingTime(txtRemainingTime,btnStart, parseFloat(data.time_min) * SharedDefines.TIME_MINUTE);
+        this.updateRemainingTime(data.id,txtRemainingTime,btnStart, parseFloat(data.time_min) * SharedDefines.TIME_MINUTE);
         btnStart.node.active = false;
         btnSynthesisEnd.node.active = false;
         txtRemainingTime.node.active = true;
         txtRemainingTime.string = `剩余${data.time_min}分钟`;
 
         const result = await NetworkManager.instance.syntheStart(data.id,this.currentBuilding.SceneItem.id);
+        this.isBtnStartClickEnable = true;
         if(result && result.success){
             console.log(`Synthesis start success`);
             const sceneSyntheData = result.data;
@@ -335,20 +345,30 @@ export class FarmFactoryWindow extends WindowBase {
         WindowManager.instance.hide(SharedDefines.WINDOW_FARM_FACTORY_NAME);
     }
 
-    private updateRemainingTime(label: Label,btnSynthesisEnd:Button, remainingSeconds: number): void {
-        const minutes = Math.floor(remainingSeconds / 60);
-        label.string = `剩余${minutes}分钟`;
+    private updateRemainingTime(cooldownId: string,label: Label,btnSynthesisEnd:Button, remainingSeconds: number): void {
 
-        if (remainingSeconds > 0) {
-            this.scheduleOnce(() => {
-                this.updateRemainingTime(label,btnSynthesisEnd, remainingSeconds - 60);
-            }, 60);
-        } else {
-            label.node.active = false;
-            btnSynthesisEnd.node.active = true;
+        if(label){
+            const minutes = Math.floor(remainingSeconds / 60);
+            label.string = `剩余${minutes}分钟`;
+        }
+
+        if(remainingSeconds > 0){
+            this.cooldownComponent.removeCooldown(cooldownId);
+            this.cooldownComponent.startCooldown(cooldownId, remainingSeconds,()=>{
+                this.updateRemainingTime(cooldownId,label,btnSynthesisEnd, remainingSeconds - 60);
+            });
+        }
+        else {
+            if(label && label.node){
+                label.node.active = false;
+            }
+            if(btnSynthesisEnd && btnSynthesisEnd.node){
+                btnSynthesisEnd.node.active = true;
+            }
             // 可能需要刷新数据或更新UI
             //this.refreshData();
         }
+
     }
 
     private refreshData(): void {
