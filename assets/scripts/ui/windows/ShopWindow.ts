@@ -53,6 +53,7 @@ export class ShopWindow extends WindowBase {
     @property(Button)
     private closeButton: Button | null = null;
 
+    private btnClickEnable: boolean = true;
     private playerController: PlayerController | null = null;
     private inventoryComponent: InventoryComponent | null = null;
     private currentMode: ShopMode = ShopMode.BUY;
@@ -115,7 +116,7 @@ export class ShopWindow extends WindowBase {
     }
 
     private onBuyItemResult(buyItemResult: NetworkBuyItemResult): void {
-        console.log('onBuyItemResult', buyItemResult);
+        console.log(`onBuyItemResult success = ${buyItemResult.success} , data = ${buyItemResult.data}`);
         if (buyItemResult.success) {
             const item = ItemDataManager.instance.getItemById(buyItemResult.data.item_id);
             if (item) {
@@ -247,21 +248,26 @@ export class ShopWindow extends WindowBase {
 
         // Setup button click event
         button.node.off(Button.EventType.CLICK);
-        button.node.on(Button.EventType.CLICK, () => {
-            if (isBuyMode) {
-                this.buyItem(item);
-            } else {
-                this.sellItem(button,item);
+        button.node.on(Button.EventType.CLICK, async () => {
+            if(!this.btnClickEnable){
+                return;
             }
+            this.btnClickEnable = false;
+            if (isBuyMode) {
+                await this.buyItem(item);
+            } else {
+                await this.sellItem(button,item);
+            }
+            this.btnClickEnable = true;
         }, this);
 
         scrollView.content?.addChild(itemNode);
     }
 
-    private buyItem(item: any): void {
+    private async buyItem(item: any): Promise<void> {
         const price = parseInt(item.buy_price);
         if (this.playerController?.playerState.gold >= price) {
-            NetworkManager.instance.buyItem(item.id,1);
+            await NetworkManager.instance.buyItem(item.id,1);
 
         } else {
             console.log("Not enough gold to buy this item!");
@@ -270,6 +276,11 @@ export class ShopWindow extends WindowBase {
 
     private async sellItem(button: Button,inventoryItem: InventoryItem): Promise<void> {
         const sellItemResult = await NetworkManager.instance.sellItem(inventoryItem.id, 1);
+        console.log(`sellItemResult success = ${sellItemResult.success} , data = ${sellItemResult.data}`);
+        if(!sellItemResult.success){
+            console.log(`sellItem failed , message = ${sellItemResult.message}`);
+            return;
+        }
         const item = ItemDataManager.instance.getItemById(sellItemResult.data.item_id);
         if (item) {
             const price = parseInt(item.sell_price);
@@ -277,7 +288,7 @@ export class ShopWindow extends WindowBase {
                 console.log("sellItem success");
                 const coinEffect = await UIEffectHelper.playCoinCollectionEffect(CoinType.COIN, this.node, button.node.getWorldPosition(), this.coinDisplay!.node.getWorldPosition());
                 coinEffect.node.on('effectComplete', () => {
-                    this.playerController!.playerState.gold += price;
+                    this.playerController!.playerState.gold = sellItemResult.data.current_coin;
                     console.log(`Sold item: ${item.name} for ${price} gold`);
                     //this.showSellItems(); 
                 });
