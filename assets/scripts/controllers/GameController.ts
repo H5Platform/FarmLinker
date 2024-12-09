@@ -321,11 +321,11 @@ export class GameController extends Component {
         }
         const sceneItems = data.data as SceneItem[];
         if(data.userid == this.playerController?.playerState.id){
-            this.initializeSceneItems(this.gameplayContainer,sceneItems,this.playerController.playerState.level,true);
+            await this.initializeSceneItems(this.gameplayContainer,sceneItems,this.playerController.playerState.level,true);
         }
         else{
             //visit friends's scene
-            this.initializeSceneItems(this.friendGameplayContainer,sceneItems,1,false);
+            await this.initializeSceneItems(this.friendGameplayContainer,sceneItems,1,false);
         }
     }
 
@@ -472,11 +472,18 @@ export class GameController extends Component {
     }
 
     private async createBuildingNode(buildingContainer:Node,item: SceneItem): Promise<Node | null> {
+        console.log(`createBuildingNode start ...`);
         const buildData = BuildDataManager.instance.findBuildDataById(item.item_id);
-        if (!buildData) return null;
+        if (!buildData){
+            console.error(`Building data not found for item ${item.item_id}`);
+            return null;
+        }
 
         const prefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_PLACEMENT_BUILDING);
-        if (!prefab) return null;
+        if (!prefab) {
+            console.error(`Prefab not found for item ${item.item_id}`);
+            return null;
+        }
 
         const node = instantiate(prefab);
         buildingContainer?.addChild(node);

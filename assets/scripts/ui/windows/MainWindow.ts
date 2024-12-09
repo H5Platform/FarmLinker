@@ -18,6 +18,8 @@ export class MainWindow extends WindowBase {
     @property(Button)
     private btnStart: Button | null = null;
 
+    private isLogin: boolean = false;
+
     public initialize(): void {
         super.initialize();
         this.setupEventListeners();
@@ -79,6 +81,10 @@ export class MainWindow extends WindowBase {
 
     private async onStartButtonClicked(): Promise<void> {
         console.log("onStartButtonClicked start...");
+        if(this.isLogin){
+            return;
+        }
+        this.isLogin = true;
         const result = await this.gameController.login(this.ebUserId!.string, this.ebPassword!.string);
 
         if(result && result.success){ 
@@ -90,6 +96,7 @@ export class MainWindow extends WindowBase {
             console.log(result.message);
             WindowManager.instance.show("ToastWindow",result.message);
         }
+        this.isLogin = false;
     }
 
     protected onDestroy(): void {

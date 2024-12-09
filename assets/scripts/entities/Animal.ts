@@ -74,7 +74,7 @@ export class Animal extends GrowthableEntity {
     }
 
     public canHarvest(): boolean {
-        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
+        return !this.isHarvesting && (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
     }
 
     public async harvest(): Promise<void> {
@@ -82,8 +82,9 @@ export class Animal extends GrowthableEntity {
             console.error(`Animal ${this.node.name} is not ready to harvest`);
             return;
         }
-
+        this.isHarvesting = true;
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
+        this.isHarvesting = false;
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
@@ -94,6 +95,7 @@ export class Animal extends GrowthableEntity {
         else{
             console.error(`Animal ${this.node.name} harvest failed`);
         }
+        
         this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
         this.node.destroy();
     }

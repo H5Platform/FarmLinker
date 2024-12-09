@@ -54,6 +54,7 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     protected totalGrowthTime: number = 0;
     protected growthStartTime: number = 0;
     protected isSick: boolean = false;
+    protected isHarvesting: boolean = false;
     
 
     @property

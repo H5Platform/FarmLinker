@@ -29,6 +29,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
 
     @property
     public isOccupied: boolean = false;
+    private isDragging: boolean = false;
 
     @property(Vec2)
     public gridPosition: Vec2 = new Vec2(0, 0);
@@ -311,11 +312,12 @@ export class PlotTile extends SceneEntity implements IDropZone {
     //#region IDraggable
 
     public canAcceptDrop(draggable: IDraggable): boolean {
-        return !this.isOccupied && draggable instanceof Crop;
+        return !this.isOccupied && draggable instanceof Crop && !this.isDragging;
     }
 
     public async onDrop(draggable: IDraggable): Promise<void> {
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+        this.isDragging = true;
         if (draggable instanceof Crop) {
             console.log('drop crop , name = ' + this.node.name);
             
@@ -349,7 +351,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
                 crop.node.removeFromParent();
             }
         }
-
+        this.isDragging = false;
     }
 
     public plant(crop : Crop,useInventory: boolean = true): void {

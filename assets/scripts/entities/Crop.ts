@@ -68,7 +68,7 @@ export class Crop extends GrowthableEntity {
     public canHarvest(): boolean {
         //log states
         console.log(`Crop ${this.node.name} growState = ${this.growState}, sceneItem.state = ${this.sceneItem.state}, harvestItemId = ${this.harvestItemId}`);
-        return (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
+        return !this.isHarvesting && (this.growState == GrowState.HARVESTING || this.sceneItem.state == SceneItemState.Dead) && this.harvestItemId != "" && this.isPlayerOwner;
     }
 
     public async harvest(): Promise<void> {
@@ -77,9 +77,9 @@ export class Crop extends GrowthableEntity {
             console.error(`Crop ${this.node.name} harvest failed`);
             return;
         }
-        
+        this.isHarvesting = true;
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
-        
+        this.isHarvesting = false;
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);

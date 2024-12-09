@@ -24,6 +24,7 @@ export class Fence extends SceneEntity implements IDropZone{
     @property
     public capacity: number = 0;
 
+    private isDragging: boolean = false;
     private occupiedSpace: number = 0;
     private animals: Animal[] = [];
     private dragDropComponent: DragDropComponent | null = null;
@@ -54,7 +55,7 @@ export class Fence extends SceneEntity implements IDropZone{
 
     public canAcceptAnimal(animal: Animal): boolean {
         const requiredSpace = 1;//parseInt(animal.gridCapacity);
-        return true;//this.getAvailableSpace() >= requiredSpace;
+        return !this.isDragging && true;//this.getAvailableSpace() >= requiredSpace;
     }
 
     // Add this method to the Fence class
@@ -289,13 +290,12 @@ export class Fence extends SceneEntity implements IDropZone{
     public async onDrop(draggable: IDraggable): Promise<void> {
 
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+        this.isDragging = true;
         if (draggable instanceof Animal) {
             const animal = draggable as Animal;
             let worldPos = animal.node.getWorldPosition();
             const designPos = UIHelper.convertPositionBetweenCanvas(worldPos, this.gameController.UICanvas.node, this.gameController.GameplayCanvas.node);
             animal.node.setWorldPosition(designPos);
-            //this.node.addChild(animal.node);
-            
 
             NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result) => {
                 if(!result.success ){
@@ -316,9 +316,6 @@ export class Fence extends SceneEntity implements IDropZone{
                 }
             });
 
-            //convert world pos to design pos
-            //const designPos = new Vec2(worldPos.x / this.gameController.ScreenScale.x, worldPos.y / this.gameController.ScreenScale.y);
-            
             const result = await NetworkManager.instance.plant(
                 animal.id,
                 SceneItemType.Animal,
@@ -330,7 +327,7 @@ export class Fence extends SceneEntity implements IDropZone{
             if(!result){
                 animal.node.removeFromParent();
             }
-
+            this.isDragging = false;
             
         }
     }
