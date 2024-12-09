@@ -79,18 +79,18 @@ export class Crop extends GrowthableEntity {
         }
         
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
+        
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
-            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
             this.stopDiseaseStatusUpdates();
-            this.node.destroy();
-            return;
         }
         else{
             console.error(`Crop ${this.node.name} harvest failed`);
-            return;
         }
+        
+        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+        this.node.destroy();
     }
 
     public canCare(): boolean {

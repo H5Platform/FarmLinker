@@ -87,15 +87,15 @@ export class Animal extends GrowthableEntity {
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
-            this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+
             this.stopDiseaseStatusUpdates();
-            this.node.destroy();
-            return;
+            
         }
         else{
             console.error(`Animal ${this.node.name} harvest failed`);
-            return;
         }
+        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
+        this.node.destroy();
     }
 
     // Any additional Animal-specific methods can be added here
