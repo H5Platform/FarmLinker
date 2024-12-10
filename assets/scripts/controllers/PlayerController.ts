@@ -218,7 +218,7 @@ export class PlayerController extends Component {
                         if (fenceComponent) {
                             if ((!this.visitMode && fenceComponent.IsPlayerOwner) || (this.visitMode && !fenceComponent.IsPlayerOwner)) {
                                 const worldPos = this._camera.screenToWorld(new Vec3(event.getLocation().x, event.getLocation().y, 0));
-                                fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
+                                await fenceComponent.select(this.dragDropComponent, new Vec2(worldPos.x, worldPos.y));
                             }
                         }
                         else {
@@ -234,7 +234,7 @@ export class PlayerController extends Component {
                             console.log(`visitMode:${this.visitMode}, plotTile.IsPlayerOwner:${plotTile.IsPlayerOwner}`);
                             if ((!this.visitMode && plotTile.IsPlayerOwner) || (this.visitMode && !plotTile.IsPlayerOwner)) {
                                 this.dragDropComponent.registerDropZone(plotTile);
-                                plotTile.select(this.dragDropComponent);
+                                await plotTile.select(this.dragDropComponent);
                             }
                         } else {
                             console.error('PlotTile node does not have PlotTile component');

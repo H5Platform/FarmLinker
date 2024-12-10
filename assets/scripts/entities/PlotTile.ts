@@ -141,7 +141,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
 
     //#region select
 
-    public select(dragComponent : DragDropComponent): void {
+    public async select(dragComponent : DragDropComponent): Promise<void> {
         if (this.cooldownComponent.isOnCooldown('select')) {
             return; // if cooldown is on, ignore this select
         }
@@ -150,8 +150,8 @@ export class PlotTile extends SceneEntity implements IDropZone {
         console.log(`select plot tile , name = ${this.node.name} , occupied = ${this.isOccupied}`);
         if (this.isOccupied) {
              if(this.occupiedCrop.canHarvest()){
-                 this.occupiedCrop.harvest();
-                 return;
+                await this.occupiedCrop.harvest();
+                return;
              }
             else{
                 const worldPos = UIHelper.convertPositionBetweenCanvas(this.node.getWorldPosition(),gameplayCanvas.node,uiCanvas.node);

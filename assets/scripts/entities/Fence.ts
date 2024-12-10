@@ -146,7 +146,7 @@ export class Fence extends SceneEntity implements IDropZone{
         // return rect.contains(point);
     }
 
-    public select(dragComponent: DragDropComponent, touchPos: Vec2, fromFriend: boolean = false): void {
+    public async select(dragComponent: DragDropComponent, touchPos: Vec2, fromFriend: boolean = false): Promise<void> {
         if (this.cooldownComponent.isOnCooldown('select')) {
             return; // if cooldown is on, ignore this select
         }
@@ -162,7 +162,7 @@ export class Fence extends SceneEntity implements IDropZone{
                 if (animalUITransform.getBoundingBox().contains(new Vec2(localPos.x, localPos.y))) {
                     console.log(`Animal ${animal.id} is selected`);
                     if(animal.canHarvest()){
-                        animal.harvest();
+                        await animal.harvest();
                         return;
                     }
                     

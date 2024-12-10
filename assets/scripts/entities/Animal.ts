@@ -84,7 +84,7 @@ export class Animal extends GrowthableEntity {
         }
         this.isHarvesting = true;
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
-        this.isHarvesting = false;
+        
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
@@ -95,9 +95,7 @@ export class Animal extends GrowthableEntity {
         else{
             console.error(`Animal ${this.node.name} harvest failed`);
         }
-        
-        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
-        this.node.destroy();
+        this.isHarvesting = false;
     }
 
     // Any additional Animal-specific methods can be added here

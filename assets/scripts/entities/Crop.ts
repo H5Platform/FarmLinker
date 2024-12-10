@@ -79,7 +79,6 @@ export class Crop extends GrowthableEntity {
         }
         this.isHarvesting = true;
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
-        this.isHarvesting = false;
         if(result){
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
@@ -88,9 +87,7 @@ export class Crop extends GrowthableEntity {
         else{
             console.error(`Crop ${this.node.name} harvest failed`);
         }
-        
-        this.node.off(Node.EventType.TOUCH_END, this.harvest, this);
-        this.node.destroy();
+        this.isHarvesting = false;
     }
 
     public canCare(): boolean {
