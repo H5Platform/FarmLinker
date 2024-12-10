@@ -322,6 +322,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
             console.log('drop crop , name = ' + this.node.name);
             
             const crop = draggable as Crop;
+            crop.node.active = false;
             NetworkManager.instance.eventTarget.once(NetworkManager.EVENT_PLANT, (result)=>{
                 if(!result.success || this.currentDraggable === null){
             
@@ -360,6 +361,7 @@ export class PlotTile extends SceneEntity implements IDropZone {
         }
         this.node.addChild(crop.node);
         crop.node.position = Vec3.ZERO;
+        crop.node.active = true;
         console.log(`plant crop 1, name = ${crop.node.name}`);
         this.occupy(crop);
         console.log(`plant crop 2, name = ${crop.node.name}`);
