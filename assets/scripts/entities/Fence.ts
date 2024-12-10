@@ -55,7 +55,7 @@ export class Fence extends SceneEntity implements IDropZone{
 
     public canAcceptAnimal(animal: Animal): boolean {
         const requiredSpace = 1;//parseInt(animal.gridCapacity);
-        return !this.isDragging && true;//this.getAvailableSpace() >= requiredSpace;
+        return true;//this.getAvailableSpace() >= requiredSpace;
     }
 
     // Add this method to the Fence class
@@ -158,7 +158,7 @@ export class Fence extends SceneEntity implements IDropZone{
                 const worldPos = this.node.getComponent(UITransform).convertToWorldSpaceAR(animalNode.position);
                 const localPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(touchPos.x, touchPos.y, 0));
               //  const localPos = WindowManager.instance.uiCamera.convertToUINode(worldPos,this.node);
-                console.log(`Animal ${animal.id} worldPos: ${worldPos}, localPos: ${localPos},touchPos = ${touchPos}`);
+                //console.log(`Animal ${animal.id} worldPos: ${worldPos}, localPos: ${localPos},touchPos = ${touchPos}`);
                 if (animalUITransform.getBoundingBox().contains(new Vec2(localPos.x, localPos.y))) {
                     console.log(`Animal ${animal.id} is selected`);
                     if(animal.canHarvest()){
@@ -288,7 +288,9 @@ export class Fence extends SceneEntity implements IDropZone{
     }
 
     public async onDrop(draggable: IDraggable): Promise<void> {
-
+        if(this.isDragging){
+            return;
+        }
         this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
         this.isDragging = true;
         if (draggable instanceof Animal) {

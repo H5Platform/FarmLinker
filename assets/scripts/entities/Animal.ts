@@ -96,6 +96,7 @@ export class Animal extends GrowthableEntity {
             console.error(`Animal ${this.node.name} harvest failed`);
         }
         this.isHarvesting = false;
+        this.node.destroy();
     }
 
     // Any additional Animal-specific methods can be added here
