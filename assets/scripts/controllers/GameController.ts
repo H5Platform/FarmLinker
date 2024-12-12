@@ -200,6 +200,9 @@ export class GameController extends Component {
 
         this.networkManager.eventTarget.on(NetworkManager.EVENT_GET_USER_SCENE_ITEMS, this.onGetUserSceneItems.bind(this));
         this.networkManager.eventTarget.on(NetworkManager.EVENT_HARVEST, this.onHarvest.bind(this));
+        
+        // Add event listener for player level up
+        this.playerController.playerState.eventTarget.on(SharedDefines.EVENT_PLAYER_LEVEL_UP, this.onPlayerLevelUp.bind(this));
        
         console.log(`setupEventListeners end ...`);
     }
@@ -648,6 +651,25 @@ export class GameController extends Component {
     }
 
     //#endregion
+
+    private onPlayerLevelUp(data: { oldLevel: number, newLevel: number }): void {
+        console.log(`Player level up from ${data.oldLevel} to ${data.newLevel}`);
+        this.refreshPlotTilesVisibility(data.newLevel);
+    }
+
+    private refreshPlotTilesVisibility(level: number): void {
+        const availablePlotTileNum = SharedDefines.INIT_PLOT_NUM + level - 1;
+        console.log(`Refreshing plot tiles visibility for level ${level}, available plots: ${availablePlotTileNum}`);
+        
+        // Update player plot tiles
+        if (this.playerPlotTiles) {
+            for (let i = 0; i < this.playerPlotTiles.length; i++) {
+                const plotTile = this.playerPlotTiles[i];
+                if (!plotTile) continue;
+                plotTile.node.active = i < availablePlotTileNum;
+            }
+        }
+    }
 
 }
 
