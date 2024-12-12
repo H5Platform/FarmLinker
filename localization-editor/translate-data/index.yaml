@@ -195,6 +195,7 @@ items:
       - nodeUuid: 49aLsAQipPjbRJ0jNzrYTB
       - nodeUuid: 2240w5A1dFObNB1/ECvs0b
       - nodeUuid: 2240w5A1dFObNB1/ECvs0b
+      - nodeUuid: f70SR5aoVAd7pJy24HOiXk
     _variants: []
   63xNiycqdBjagXa6p/2+6B:
     key: 63xNiycqdBjagXa6p/2+6B
@@ -336,6 +337,9 @@ items:
       - sceneUuid: 9082e393-8ed7-48d3-a699-0550b0f8eeff
         nodeUuid: 92/XyV2rlEcbymj9UlAGbl
         reference: 9082e393-8ed7-48d3-a699-0550b0f8eeff
+      - sceneUuid: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
+        nodeUuid: 1egMvD6k1E2ZQnUc4cnmjd
+        reference: 99c4fa28-579e-4a12-86f6-bdca8ca050f9
     _variants: []
   e1JlHJZ/BC7Ls72koL0mYk:
     key: e1JlHJZ/BC7Ls72koL0mYk
@@ -2092,5 +2096,8 @@ languageConfig:
   bcp47Tag: index
   translateFinished: 74
   translateTotal: 0
+  compileFinished: 0
+  compileTotal: 0
+0
   compileFinished: 0
   compileTotal: 0
