@@ -554,12 +554,12 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
         }
     }
 
-    protected notifyPlayCoinEffect(harvestValue: number): void {
+    protected notifyPlayExpEffect(expValue: number): void {
         const gameWindow = WindowManager.instance.getWindow(SharedDefines.WINDOW_GAME_NAME);
         if (gameWindow) {
-            gameWindow.node.emit(SharedDefines.EVENT_PLAY_COIN_EFFECT, {
-                harvestValue: harvestValue,
-                harvestNode: this.node
+            gameWindow.node.emit(SharedDefines.EVENT_PLAY_EXP_EFFECT, {
+                expValue: expValue,
+                expNode: this.node
             });
         }
     }

@@ -20,6 +20,7 @@ import { SyntheDataManager } from '../managers/SyntheDataManager';
 import { GradeDataManager } from '../managers/GradeDataManager';
 import { CoinDataManager } from '../managers/CoinDataManager';
 import { DiamondDataManager } from '../managers/DiamondDataManager';
+import { WindowManager } from '../ui/WindowManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -518,106 +519,15 @@ export class GameController extends Component {
         }
     }
 
-    //#region care and treat (DEPRECATED)
-
-    // private onCared(result: NetworkCareResult): void {
-    //     console.log('cared result', result);
-    //     if(result.success){
-    //         const networkCareResultData = result.data;
-    //         console.log('networkCareResultData',networkCareResultData);
-    //         //if scene_item_type is crop, call handleOnCropCared
-    //         if(networkCareResultData.scene_item_type == SceneItemType.Crop){
-    //             this.handleOnCropCared(networkCareResultData);
-    //         }
-    //         else if(networkCareResultData.scene_item_type == SceneItemType.Animal){
-    //             this.handleOnAnimalCared(networkCareResultData);
-    //         }
-    //     }
-    // }
-
-    // private handleOnCropCared(networkCareResultData:NetworkCareResultData): void {
-    //     const plotTile = this.findPlotTileBySceneId(this.playerPlotTiles,networkCareResultData.sceneid);
-    //     if(plotTile){
-    //         plotTile.onCare(networkCareResultData.care_count);
-    //     }
-
-    //     if(networkCareResultData.friend_id){
-    //         const friendPlotTile = this.findPlotTileBySceneId(this.friendPlotTiles,networkCareResultData.sceneid);
-    //         if(friendPlotTile){
-    //             friendPlotTile.onCare(networkCareResultData.care_count);
-    //         }
-    //         this.playerController.friendState.addDiamond(networkCareResultData.diamond_added);
-    //         this.playerController.playerState.addDiamond(networkCareResultData.diamond_added);
-    //     }
-    // }
-
-    // private handleOnAnimalCared(networkCareResultData:NetworkCareResultData): void {
-    //     console.log(`handleOnAnimalCared start ... , networkCareResultData:${networkCareResultData}`);
-    //     const animal = this.playerFence.findAnimalBySceneId(networkCareResultData.sceneid);
-    //     if(animal){
-    //         animal.CareCount = networkCareResultData.care_count;
-    //         console.log(`handleOnAnimalCared end ... , animal:${animal.node.name} , careCount:${animal.CareCount}`);
-    //     }
-
-    //     if(networkCareResultData.friend_id){
-    //         const friendAnimal = this.friendFence.findAnimalBySceneId(networkCareResultData.sceneid);
-    //         if(friendAnimal){
-    //             friendAnimal.CareCount = networkCareResultData.care_count;
-    //         }
-    //         this.playerController.friendState.addDiamond(networkCareResultData.diamond_added);
-    //         this.playerController.playerState.addDiamond(networkCareResultData.diamond_added);
-    //     }
-    // }
-
-    // private onTreated(result: NetworkTreatResult): void {
-    //     console.log('treated result', result);
-    //     if(result.success){
-    //         const networkTreatResultData = result.data;
-    //         console.log('networkTreatResultData', networkTreatResultData);
-    //         if(networkTreatResultData.scene_item_type == SceneItemType.Crop){
-    //             this.handleOnCropTreated(networkTreatResultData);
-    //         }
-    //         else if(networkTreatResultData.scene_item_type == SceneItemType.Animal){
-    //             this.handleOnAnimalTreated(networkTreatResultData);
-    //         }
-    //     }
-    // }
-    
-    // private handleOnCropTreated(networkTreatResultData: NetworkTreatResultData): void {
-    //     const plotTile = this.findPlotTileBySceneId(this.playerPlotTiles, networkTreatResultData.sceneid);
-    //     if(plotTile){
-    //         plotTile.onTreat(networkTreatResultData.treat_count);
-    //     }
-    
-    //     if(networkTreatResultData.friend_id){
-    //         const friendPlotTile = this.findPlotTileBySceneId(this.friendPlotTiles, networkTreatResultData.sceneid);
-    //         if(friendPlotTile){
-    //             friendPlotTile.onTreat(networkTreatResultData.treat_count);
-    //         }
-    //         this.playerController.friendState.addDiamond(networkTreatResultData.diamond_added);
-    //         this.playerController.playerState.addDiamond(networkTreatResultData.diamond_added);
-    //     }
-    // }
-    
-    // private handleOnAnimalTreated(networkTreatResultData: NetworkTreatResultData): void {
-    //     console.log(`handleOnAnimalTreated start ... , networkTreatResultData:${networkTreatResultData}`);
-    //     const animal = this.playerFence.findAnimalBySceneId(networkTreatResultData.sceneid);
-    //     if(animal){
-    //         animal.TreatCount = networkTreatResultData.treat_count;
-    //         console.log(`handleOnAnimalTreated end ... , animal:${animal.node.name} , treatCount:${animal.TreatCount}`);
-    //     }
-    
-    //     if(networkTreatResultData.friend_id){
-    //         const friendAnimal = this.friendFence.findAnimalBySceneId(networkTreatResultData.sceneid);
-    //         if(friendAnimal){
-    //             friendAnimal.TreatCount = networkTreatResultData.treat_count;
-    //         }
-    //         this.playerController.friendState.addDiamond(networkTreatResultData.diamond_added);
-    //         this.playerController.playerState.addDiamond(networkTreatResultData.diamond_added);
-    //     }
-    // }
-
-    //#endregion
+    protected notifyPlayExpEffect(expValue: number): void {
+        const gameWindow = WindowManager.instance.getWindow(SharedDefines.WINDOW_GAME_NAME);
+        if (gameWindow) {
+            gameWindow.node.emit(SharedDefines.EVENT_PLAY_EXP_EFFECT, {
+                expValue: expValue,
+                expNode: this.node
+            });
+        }
+    }
 
     public async visitFriend(userId:string): Promise<void> {
         

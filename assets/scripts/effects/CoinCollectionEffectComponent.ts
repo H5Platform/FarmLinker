@@ -3,7 +3,8 @@ const { ccclass, property } = _decorator;
 
 export enum CoinType {
     COIN,
-    DIAMOND
+    DIAMOND,
+    EXP
 }
 
 @ccclass('CoinCollectionEffectComponent')
@@ -16,6 +17,9 @@ export class CoinCollectionEffectComponent extends Component {
 
     @property(Prefab)
     public diamondPrefab: Prefab | null = null;
+
+    @property(Prefab)
+    public expPrefab: Prefab | null = null;
 
 
     @property
@@ -47,6 +51,8 @@ export class CoinCollectionEffectComponent extends Component {
             this.targetPrefab = this.coinPrefab;
         } else if(coinType === CoinType.DIAMOND){
             this.targetPrefab = this.diamondPrefab;
+        } else if(coinType === CoinType.EXP){
+            this.targetPrefab = this.expPrefab;
         }
 
         if(!this.targetPrefab) {

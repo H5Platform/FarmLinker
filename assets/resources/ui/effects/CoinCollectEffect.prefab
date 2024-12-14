@@ -76,6 +76,10 @@
       "__uuid__": "217b0a94-aaba-4412-ba65-4221f5fe154e",
       "__expectedType__": "cc.Prefab"
     },
+    "expPrefab": {
+      "__uuid__": "e2f8b654-c822-4bfb-b5f4-7df9f6a02da5",
+      "__expectedType__": "cc.Prefab"
+    },
     "coinCount": 10,
     "spreadRadius": 50,
     "moveDuration": 1,
@@ -95,6 +99,7 @@
       "__id__": 0
     },
     "fileId": "5aAXbAB6NH0YIDlN0EmG+1",
+    "instance": null,
     "targetOverrides": null
   }
 ]

@@ -80,6 +80,7 @@ export class Crop extends GrowthableEntity {
         this.isHarvesting = true;
         const result = await NetworkManager.instance.harvest(this.sceneItem.id, this.sceneItem.item_id, this.sceneItem.type);
         if(result){
+            this.notifyPlayExpEffect(0);
             this.growState = GrowState.NONE;
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
             this.stopDiseaseStatusUpdates();

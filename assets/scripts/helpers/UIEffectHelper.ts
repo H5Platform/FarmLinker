@@ -20,8 +20,6 @@ export class UIEffectHelper {
         }
         return null;
     }
-
-    
     
 }
 

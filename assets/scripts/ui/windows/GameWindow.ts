@@ -179,7 +179,7 @@ export class GameWindow extends WindowBase {
         if (this.btnBack) {
             this.btnBack.node.on(Button.EventType.CLICK, this.onBtnBackClicked, this);
         }
-        this.node.on(SharedDefines.EVENT_PLAY_COIN_EFFECT, this.onPlayCoinEffect, this);
+        this.node.on(SharedDefines.EVENT_PLAY_EXP_EFFECT, this.onPlayExpEffect, this);
     }
 
     private updateButtonsVisibility(): void {
@@ -430,36 +430,33 @@ export class GameWindow extends WindowBase {
     }
 
     
-    private async onPlayCoinEffect(event: any): Promise<void> {
-        const { harvestValue, harvestNode } = event;
-        await this.playHarvestCoinEffect(harvestNode, harvestValue);
+    private async onPlayExpEffect(event: any): Promise<void> {
+        const { expValue, expNode } = event;
+        await this.playExpEffect(expNode, expValue);
     }
 
-    private async playHarvestCoinEffect(sourceNode: Node, harvestValue: number): Promise<void> {
-        if(!this.coinDisplay) {
-            console.error('coinDisplay not found');
-            return;
-        }
+    private async playExpEffect(sourceNode: Node, expValue: number): Promise<void> {
+        console.log('playExpEffect: ' + expValue);
 
         // 获取当前 Canvas
-        const gameCanvas = this.node.parent;
+        const gameCanvas = this.gameController?.GameplayCanvas; //this.node.parent;
         // 获取源节点所在的 Canvas
-        const sourceCanvas = sourceNode.parent;
+        const uiCanvas = this.gameController?.UICanvas;
         
         // 转换坐标
         const startWorldPos = sourceNode.getWorldPosition();
         const convertedStartPos = UIHelper.convertPositionBetweenCanvas(
             startWorldPos,
-            sourceCanvas,
-            gameCanvas
+            gameCanvas.node,
+            uiCanvas.node
         );
 
         // 获取目标金币图标的世界坐标
-        const endPos = this.coinDisplay.currencySpriteNode.getWorldPosition();
+        const endPos = this.lblLevel.node.getWorldPosition();//this.coinDisplay.currencySpriteNode.getWorldPosition();
         
-        // 播放金币收集特效
+        // 播放Exp收集特效
         const coinEffect = await UIEffectHelper.playCoinCollectionEffect(
-            CoinType.COIN,
+            CoinType.EXP,
             this.node,
             convertedStartPos,
             endPos
