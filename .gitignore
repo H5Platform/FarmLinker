@@ -7,8 +7,9 @@ temp/
 local/
 /build/*
 !/build/web-mobile
+!/build/web-mobile/**
 profiles/
-native
+/native
 #//////////////////////////
 # NPM
 #//////////////////////////
