@@ -412,6 +412,8 @@ export class SharedDefines {
     public static readonly EVENT_CROP_HARVEST: string = 'crop-harvest';
     public static readonly EVENT_ANIMAL_HARVEST: string = 'animal-harvest';
 
+    public static readonly EVENT_PLAY_COIN_EFFECT: string = 'play-coin-effect';
+
 
     public static readonly WINDOW_CRAFT_NAME: string = 'CraftWindow';
     public static readonly WINDOW_SHOP_NAME: string = 'ShopWindow';

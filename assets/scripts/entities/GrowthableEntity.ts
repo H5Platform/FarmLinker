@@ -7,6 +7,7 @@ import { IDraggable } from '../components/DragDropComponent';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
 import { SceneEntity } from './SceneEntity';
+import { WindowManager } from '../ui/WindowManager';
 
 const { ccclass, property } = _decorator;
 
@@ -550,6 +551,16 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
             } else {
                 this.updateSickState();
             }
+        }
+    }
+
+    protected notifyPlayCoinEffect(harvestValue: number): void {
+        const gameWindow = WindowManager.instance.getWindow(SharedDefines.WINDOW_GAME_NAME);
+        if (gameWindow) {
+            gameWindow.node.emit(SharedDefines.EVENT_PLAY_COIN_EFFECT, {
+                harvestValue: harvestValue,
+                harvestNode: this.node
+            });
         }
     }
 

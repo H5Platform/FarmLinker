@@ -12,6 +12,9 @@ import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { NetworkManager } from '../../managers/NetworkManager';
 import { GradeDataManager } from '../../managers/GradeDataManager';
+import { UIHelper } from '../../helpers/UIHelper';
+import { UIEffectHelper } from '../../helpers/UIEffectHelper';
+import { CoinType } from '../../effects/CoinCollectionEffectComponent';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -176,7 +179,7 @@ export class GameWindow extends WindowBase {
         if (this.btnBack) {
             this.btnBack.node.on(Button.EventType.CLICK, this.onBtnBackClicked, this);
         }
-
+        this.node.on(SharedDefines.EVENT_PLAY_COIN_EFFECT, this.onPlayCoinEffect, this);
     }
 
     private updateButtonsVisibility(): void {
@@ -427,6 +430,47 @@ export class GameWindow extends WindowBase {
     }
 
     
+    private async onPlayCoinEffect(event: any): Promise<void> {
+        const { harvestValue, harvestNode } = event;
+        await this.playHarvestCoinEffect(harvestNode, harvestValue);
+    }
+
+    private async playHarvestCoinEffect(sourceNode: Node, harvestValue: number): Promise<void> {
+        if(!this.coinDisplay) {
+            console.error('coinDisplay not found');
+            return;
+        }
+
+        // 获取当前 Canvas
+        const gameCanvas = this.node.parent;
+        // 获取源节点所在的 Canvas
+        const sourceCanvas = sourceNode.parent;
+        
+        // 转换坐标
+        const startWorldPos = sourceNode.getWorldPosition();
+        const convertedStartPos = UIHelper.convertPositionBetweenCanvas(
+            startWorldPos,
+            sourceCanvas,
+            gameCanvas
+        );
+
+        // 获取目标金币图标的世界坐标
+        const endPos = this.coinDisplay.currencySpriteNode.getWorldPosition();
+        
+        // 播放金币收集特效
+        const coinEffect = await UIEffectHelper.playCoinCollectionEffect(
+            CoinType.COIN,
+            this.node,
+            convertedStartPos,
+            endPos
+        );
+
+        // // 特效完成后更新金币数量
+        // coinEffect.node.on("effectComplete", () => {
+        //     // 通知 PlayerController 更新金币
+        //     this.playerController?.harvestCrop(harvestValue);
+        // }, coinEffect.node);
+    }
 }
 
 
