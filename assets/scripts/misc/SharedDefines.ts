@@ -459,3 +459,12 @@ export class SharedDefines {
     public static readonly PREFAB_PLACEMENT_BUILDING: string = 'entities/buildings/placementBuilding';
 
 }
+
+export interface NetworkAddDiamondResult {
+    success: boolean;
+    message: string;
+    data: {
+        user_id: string;
+        added_amount: number;
+    };
+}

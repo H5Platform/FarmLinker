@@ -68,6 +68,11 @@ export class PaymentItem extends ScrollViewItem {
         WindowManager.instance.show(SharedDefines.WINDOW_TIPS_NAME, content, () => {
             if(this.paymentType == PayItemType.Diamond){
                 DashFunManager.instance.requestPayment("Test","Payment test",this.paymentType,this.amount);
+
+                // const result = await NetworkManager.instance.requestAddDiamondForTest(100);
+                // if (result && result.success) {
+                //     console.log(`Added ${result.data.added_amount} diamonds to user ${result.data.user_id}`);
+                // }
             }
             else if(this.paymentType == PayItemType.Coin){
                 this.exchangeCoin(this.payIndex,this.costDiamond);

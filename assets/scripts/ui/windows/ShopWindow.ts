@@ -43,6 +43,10 @@ export class ShopWindow extends WindowBase {
     public coinDisplay: CoinDisplay | null = null;
     @property(DiamondDisplay)
     public diamondDisplay: DiamondDisplay | null = null;
+    @property(Button)
+    private btnAddCoin: Button | null = null;
+    @property(Button)
+    private btnAddDiamond: Button | null = null;
 
     @property(Button)
     private buyButton: Button | null = null;
@@ -109,6 +113,8 @@ export class ShopWindow extends WindowBase {
         this.buyButton?.node.on(Button.EventType.CLICK, this.onBuyButtonClicked, this);
         this.sellButton?.node.on(Button.EventType.CLICK, this.onSellButtonClicked, this);
         this.closeButton?.node.on(Button.EventType.CLICK, this.hide, this);
+        this.btnAddCoin?.node.on(Button.EventType.CLICK, this.onBtnAddCoinClicked, this);
+        this.btnAddDiamond?.node.on(Button.EventType.CLICK, this.onBtnAddDiamondClicked, this);
     }
 
     private setupNetworkEventListeners(): void {
@@ -141,6 +147,14 @@ export class ShopWindow extends WindowBase {
         this.currentMode = ShopMode.SELL;
         this.switchToMode(ShopMode.SELL);
         this.showSellItems();
+    }
+
+    private onBtnAddCoinClicked(): void {
+        WindowManager.instance.show(SharedDefines.WINDOW_COIN_NAME);
+    }
+
+    private onBtnAddDiamondClicked(): void {
+        WindowManager.instance.show(SharedDefines.WINDOW_PAYMENT_NAME);
     }
 
     private onBtnCloseClicked(): void {

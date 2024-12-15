@@ -187,7 +187,7 @@ export class GameWindow extends WindowBase {
         //check if is visit mode
         const visitMode = this.gameController?.getPlayerController().visitMode ?? false;
         console.log(`updateButtonsVisibility ${visitMode}`);
-        this.btnFriend.enabled = !visitMode;
+       // this.btnFriend.enabled = !visitMode;
         this.btnShop.enabled = !visitMode;
         this.btnCraft.enabled = !visitMode;
         this.btnBack.node.active = visitMode;
@@ -195,11 +195,11 @@ export class GameWindow extends WindowBase {
         if(visitMode){
             SpriteHelper.setSpriteColor(this.btnShop.getComponent(Sprite), Color.GRAY);
             SpriteHelper.setSpriteColor(this.btnCraft.getComponent(Sprite), Color.GRAY);
-            SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.GRAY);
+            //SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.GRAY);
         }else{
             SpriteHelper.setSpriteColor(this.btnShop.getComponent(Sprite), Color.WHITE);
             SpriteHelper.setSpriteColor(this.btnCraft.getComponent(Sprite), Color.WHITE);
-            SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.WHITE);
+            //SpriteHelper.setSpriteColor(this.btnFriend.getComponent(Sprite), Color.WHITE);
         }
     }
 
@@ -427,6 +427,8 @@ export class GameWindow extends WindowBase {
 
     private onFriendButtonClicked(friendUserId: string): void {
         this.gameController?.visitFriend(friendUserId);
+        //set scrollview invisible
+        this.friendScrollView.node.active = false;
     }
 
     

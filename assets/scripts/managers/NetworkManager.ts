@@ -2,7 +2,7 @@
 
 import { _decorator, Component, director, EventTarget, sys } from 'cc';
 import { HttpHelper } from '../helpers/HttpHelper';
-import { NetworkAddBuildingResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkExchangeCoinResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { NetworkAddBuildingResult, NetworkAddDiamondResult, NetworkCareResult, NetworkCleanseResult, NetworkDiseaseStatusResult, NetworkExchangeCoinResult, NetworkLoginResult, NetworkQueryPaymentResult, NetworkRecommendFriendsResult, NetworkSyntheListResult, NetworkSyntheResult, NetworkTreatResult, NetworkVisitResult, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { BUILD } from 'cc/env';
 const { ccclass, property } = _decorator;
 
@@ -41,6 +41,7 @@ export class NetworkManager extends Component {
     public static readonly API_RECOMMEND_FRIENDS: string = '/friend/recommend';
     public static readonly API_QUERY_PAYMENT_RESULT: string = '/payment/queryPaymentResult';
     public static readonly API_EXCHANGE_COIN: string = '/payment/exchangeCoin';
+    public static readonly API_TEST_ADD_DIAMOND: string = "/test/addDiamond";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -834,6 +835,32 @@ export class NetworkManager extends Component {
         try {
             const response = await HttpHelper.post(url, data, headers);
             const result = JSON.parse(response) as NetworkExchangeCoinResult;
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            return null;
+        }
+    }
+
+    public async requestAddDiamondForTest(amount: number): Promise<NetworkAddDiamondResult> {
+        if (this.simulateNetwork) {
+            return null;
+        }
+
+        const url = this.buildApiUrl(NetworkManager.API_TEST_ADD_DIAMOND, this.gameServerPort);
+        const headers = {
+            'Authorization': this.token,
+            ...this.defaultHeaders
+        };
+
+        const data = {
+            user_id: this.userId,
+            amount: amount
+        };
+
+        try {
+            const response = await HttpHelper.post(url, data, headers);
+            const result = JSON.parse(response) as NetworkAddDiamondResult;
             return result;
         } catch (error) {
             this.handleError(error);
