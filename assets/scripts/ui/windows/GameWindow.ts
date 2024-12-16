@@ -395,10 +395,10 @@ export class GameWindow extends WindowBase {
             buttonNode.name = friend.id;
 
             // Set friend name
-            // const nameLabel = buttonNode.getChildByName('NameLabel')?.getComponent(Label);
-            // if (nameLabel) {
-            //     nameLabel.string = friend.name;
-            // }
+            const nameLabel = buttonNode.getChildByName('txtName')?.getComponent(Label);
+            if (nameLabel) {
+                nameLabel.string = friend.nickname;
+            }
 
             // Set friend avatar (assuming there's an avatar URL in the friend data)
             if (friend.avatarUrl) {

@@ -448,6 +448,8 @@ export class FarmSelectionWindow extends WindowBase {
                     careResult = await crop.care();
                 }
                 if(careResult && careResult.success){
+                    // TODO Need translate
+                    WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "浇水成功");
                     console.log(`care result: ${careResult.success}`);
                     if(careResult.data.friend_id){
                         console.log(`care friend , name = ${careResult.data.friend_id} , friend_id = ${this.playerController.friendState.id} , diamond_added = ${careResult.data.diamond_added}`);
@@ -458,9 +460,9 @@ export class FarmSelectionWindow extends WindowBase {
                         });
                     }
                 }
-            }
-            else{
-                console.log("Crop cannot care");
+            } else {
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "当前无法浇水");
             }
         }
         this.hide();
@@ -480,6 +482,8 @@ export class FarmSelectionWindow extends WindowBase {
                     treatResult = await crop.treat();
                 }
                 if(treatResult && treatResult.success){
+                    // TODO Need translate
+                    WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "治疗成功");
                     console.log(`treat result: ${treatResult.success}`);
                     this.collectingDiamondRefCount++;
                     this.playDiamondCollectionEffect(plotTile.node,treatResult.data.diamond_added,()=>{
@@ -487,9 +491,9 @@ export class FarmSelectionWindow extends WindowBase {
                         this.hide();
                     });
                 }
-            }
-            else{
-                console.log("Crop cannot treat");
+            } else {
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "当前无法治疗");
             }
         }
         this.hide();
@@ -509,6 +513,8 @@ export class FarmSelectionWindow extends WindowBase {
                     cleanseResult = await crop.cleanse();
                 }
                 if(cleanseResult && cleanseResult.success){
+                    // TODO Need translate
+                    WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "清理成功");
                     console.log(`cleanse result: ${cleanseResult.success}`);
                     this.collectingDiamondRefCount++;
                     this.playDiamondCollectionEffect(plotTile.node,cleanseResult.data.diamond_added,()=>{
@@ -516,9 +522,9 @@ export class FarmSelectionWindow extends WindowBase {
                         this.hide();
                     });
                 }
-            }
-            else{
-                console.log("Crop cannot cleanse");
+            } else {
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "当前无法清理");
             }
         }
         this.hide();

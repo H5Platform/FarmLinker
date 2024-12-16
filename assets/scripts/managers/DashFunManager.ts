@@ -40,6 +40,7 @@ export class DashFunManager extends Component{
     }
 
     private _gameId:string = "ForTest";
+    private testMode:boolean = true;
 
     public eventTarget:EventTarget = new EventTarget();
 
@@ -160,7 +161,17 @@ const msg = {
 parent.postMessage(msg, "*")
     */
 
-    public requestPayment(title:string, desc:string, type:PayItemType, price:number){
+    public async requestPayment(title:string, desc:string, type:PayItemType, price:number){
+
+        if(this.testMode){
+            const result = await NetworkManager.instance.requestAddDiamondForTest(price);
+            if (result && result.success) {
+                console.log(`Added ${result.data.added_amount} diamonds to user ${result.data.user_id}`);
+                this.eventTarget.emit(DashFunManager.EVENT_OPEN_INVOICE_RESULT, result.success,0,Number(result.data.added_amount));
+            }
+            return;
+        }
+        
         console.log(`requestPayment title: ${title} , desc: ${desc} , type: ${type} , price: ${price} , ceshi`);
         const msg = {
             dashfun:{

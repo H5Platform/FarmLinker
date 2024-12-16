@@ -283,27 +283,31 @@ export class FarmFactoryWindow extends WindowBase {
         this.schedule(updateTimer, 60);
     }
 
-    private async onBtnStartClick( data: any, itemNode: Node ): Promise<void> {
+    private async onBtnStartClick(data: any, itemNode: Node): Promise<void> {
         if(!this.isBtnStartClickEnable){
             return;
         }
         this.isBtnStartClickEnable = false;
-        // Handle button click event
-        console.log(`Crafting ${data.name} with formula ${data.formula_1} , itemNode name: ${itemNode.name}`);
-        const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
-        const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
-        const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
-        console.log(`data.time_min:`,data.time_min);
-        this.updateRemainingTime(data.id,txtRemainingTime,btnStart, parseFloat(data.time_min) * SharedDefines.TIME_MINUTE);
-        btnStart.node.active = false;
-        btnSynthesisEnd.node.active = false;
-        txtRemainingTime.node.active = true;
-        txtRemainingTime.string = `剩余${data.time_min}分钟`;
-
+        
+        // TODO Need translate
+        WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "开始制作...");
+        
         const result = await NetworkManager.instance.syntheStart(data.id,this.currentBuilding.SceneItem.id);
         this.isBtnStartClickEnable = true;
         if(result && result.success){
-            console.log(`Synthesis start success`);
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作开始");
+            console.log(`Crafting ${data.name} with formula ${data.formula_1} , itemNode name: ${itemNode.name}`);
+            const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
+            const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
+            const btnStart = itemNode.getChildByName('btnStart').getComponent(Button);
+            console.log(`data.time_min:`,data.time_min);
+            this.updateRemainingTime(data.id,txtRemainingTime,btnStart, parseFloat(data.time_min) * SharedDefines.TIME_MINUTE);
+            btnStart.node.active = false;
+            btnSynthesisEnd.node.active = false;
+            txtRemainingTime.node.active = true;
+            txtRemainingTime.string = `剩余${data.time_min}分钟`;
+
             const sceneSyntheData = result.data;
             itemNode.name = sceneSyntheData.id;
             data.formula_1.forEach((source, index) => {
@@ -315,24 +319,27 @@ export class FarmFactoryWindow extends WindowBase {
             });
             this.refreshData();
 
-        }else{
-            console.log(`Synthesis start failed`);
+        } else {
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作失败");
         }
-
     }
 
     private async onBtnSynthesisEndClick( data: any,itemNode:Node): Promise<void> {
         console.log(`Synthesis completed after ${data.time_min} minutes`);
         const result = await NetworkManager.instance.syntheEnd(this.currentBuilding.SceneItem.id,itemNode.name);
         if(result && result.success){
-            console.log(`Synthesis end success`);
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作完成");
+            console.log(`Synthesis completed after ${data.time_min} minutes`);
             const syntheData = SyntheDataManager.instance.findSyntheDataById(result.data.syntheid);
             const syntheItem = ItemDataManager.instance.getItemById(syntheData.synthe_item_id);
             const inventoryItem = new InventoryItem(syntheItem,1);
             this.inventoryComponent.addItem(inventoryItem);
             this.refreshData();
-        }
-        else{
+        } else {
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作完成失败");
             console.log(`Synthesis end failed`);
         }
     }

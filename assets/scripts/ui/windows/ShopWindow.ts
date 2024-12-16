@@ -124,6 +124,8 @@ export class ShopWindow extends WindowBase {
     private onBuyItemResult(buyItemResult: NetworkBuyItemResult): void {
         console.log(`onBuyItemResult success = ${buyItemResult.success} , data = ${buyItemResult.data}`);
         if (buyItemResult.success) {
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "购买成功");   
             const item = ItemDataManager.instance.getItemById(buyItemResult.data.item_id);
             if (item) {
                 this.playerController!.playerState.gold = buyItemResult.data.current_coin;
@@ -132,6 +134,10 @@ export class ShopWindow extends WindowBase {
                 console.log(`Bought item: ${item.name}`);
                 this.showBuyItems(); 
             }
+        }
+        else{
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "购买失败");
         }
     }
 
@@ -285,6 +291,8 @@ export class ShopWindow extends WindowBase {
 
         } else {
             console.log("Not enough gold to buy this item!");
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "金币不足");
         }
     }
 
@@ -293,8 +301,11 @@ export class ShopWindow extends WindowBase {
         console.log(`sellItemResult success = ${sellItemResult.success} , data = ${sellItemResult.data}`);
         if(!sellItemResult.success){
             console.log(`sellItem failed , message = ${sellItemResult.message}`);
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
             return;
         }
+
         const item = ItemDataManager.instance.getItemById(sellItemResult.data.item_id);
         if (item) {
             const price = parseInt(item.sell_price);
@@ -308,13 +319,19 @@ export class ShopWindow extends WindowBase {
                 });
                // this.playerController!.playerState.gold += price;
                 console.log(`Sold item: ${item.name} for ${price} gold`);
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售成功");
                 this.showSellItems();
             } else {
                 console.log("Failed to sell item!");
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
             }
         }
         else {
             console.log("The item is not found!");
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
         }
 
         

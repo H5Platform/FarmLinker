@@ -39,9 +39,23 @@ export class PaymentItem extends ScrollViewItem {
         this.payIndex = payIndex;
         this.playerState = playerState;
         this.paymentType = paymentType;
+        //remove old listener
+        this.btnPayment.node.off(Button.EventType.CLICK, this.onPaymentButtonClick, this);
         this.btnPayment.node.on(Button.EventType.CLICK, this.onPaymentButtonClick, this);
+        //remove old listener
+        DashFunManager.instance.eventTarget.off(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
         DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
 
+    }
+
+    public onEnable(): void {
+        this.btnPayment.node.on(Button.EventType.CLICK, this.onPaymentButtonClick, this);
+        DashFunManager.instance.eventTarget.on(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
+    }
+
+    public onDisable(): void {
+        this.btnPayment.node.off(Button.EventType.CLICK, this.onPaymentButtonClick, this);
+        DashFunManager.instance.eventTarget.off(DashFunManager.EVENT_OPEN_INVOICE_RESULT, this.onOpenInvoiceResult, this);
     }
 
     public refresh(): void {
@@ -63,18 +77,16 @@ export class PaymentItem extends ScrollViewItem {
             content = content.replace("{0}", this.costDiamond.toString());
             content = content.replace("{1}", this.amount.toString());
         }
-        
 
         WindowManager.instance.show(SharedDefines.WINDOW_TIPS_NAME, content, () => {
             if(this.paymentType == PayItemType.Diamond){
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "正在购买钻石...");
                 DashFunManager.instance.requestPayment("Test","Payment test",this.paymentType,this.amount);
-
-                // const result = await NetworkManager.instance.requestAddDiamondForTest(100);
-                // if (result && result.success) {
-                //     console.log(`Added ${result.data.added_amount} diamonds to user ${result.data.user_id}`);
-                // }
             }
             else if(this.paymentType == PayItemType.Coin){
+                // TODO Need translate
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "正在兑换金币...");
                 this.exchangeCoin(this.payIndex,this.costDiamond);
             }
         }, null);
@@ -107,8 +119,13 @@ export class PaymentItem extends ScrollViewItem {
         const result = await NetworkManager.instance.requestExchangeCoin(payIndex);
         console.log(`exchangeCoin result: ${JSON.stringify(result)}`);
         if(result && result.success){
-            this.playerState.addDiamond(-result.data.costDiamond);
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "兑换成功");
             this.playerState.addGold(result.data.coinAmount);
+            this.playerState.addDiamond(-result.data.costDiamond);
+        } else {
+            // TODO Need translate
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "兑换失败");
         }
     }
 
