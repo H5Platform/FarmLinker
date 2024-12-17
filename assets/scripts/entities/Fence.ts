@@ -191,6 +191,7 @@ export class Fence extends SceneEntity implements IDropZone{
             worldPos,
             this.onSelectionWindowItemClicked.bind(this)
         );
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
     }
 
     private async onAnimalCommandSelected(animal: Animal, command: CommandType): Promise<void> {
@@ -262,6 +263,11 @@ export class Fence extends SceneEntity implements IDropZone{
     }
 
     private async onSelectionWindowItemClicked(inventoryItem:InventoryItem): Promise<void> {
+        this.cooldownComponent.startCooldown('select', SharedDefines.COOLDOWN_SELECTION_TIME, () => {});
+        if(this.dragDropComponent.IsDragging){
+            console.log(`[Fence:onSelectionWindowItemClicked] dragDropComponent is dragging`);
+            return;
+        }
         const animalPrefab = await ResourceManager.instance.loadPrefab(SharedDefines.PREFAB_ANIMAL);
         const animalNode = instantiate(animalPrefab);
         animalNode.name = inventoryItem.detailId;

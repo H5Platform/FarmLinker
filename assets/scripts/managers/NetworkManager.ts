@@ -60,10 +60,10 @@ export class NetworkManager extends Component {
     private static _instance: NetworkManager | null = null;
 
     private get baseUrl(): string {
-        // return "https://farmlinker-tma-test.dashfun.games";
+       // return "https://farmlinker-tma-test.dashfun.games";
         // Check if the game is running in preview mode (local development)
         if (BUILD) {
-            return "https://farmlinker-tma-test.dashfun.games";//"https://server-test.farmslinker.com";//"https://farmlinker-tma-test.dashfun.games";//this.serverBaseUrl;
+            return "https://server-test.farmslinker.com";//"https://farmlinker-tma-test.dashfun.games";//this.serverBaseUrl;
         } else {
             return this.localBaseUrl;
         }
