@@ -363,6 +363,10 @@ export class GameWindow extends WindowBase {
 
     private onBtnBackClicked(): void {
         this.gameController?.backToHome();
+        if (this.lbHome) {
+            // TODO Need translate later
+            this.lbHome.string = "我的家";
+        }
     }
 
     private async updateRecommendedFriends(): Promise<void> {
