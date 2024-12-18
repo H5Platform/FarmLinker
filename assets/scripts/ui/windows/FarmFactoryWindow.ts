@@ -289,9 +289,6 @@ export class FarmFactoryWindow extends WindowBase {
         }
         this.isBtnStartClickEnable = false;
         
-        // TODO Need translate
-        WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "开始制作...");
-        
         const result = await NetworkManager.instance.syntheStart(data.id,this.currentBuilding.SceneItem.id);
         this.isBtnStartClickEnable = true;
         if(result && result.success){

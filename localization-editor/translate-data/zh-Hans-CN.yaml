@@ -813,9 +813,65 @@ items:
     isVariant: false
     associations: []
     _variants: []
+  5X2H45860K4ZR9D8B1A7Q2C:
+    key: 5X2H45860K4ZR9D8B1A7Q2C
+    value: 购买了{0}
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  1J4L31980G6PZ2F5C0R8T4M:
+    key: 1J4L31980G6PZ2F5C0R8T4M
+    value: 出售了{0}
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  3T6M74521V3QW8K9J2B5Y0D:
+    key: 3T6M74521V3QW8K9J2B5Y0D
+    value: 获得{0}金币
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  8G5N67240P1KQ3X6C9R4B2H:
+    key: 8G5N67240P1KQ3X6C9R4B2H
+    value: 获得{0}经验
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  KQ3X6C9R4B2H8G5N67240P1:
+    key: KQ3X6C9R4B2H8G5N67240P1
+    value: 获得{0}农场币
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  7F9B22490T5LJ1H3K8W6P5R:
+    key: 7F9B22490T5LJ1H3K8W6P5R
+    value: 建造了{0}
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  2E3A58670H4QN9C1R7K8L5D:
+    key: 2E3A58670H4QN9C1R7K8L5D
+    value: 金币不够
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  6U1K90328P7ZQ5A4B9T1R6F:
+    key: 6U1K90328P7ZQ5A4B9T1R6F
+    value: 农场币不够
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
 languageConfig:
   bcp47Tag: zh-Hans-CN
   translateFinished: 74
   translateTotal: 74
   compileFinished: 0
-  compileTotal: 111
+  compileTotal: 119

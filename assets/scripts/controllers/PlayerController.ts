@@ -12,6 +12,7 @@ import { ItemDataManager } from '../managers/ItemDataManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { WindowManager } from '../ui/WindowManager';
 import { Building } from '../entities/Building';
+import { UIHelper } from '../helpers/UIHelper';
 
 const { ccclass, property } = _decorator;
 
@@ -324,6 +325,13 @@ export class PlayerController extends Component {
                     this._playerState.gold = result.data.coin;
                     this._playerState.diamond = result.data.diamond;
                     this._playerState.prosperity = result.data.prosperity;
+
+                    //TODO  show toast
+                    //get current building cost diamond and coin
+                    // const costDiamond = this.currentBuildingPlacement.buildData.cost_diamond;
+                    // const costCoin = this.currentBuildingPlacement.buildData.cost_coin;
+                    // const toastText = UIHelper.formatLocalizedText("6U1K90328P7ZQ5A4B9T1R6F", costDiamond.toString(), costCoin.toString());//建造完成
+                    // WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
                 }
                 this.endBuildingPlacement();
                 this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, true);

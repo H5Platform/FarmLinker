@@ -12,6 +12,7 @@ import { NetworkManager } from '../../managers/NetworkManager';
 import { CoinType } from '../../effects/CoinCollectionEffectComponent';
 import { UIEffectHelper } from '../../helpers/UIEffectHelper';
 import { l10n } from 'db://localization-editor/l10n';
+import { UIHelper } from '../../helpers/UIHelper';
 
 
 const { ccclass, property } = _decorator;
@@ -124,14 +125,14 @@ export class ShopWindow extends WindowBase {
     private onBuyItemResult(buyItemResult: NetworkBuyItemResult): void {
         console.log(`onBuyItemResult success = ${buyItemResult.success} , data = ${buyItemResult.data}`);
         if (buyItemResult.success) {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "购买成功");   
             const item = ItemDataManager.instance.getItemById(buyItemResult.data.item_id);
             if (item) {
                 this.playerController!.playerState.gold = buyItemResult.data.current_coin;
                 const inventoryItem = new InventoryItem(item);
                 this.inventoryComponent?.addItem(inventoryItem);
                 console.log(`Bought item: ${item.name}`);
+                const toastText = UIHelper.formatLocalizedText("5X2H45860K4ZR9D8B1A7Q2C", l10n.t(item.description),item.buy_price);//购买了{0}
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);   
                 this.showBuyItems(); 
             }
         }
@@ -291,12 +292,12 @@ export class ShopWindow extends WindowBase {
 
         } else {
             console.log("Not enough gold to buy this item!");
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "金币不足");
+            const toastText = UIHelper.formatLocalizedText("2E3A58670H4QN9C1R7K8L5D");//金币不足
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
         }
     }
 
-    private async sellItem(button: Button,inventoryItem: InventoryItem): Promise<void> {
+    private async sellItem(button: Button, inventoryItem: InventoryItem): Promise<void> {
         const sellItemResult = await NetworkManager.instance.sellItem(inventoryItem.id, 1);
         console.log(`sellItemResult success = ${sellItemResult.success} , data = ${sellItemResult.data}`);
         if(!sellItemResult.success){
@@ -319,8 +320,9 @@ export class ShopWindow extends WindowBase {
                 });
                // this.playerController!.playerState.gold += price;
                 console.log(`Sold item: ${item.name} for ${price} gold`);
-                // TODO Need translate
-                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售成功");
+                const toastText = UIHelper.formatLocalizedText("1J4L31980G6PZ2F5C0R8T4M", l10n.t(item.description),price.toString());//出售了{0}
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
+  
                 this.showSellItems();
             } else {
                 console.log("Failed to sell item!");

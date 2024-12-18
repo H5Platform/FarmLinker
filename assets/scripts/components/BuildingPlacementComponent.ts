@@ -14,7 +14,11 @@ const { ccclass, property } = _decorator;
 @ccclass('BuildingPlacementComponent')
 export class BuildingPlacementComponent extends Component {
     private gameController: GameController | null = null;
-    private buildData: any;
+    //getter builddata
+    public get buildData(): any {
+        return this._buildData;
+    }
+    private _buildData: any;
     private buildingManager: BuildingManager | null = null;
     private isPlacing: boolean = false;
     private uiCanvas: Node | null = null;
@@ -25,6 +29,8 @@ export class BuildingPlacementComponent extends Component {
     private contactCount: number = 0;
     private originalContentSize: Vec2 = new Vec2(0, 0);
     private isIntersecting: boolean = false;
+
+
 
     protected onEnable(): void {
 

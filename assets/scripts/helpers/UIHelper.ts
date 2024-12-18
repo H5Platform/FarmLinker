@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, EventTouch,Vec2, EventTarget, UITransform, Vec3, Canvas, Camera  } from 'cc';
+import { l10n } from '../../../extensions/localization-editor/static/assets/l10n';
 const { ccclass, property } = _decorator;
 
 export class UIHelper {
@@ -37,5 +38,27 @@ export class UIHelper {
         const targetWorldPos = targetCamera.screenToWorld(screenPos);
 
         return targetWorldPos;
+    }
+
+    /**
+     * Formats a localized string by replacing placeholders with provided values
+     * @param key The localization key
+     * @param params Array of values to replace placeholders with. Each value will be localized if it's a valid l10n key.
+     * @returns The formatted string
+     */
+    public static formatLocalizedText(key: string, ...params: string[]): string {
+        let text = l10n.t(key);
+        params.forEach((param, index) => {
+            // Try to localize the parameter first
+            //const localizedParam = l10n.t(param);
+            text = text.replace(`{${index}}`, param);
+        });
+        return text;
+    }
+
+    public static formatLocalizedTextWithNumber(key: string, number: number): string {
+        let text = l10n.t(key);
+        text = text.replace(`{0}`, number.toString());
+        return text;
     }
 }

@@ -80,13 +80,11 @@ export class PaymentItem extends ScrollViewItem {
 
         WindowManager.instance.show(SharedDefines.WINDOW_TIPS_NAME, content, () => {
             if(this.paymentType == PayItemType.Diamond){
-                // TODO Need translate
-                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "正在购买钻石...");
+                
                 DashFunManager.instance.requestPayment("Test","Payment test",this.paymentType,this.amount);
             }
             else if(this.paymentType == PayItemType.Coin){
-                // TODO Need translate
-                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "正在兑换金币...");
+                
                 this.exchangeCoin(this.payIndex,this.costDiamond);
             }
         }, null);

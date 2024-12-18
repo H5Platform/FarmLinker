@@ -8,6 +8,7 @@ import { CoinDisplay } from '../components/CoinDisplay';
 import { DiamondDisplay } from '../components/DiamondDisplay';
 import { BuildingManager } from '../../managers/BuildingManager';
 import { CraftScrollViewItem } from '../components/ScrollViewItems/CraftScrollViewItem';
+import { UIHelper } from '../../helpers/UIHelper';
 
 const { ccclass, property } = _decorator;
 
@@ -158,14 +159,19 @@ export class CraftWindow extends WindowBase {
     }
 
     private onBuildItemClicked(buildData: any): void {
-        if(this.playerController.playerState.gold >= buildData.cost_coin){
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "开始建造...");
+        if(this.playerController.playerState.gold >= buildData.cost_coin && this.playerController.playerState.diamond >= buildData.cost_diamond){
+            //WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "开始建造...");
             this.switchView(ViewType.PLACEMENT);
             this.startBuildingPlacement(buildData);
         } else {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "金币不足");
+            if(this.playerController.playerState.diamond < buildData.cost_diamond){
+                const toastText = UIHelper.formatLocalizedText("6U1K90328P7ZQ5A4B9T1R6F");//钻石不足
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
+            }
+            if(this.playerController.playerState.gold < buildData.cost_coin){
+                const toastText = UIHelper.formatLocalizedText("2E3A58670H4QN9C1R7K8L5D");//金币不足
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
+            }
         }
     }
 
