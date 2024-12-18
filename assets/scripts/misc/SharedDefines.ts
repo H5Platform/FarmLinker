@@ -231,6 +231,7 @@ export class NetworkVisitResultData{
     coin: number;
     diamond: number;
     sceneItems: SceneItem[];
+    nickName: string;
 }
 
 export class NetworkVisitResult{

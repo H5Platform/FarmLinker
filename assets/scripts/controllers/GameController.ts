@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab,EventTarget, Vec3, Layers, screen, Vec2, view, Canvas, UITransform, macro, Camera } from 'cc';
 import { PlotTile } from '../entities/PlotTile';
 import { PlayerController } from './PlayerController';
-import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
+import { CommandState, CommandType, NetworkCareResult, NetworkCareResultData, NetworkHarvestResult, NetworkHarvestResultData, NetworkInventoryItem, NetworkLoginResult, NetworkTreatResult, NetworkVisitResultData, SceneItem, SceneItemState, SceneItemType, SharedDefines } from '../misc/SharedDefines';
 import { CropDataManager } from '../managers/CropDataManager';
 import { ItemDataManager } from '../managers/ItemDataManager';
 import { BuildDataManager } from '../managers/BuildDataManager';
@@ -529,7 +529,7 @@ export class GameController extends Component {
         }
     }
 
-    public async visitFriend(userId:string): Promise<void> {
+    public async visitFriend(userId:string): Promise<NetworkVisitResultData> {
         
         const result = await NetworkManager.instance.visit(userId);
         if(result && result.success){
@@ -542,6 +542,8 @@ export class GameController extends Component {
             this.setGameViewVisibility(false);
             //initialize friend's scene items
             this.initializeSceneItems(this.friendGameplayContainer,result.data.sceneItems,result.data.level,false);
+
+            return result.data;
         }else{
             console.error('visit friend failed');
             //hide friendGameplayContainer
@@ -549,6 +551,7 @@ export class GameController extends Component {
             this.setGameViewVisibility(true);
             this.playerController.visitMode = false;
             this.playerController.friendState = null;
+            return null;
         }
     }
 

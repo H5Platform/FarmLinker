@@ -15,6 +15,9 @@ import { GradeDataManager } from '../../managers/GradeDataManager';
 import { UIHelper } from '../../helpers/UIHelper';
 import { UIEffectHelper } from '../../helpers/UIEffectHelper';
 import { CoinType } from '../../effects/CoinCollectionEffectComponent';
+import { GrowthableEntity } from '../../entities/GrowthableEntity';
+import { Crop } from '../../entities/Crop';
+import { Animal } from '../../entities/Animal';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -25,6 +28,8 @@ export class GameWindow extends WindowBase {
     public lbProsperity: Label | null = null;
     @property(Label)
     public lblLevel: Label | null = null;
+    @property(Label)
+    public lbHome: Label | null = null;
     @property(ProgressBar)
     public progressExp : ProgressBar | null = null;
     @property(CoinDisplay)
@@ -92,6 +97,10 @@ export class GameWindow extends WindowBase {
     public show(...args: any[]): void 
     {
         super.show(...args);
+        if (this.lbHome) {
+            // TODO Need translate later
+            this.lbHome.string = "我的家";
+        }
         //set crop container invisible
         this.scrollViewCrops.node.active = false;
         //set friendScrollView invisible
@@ -425,10 +434,14 @@ export class GameWindow extends WindowBase {
         }
     }
 
-    private onFriendButtonClicked(friendUserId: string): void {
-        this.gameController?.visitFriend(friendUserId);
+    private async onFriendButtonClicked(friendUserId: string): Promise<void> {
+        const friendData = await this.gameController?.visitFriend(friendUserId);
         //set scrollview invisible
         this.friendScrollView.node.active = false;
+        if (this.lbHome && friendData) {
+            // TODO Need translate later
+            this.lbHome.string = friendData.nickName + "的家";
+        }
     }
 
     
@@ -456,12 +469,25 @@ export class GameWindow extends WindowBase {
         // 获取目标金币图标的世界坐标
         const endPos = this.lblLevel.node.getWorldPosition();//this.coinDisplay.currencySpriteNode.getWorldPosition();
         
+        const entity = sourceNode.getComponent(Crop);
+        let spriteFrame = null;
+        if(entity){
+            spriteFrame = entity.sprite.spriteFrame;
+        }
+        else
+        {
+            const animal = sourceNode.getComponent(Animal);
+            if(animal){
+                spriteFrame = animal.sprite.spriteFrame;
+            }
+        }
         // 播放Exp收集特效
-        const coinEffect = await UIEffectHelper.playCoinCollectionEffect(
-            CoinType.EXP,
+        //replace with playHarvestEffect effect
+        const expEffect = await UIEffectHelper.playHarvestEffect(
             this.node,
             convertedStartPos,
-            endPos
+            endPos,
+            spriteFrame
         );
 
         // // 特效完成后更新金币数量

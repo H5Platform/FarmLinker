@@ -23,7 +23,7 @@ export class UIEffectHelper {
     }
 
     public static async playHarvestEffect(parent: Node,startPos: Vec3, endPos: Vec3, spriteFrame: SpriteFrame) {
-        const effectPrefab = await ResourceManager.instance.loadPrefab('ui/effects/HarvestCollectEffect');
+        const effectPrefab = await ResourceManager.instance.loadPrefab('ui/effects/HarvestCollectionEffect');
         if (effectPrefab) {
             const effect = instantiate(effectPrefab);
             // 将效果添加到合适的父节点（通常是 Canvas 或 UI 层）
