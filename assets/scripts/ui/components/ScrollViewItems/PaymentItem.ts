@@ -6,6 +6,7 @@ import { NetworkManager } from '../../../managers/NetworkManager';
 import { WindowManager } from '../../WindowManager';
 import { SharedDefines } from '../../../misc/SharedDefines';
 import { l10n } from '../../../../../extensions/localization-editor/static/assets/l10n';
+import { UIHelper } from '../../../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('PaymentItem')
@@ -99,6 +100,8 @@ export class PaymentItem extends ScrollViewItem {
         console.log("onOpenInvoiceResult", success, index, amount);
         if(success){
             //log current diamond
+            const toastText = UIHelper.formatLocalizedText("T2U3V4W5X6Y7Z8A9B0C1D2E");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             console.log(`onOpenInvoiceResult current diamond: ${this.playerState.diamond}`);
             this.playerState.addDiamond(amount);
             console.log(`onOpenInvoiceResult after add diamond: ${this.playerState.diamond}`);
@@ -111,19 +114,21 @@ export class PaymentItem extends ScrollViewItem {
             // this.playerState.addDiamond(-costDiamond);
             // this.playerState.addGold(this.amount);
             console.log("PaymentItem::buyCoin not enough diamond");
+            const toastText = UIHelper.formatLocalizedText("6U1K90328P7ZQ5A4B9T1R6F");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             return;
         }
 
         const result = await NetworkManager.instance.requestExchangeCoin(payIndex);
         console.log(`exchangeCoin result: ${JSON.stringify(result)}`);
         if(result && result.success){
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "兑换成功");
+            const toastText = UIHelper.formatLocalizedText("P8Q9R1S2T3U4V5W6X7Y8Z0A");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             this.playerState.addGold(result.data.coinAmount);
             this.playerState.addDiamond(-result.data.costDiamond);
         } else {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "兑换失败");
+            const toastText = UIHelper.formatLocalizedText("M4N5O6P7Q8R9S0T1U2V3W4X");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
         }
     }
 

@@ -11,6 +11,7 @@ import { NetworkManager } from '../../managers/NetworkManager';
 import { Building } from '../../entities/Building';
 import { l10n } from 'db://localization-editor/l10n';
 import { CooldownComponent } from '../../components/CooldownComponent';
+import { UIHelper } from '../../helpers/UIHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('FarmFactoryWindow')
@@ -292,8 +293,6 @@ export class FarmFactoryWindow extends WindowBase {
         const result = await NetworkManager.instance.syntheStart(data.id,this.currentBuilding.SceneItem.id);
         this.isBtnStartClickEnable = true;
         if(result && result.success){
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作开始");
             console.log(`Crafting ${data.name} with formula ${data.formula_1} , itemNode name: ${itemNode.name}`);
             const txtRemainingTime = itemNode.getChildByName('txtRemainingTime').getComponent(Label);
             const btnSynthesisEnd = itemNode.getChildByName('btnSynthesisEnd').getComponent(Button);
@@ -317,8 +316,8 @@ export class FarmFactoryWindow extends WindowBase {
             this.refreshData();
 
         } else {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作失败");
+            const toastText = UIHelper.formatLocalizedText("M4N5O6P7Q8R9S0T1U2V3W4X");//制作失败
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
         }
     }
 
@@ -326,8 +325,9 @@ export class FarmFactoryWindow extends WindowBase {
         console.log(`Synthesis completed after ${data.time_min} minutes`);
         const result = await NetworkManager.instance.syntheEnd(this.currentBuilding.SceneItem.id,itemNode.name);
         if(result && result.success){
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作完成");
+            const itemDescription = l10n.t(data.description);
+            const toastText = UIHelper.formatLocalizedText("F7G8H9J0K1L2M3N4O5P6Q7R",itemDescription);
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             console.log(`Synthesis completed after ${data.time_min} minutes`);
             const syntheData = SyntheDataManager.instance.findSyntheDataById(result.data.syntheid);
             const syntheItem = ItemDataManager.instance.getItemById(syntheData.synthe_item_id);
@@ -335,8 +335,8 @@ export class FarmFactoryWindow extends WindowBase {
             this.inventoryComponent.addItem(inventoryItem);
             this.refreshData();
         } else {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "制作完成失败");
+            const toastText = UIHelper.formatLocalizedText("M4N5O6P7Q8R9S0T1U2V3W4X");//制作完成失败
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             console.log(`Synthesis end failed`);
         }
     }

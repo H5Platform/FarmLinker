@@ -98,8 +98,7 @@ export class GameWindow extends WindowBase {
     {
         super.show(...args);
         if (this.lbHome) {
-            // TODO Need translate later
-            this.lbHome.string = "我的家";
+            this.lbHome.string = UIHelper.formatLocalizedText("Z9Y8X7W6V5U4T3S2R1Q0P9W",this.playerController?.playerState.nickname);
         }
         //set crop container invisible
         this.scrollViewCrops.node.active = false;
@@ -364,8 +363,7 @@ export class GameWindow extends WindowBase {
     private onBtnBackClicked(): void {
         this.gameController?.backToHome();
         if (this.lbHome) {
-            // TODO Need translate later
-            this.lbHome.string = "我的家";
+            this.lbHome.string = UIHelper.formatLocalizedText("Z9Y8X7W6V5U4T3S2R1Q0P9W",this.playerController?.playerState.nickname);
         }
     }
 
@@ -443,8 +441,7 @@ export class GameWindow extends WindowBase {
         //set scrollview invisible
         this.friendScrollView.node.active = false;
         if (this.lbHome && friendData) {
-            // TODO Need translate later
-            this.lbHome.string = friendData.nickName + "的家";
+            this.lbHome.string = UIHelper.formatLocalizedText("Z9Y8X7W6V5U4T3S2R1Q0P9W",friendData.nickName);
         }
     }
 

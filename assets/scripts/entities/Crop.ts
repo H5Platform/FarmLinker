@@ -11,6 +11,9 @@ import { ResourceManager } from '../managers/ResourceManager';
 import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
 import { GrowthableEntity } from './GrowthableEntity';
+import { UIHelper } from '../helpers/UIHelper';
+import { WindowManager } from '../ui/WindowManager';
+import { l10n } from '../../../extensions/localization-editor/static/assets/l10n';
 const { ccclass, property } = _decorator;
 
 @ccclass('Crop')
@@ -82,10 +85,15 @@ export class Crop extends GrowthableEntity {
         if(result){
             this.notifyPlayExpEffect(0);
             this.growState = GrowState.NONE;
+            const itemData = ItemDataManager.instance.getItemById(this.harvestItemId);
+            const toastText = UIHelper.formatLocalizedText("F7G8H9J0K1L2M3N4O5P6Q7R", l10n.t(itemData.description));
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             this.eventTarget.emit(SharedDefines.EVENT_CROP_HARVEST, this);
             this.stopDiseaseStatusUpdates();
         }
         else{
+            const toastText = UIHelper.formatLocalizedText("M4N5O6P7Q8R9S0T1U2V3W4X");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             console.error(`Crop ${this.node.name} harvest failed`);
         }
         this.isHarvesting = false;

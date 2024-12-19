@@ -13,6 +13,9 @@ import { NetworkManager } from '../managers/NetworkManager';
 import { DateHelper } from '../helpers/DateHelper';
 import { GrowthableEntity } from './GrowthableEntity';
 import { PlayerController } from '../controllers/PlayerController';
+import { UIHelper } from '../helpers/UIHelper';
+import { WindowManager } from '../ui/WindowManager';
+import { l10n } from '../../../extensions/localization-editor/static/assets/l10n';
 
 const { ccclass, property } = _decorator;
 
@@ -88,12 +91,17 @@ export class Animal extends GrowthableEntity {
         if(result){
             this.notifyPlayExpEffect(0);
             this.growState = GrowState.NONE;
+            const itemData = ItemDataManager.instance.getItemById(this.harvestItemId);
+            const toastText = UIHelper.formatLocalizedText("F7G8H9J0K1L2M3N4O5P6Q7R", l10n.t(itemData.description));
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             this.eventTarget.emit(SharedDefines.EVENT_ANIMAL_HARVEST, this);
 
             this.stopDiseaseStatusUpdates();
             
         }
         else{
+            const toastText = UIHelper.formatLocalizedText("M4N5O6P7Q8R9S0T1U2V3W4X");
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             console.error(`Animal ${this.node.name} harvest failed`);
         }
         this.isHarvesting = false;

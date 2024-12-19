@@ -183,16 +183,12 @@ export class CraftWindow extends WindowBase {
 
     private onBtnPlacementClicked(): void {
         if (this.playerController) {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "建造完成");
             this.playerController.tryPlacementBuilding();
         }
     }
 
     private onBtnCancelClicked(): void {
         if (this.playerController) {
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "取消建造");
             this.playerController.cancelBuildingPlacement();
         }
     }

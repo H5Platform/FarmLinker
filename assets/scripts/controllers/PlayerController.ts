@@ -13,6 +13,7 @@ import { NetworkManager } from '../managers/NetworkManager';
 import { WindowManager } from '../ui/WindowManager';
 import { Building } from '../entities/Building';
 import { UIHelper } from '../helpers/UIHelper';
+import { l10n } from '../../../extensions/localization-editor/static/assets/l10n';
 
 const { ccclass, property } = _decorator;
 
@@ -326,12 +327,9 @@ export class PlayerController extends Component {
                     this._playerState.diamond = result.data.diamond;
                     this._playerState.prosperity = result.data.prosperity;
 
-                    //TODO  show toast
-                    //get current building cost diamond and coin
-                    // const costDiamond = this.currentBuildingPlacement.buildData.cost_diamond;
-                    // const costCoin = this.currentBuildingPlacement.buildData.cost_coin;
-                    // const toastText = UIHelper.formatLocalizedText("6U1K90328P7ZQ5A4B9T1R6F", costDiamond.toString(), costCoin.toString());//建造完成
-                    // WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
+                    const itemDescription = l10n.t(this.currentBuildingPlacement.buildData.description);
+                    const toastText = UIHelper.formatLocalizedText("7F9B22490T5LJ1H3K8W6P5R",itemDescription);
+                    WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
                 }
                 this.endBuildingPlacement();
                 this.eventTarget.emit(SharedDefines.EVENT_PLAYER_PLACEMENT_BUILDING, true);

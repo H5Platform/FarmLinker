@@ -137,8 +137,8 @@ export class ShopWindow extends WindowBase {
             }
         }
         else{
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "购买失败");
+            const toastText = UIHelper.formatLocalizedText("QW8R3D5T2Y7F6J9K41256P8");//购买失败
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
         }
     }
 
@@ -302,8 +302,8 @@ export class ShopWindow extends WindowBase {
         console.log(`sellItemResult success = ${sellItemResult.success} , data = ${sellItemResult.data}`);
         if(!sellItemResult.success){
             console.log(`sellItem failed , message = ${sellItemResult.message}`);
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
+            const toastText = UIHelper.formatLocalizedText("ZQ5A4B9T1R6F6U1K90328P7");//出售失败
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             return;
         }
 
@@ -326,14 +326,14 @@ export class ShopWindow extends WindowBase {
                 this.showSellItems();
             } else {
                 console.log("Failed to sell item!");
-                // TODO Need translate
-                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
+                const toastText = UIHelper.formatLocalizedText("ZQ5A4B9T1R6F6U1K90328P7");//出售失败
+                WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
             }
         }
         else {
             console.log("The item is not found!");
-            // TODO Need translate
-            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, "出售失败");
+            const toastText = UIHelper.formatLocalizedText("ZQ5A4B9T1R6F6U1K90328P7");//出售失败
+            WindowManager.instance.show(SharedDefines.WINDOW_TOAST_NAME, toastText);
         }
 
         

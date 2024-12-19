@@ -765,14 +765,14 @@ items:
     _variants: []
   5X2H45860K4ZR9D8B1A7Q2C:
     key: 5X2H45860K4ZR9D8B1A7Q2C
-    value: Purchased {0}
+    value: Purchased {0} for {1} gold coins
     type: 4
     isVariant: false
     associations: []
     _variants: []
   1J4L31980G6PZ2F5C0R8T4M:
     key: 1J4L31980G6PZ2F5C0R8T4M
-    value: Sold {0}
+    value: Sold {0} for {1} gold coins
     type: 4
     isVariant: false
     associations: []
@@ -819,9 +819,79 @@ items:
     isVariant: false
     associations: []
     _variants: []
+  G6PZ2F5C0R8T4M1J4L31980:
+    key: G6PZ2F5C0R8T4M1J4L31980
+    value: Purchased {0} for {1} farm coins
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  QW8R3D5T2Y7F6J9K41256P8:
+    key: QW8R3D5T2Y7F6J9K41256P8
+    value: Purchase failed
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  ZQ5A4B9T1R6F6U1K90328P7:
+    key: ZQ5A4B9T1R6F6U1K90328P7
+    value: Sale failed
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  A1B2C3D4E5F6G7H8I9J0K1L:
+    key: A1B2C3D4E5F6G7H8I9J0K1L
+    value: Operation failed, network fluctuation
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  M4N5O6P7Q8R9S0T1U2V3W4X:
+    key: M4N5O6P7Q8R9S0T1U2V3W4X
+    value: Operation failed
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  Z9Y8X7W6V5U4T3S2R1Q0P9W:
+    key: Z9Y8X7W6V5U4T3S2R1Q0P9W
+    value: "{0}'s home"
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  H3J4K5L6M7N8O9P0Q1R2S3T:
+    key: H3J4K5L6M7N8O9P0Q1R2S3T
+    value: Crafting successful
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  F7G8H9J0K1L2M3N4O5P6Q7R:
+    key: F7G8H9J0K1L2M3N4O5P6Q7R
+    value: Obtained {0}
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  T2U3V4W5X6Y7Z8A9B0C1D2E:
+    key: T2U3V4W5X6Y7Z8A9B0C1D2E
+    value: Congratulations, recharge successful
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
+  P8Q9R1S2T3U4V5W6X7Y8Z0A:
+    key: P8Q9R1S2T3U4V5W6X7Y8Z0A
+    value: Congratulations, exchange successful
+    type: 4
+    isVariant: false
+    associations: []
+    _variants: []
 languageConfig:
   bcp47Tag: en
   translateFinished: 69
   translateTotal: 213
   compileFinished: 0
-  compileTotal: 117
+  compileTotal: 127
