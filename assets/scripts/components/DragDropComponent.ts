@@ -1,7 +1,9 @@
 import { _decorator, Component, Node, EventTouch, Vec3, UITransform, Vec2, input,Input,  director, Camera, Layers } from 'cc';
-import { SharedDefines } from '../misc/SharedDefines';
+import { InteractionMode, SharedDefines } from '../misc/SharedDefines';
 import { Crop } from '../entities/Crop';
 import { UIHelper } from '../helpers/UIHelper';
+import { PlayerController } from '../controllers/PlayerController';
+import { GameController } from '../controllers/GameController';
 const { ccclass, property } = _decorator;
 
 // 定义可拖拽对象的接口
@@ -33,6 +35,7 @@ export class DragDropComponent extends Component {
 
     private uiCanvasNode: Node | null = null;
     private gameplayCanvasNode: Node | null = null;
+    private playerController: PlayerController | null = null;
     
     private currentDraggingObject: IDraggable | null = null;
     private dropZones: IDropZone[] = [];
@@ -48,6 +51,8 @@ export class DragDropComponent extends Component {
     private originDragNodeLayer: number = 0;
 
     onLoad() {
+
+
         //find gameplay canvas by name
         this.gameplayCanvasNode = director.getScene()!.getChildByName('GameplayCanvas');
         if (!this.gameplayCanvasNode) {
@@ -68,12 +73,17 @@ export class DragDropComponent extends Component {
     }
 
     protected start(): void {
-
+        //find gamecontroller by name
+        const gameController = director.getScene()!.getChildByName('GameController')!.getComponent(GameController);
+        if (gameController) {
+            this.playerController = gameController.getPlayerController();
+        }
         
         this.dragContainer = this.node;
 
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
-        this.node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
+        this.node.on(Node.EventType.TOUCH_MOVE, this.onMouseMove, this);
+        this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
     }
 
     update() {
@@ -99,6 +109,9 @@ export class DragDropComponent extends Component {
     }
 
     public startDragging(draggable: IDraggable, node: Node): void {
+        if(this.playerController){
+            this.playerController.interactionMode = InteractionMode.Plant;
+        }
         this.currentDraggingObject = draggable;
         this.isDragging = true;
         this.originDragNodeLayer = node.layer;
@@ -124,6 +137,16 @@ export class DragDropComponent extends Component {
     }
 
     private onTouchStart(event: EventTouch): void {
+
+        this.currentMousePos = event.getUILocation();
+    }
+
+    private onMouseMove(event: EventTouch): void 
+    {
+        this.currentMousePos = event.getUILocation();
+    }
+
+    private onTouchEnd(event: EventTouch): void {
         if (this.isDragging && this.currentDraggingObject) {
 
             const worldPos = this.currentDraggingObject.getNode().getWorldPosition();
@@ -157,11 +180,10 @@ export class DragDropComponent extends Component {
             this.isDragging = false;
             this.startDragPosition = new Vec3();
         }
-    }
-
-    private onMouseMove(event: EventTouch): void 
-    {
         this.currentMousePos = event.getUILocation();
+        if(this.playerController){
+            this.playerController.interactionMode = InteractionMode.CameraDrag;
+        }
     }
 
 

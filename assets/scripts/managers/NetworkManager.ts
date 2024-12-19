@@ -41,7 +41,7 @@ export class NetworkManager extends Component {
     public static readonly API_RECOMMEND_FRIENDS: string = '/friend/recommend';
     public static readonly API_QUERY_PAYMENT_RESULT: string = '/payment/queryPaymentResult';
     public static readonly API_EXCHANGE_COIN: string = '/payment/exchangeCoin';
-    public static readonly API_TEST_ADD_DIAMOND: string = "/test/addDiamond";
+    public static readonly API_ADD_DIAMOND: string = "/payment/addDiamond";
 
     public static readonly EVENT_LOGIN_SUCCESS = 'login-success';
     public static readonly EVENT_LOGIN_FAILED = 'login-failed';
@@ -60,13 +60,13 @@ export class NetworkManager extends Component {
     private static _instance: NetworkManager | null = null;
 
     private get baseUrl(): string {
-       // return "https://farmlinker-tma-test.dashfun.games";
+        return "https://farmlinker-tma-test.dashfun.games";
         // Check if the game is running in preview mode (local development)
-        if (BUILD) {
-            return "https://farmlinker-tma-test.dashfun.games";//"https://server-test.farmslinker.com";//"https://farmlinker-tma-test.dashfun.games";//this.serverBaseUrl;
-        } else {
-            return this.localBaseUrl;
-        }
+        // if (BUILD) {
+        //     return "https://farmlinker-tma-test.dashfun.games";//"https://server-test.farmslinker.com";//"https://farmlinker-tma-test.dashfun.games";//this.serverBaseUrl;
+        // } else {
+        //     return this.localBaseUrl;
+        // }
     }
 
     @property
@@ -128,9 +128,9 @@ export class NetworkManager extends Component {
 
     private buildApiUrl(api: string, port?: number): string {
         let url = this.baseUrl;
-        if (!BUILD && port) {
-            url += `:${port}`;
-        }
+        // if (!BUILD && port) {
+        //     url += `:${port}`;
+        // }
         return `${url}${api}`;
     }
 
@@ -847,7 +847,7 @@ export class NetworkManager extends Component {
             return null;
         }
 
-        const url = this.buildApiUrl(NetworkManager.API_TEST_ADD_DIAMOND, this.paymentPort);
+        const url = this.buildApiUrl(NetworkManager.API_ADD_DIAMOND, this.paymentPort);
         const headers = {
             'Authorization': this.token,
             ...this.defaultHeaders

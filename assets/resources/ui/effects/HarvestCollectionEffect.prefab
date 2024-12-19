@@ -69,8 +69,8 @@
       "__id__": 3
     },
     "sprite": null,
-    "moveDuration": 1,
-    "initialScale": 1.05,
+    "moveDuration": 0.75,
+    "initialScale": 1,
     "finalScale": 0.3,
     "heightFactor": 200,
     "_id": ""
