@@ -18,6 +18,7 @@ import { CoinType } from '../../effects/CoinCollectionEffectComponent';
 import { GrowthableEntity } from '../../entities/GrowthableEntity';
 import { Crop } from '../../entities/Crop';
 import { Animal } from '../../entities/Animal';
+import { ItemDataManager } from '../../managers/ItemDataManager';
 
 @ccclass('GameWindow')
 export class GameWindow extends WindowBase {
@@ -463,6 +464,9 @@ export class GameWindow extends WindowBase {
         const gameCanvas = this.gameController?.GameplayCanvas; //this.node.parent;
         // 获取源节点所在的 Canvas
         const uiCanvas = this.gameController?.UICanvas;
+
+        // const gameplayToUICameraRatio = this.gameController!.GameplayToUICameraRatio;
+        // sourceNode.setScale(Vec3.ONE.multiplyScalar(gameplayToUICameraRatio));
         
         // 转换坐标
         const startWorldPos = sourceNode.getWorldPosition();
@@ -475,17 +479,25 @@ export class GameWindow extends WindowBase {
         // 获取目标金币图标的世界坐标
         const endPos = this.lblLevel.node.getWorldPosition();//this.coinDisplay.currencySpriteNode.getWorldPosition();
         
-        const entity = sourceNode.getComponent(Crop);
-        let spriteFrame = null;
+         const entity = sourceNode.getComponent(Crop);
+         let spriteFrame = null;
+         let harvestItemId = '';
         if(entity){
-            spriteFrame = entity.sprite.spriteFrame;
+            //get harvest item id from crop data
+            harvestItemId = entity.HarvestItemId;
         }
         else
         {
             const animal = sourceNode.getComponent(Animal);
-            if(animal){
-                spriteFrame = animal.sprite.spriteFrame;
+            if(animal)
+            {
+                harvestItemId = animal.HarvestItemId;
             }
+        }
+        const harvestItemData = ItemDataManager.instance.getItemById(harvestItemId);
+        if(harvestItemData){
+            //spriteFrame = ResourceManager.instance.loadAsset( harvestItemData.png);
+            spriteFrame = await ResourceManager.instance.loadAsset<SpriteFrame>(`${SharedDefines.WINDOW_SHOP_TEXTURES}${harvestItemData.png}/spriteFrame`, SpriteFrame);
         }
         // 播放Exp收集特效
         //replace with playHarvestEffect effect

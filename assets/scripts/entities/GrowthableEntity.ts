@@ -45,6 +45,8 @@ export abstract class GrowthableEntity extends SceneEntity implements IDraggable
     protected sourceInventoryItem: InventoryItem | null = null;
     protected cooldownComponent: CooldownComponent | null = null;
     protected growState: GrowState = GrowState.NONE;
+    //getter for harvest item id
+    public get HarvestItemId(): string { return this.harvestItemId; }
     protected harvestItemId: string = '';
     protected baseSpritePath: string = '';
 
