@@ -80,7 +80,7 @@ export class BuildingPlacementComponent extends Component {
         this.uiCanvas = this.gameController!.UICanvas.node;
         this.gameplayCanvas = this.gameController!.GameplayCanvas.node;
         this.node.name = buildData.id;
-        this.buildData = buildData;
+        this._buildData = buildData;
         this.buildingManager = buildingManager;
         const uiTransform = this.node.getComponent(UITransform);
         this.originalContentSize = new Vec2(uiTransform.contentSize.width, uiTransform.contentSize.height);
